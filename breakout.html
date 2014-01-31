@@ -1,0 +1,88 @@
+<html>
+<head>
+<script src="script/jquery.js"></script>
+<script src="script/detectdevice.js"></script>
+<script src="script/breakout.js"></script>
+<script src="script/sprites.js"></script>
+<script>
+$(document).ready(function() {
+	var ctx = $('#canvas')[0].getContext("2d");
+	var HEIGHT = ctx.canvas.height = window.innerHeight;
+	var WIDTH = ctx.canvas.width = window.innerWidth;
+	var d = new Device();
+	var happyimg = new Image();
+	happyimg.src = 'baddies.png';
+	var game = new Game(WIDTH, HEIGHT, happyimg);
+	var timer = new FrameTimer();
+    timer.tick();
+	var timerinterval = 1;
+
+	function clear() {
+	  ctx.clearRect(0, 0, WIDTH, HEIGHT);
+	}
+
+	function draw() {
+		clear();
+		game.draw(ctx, timer.getSeconds());
+		timer.tick();
+	}
+
+	setInterval(draw, timerinterval);
+
+	$(document).keydown(function(evt) {
+	  if (evt.keyCode == 39) game.moveright();
+	  else if (evt.keyCode == 37) game.moveleft();
+	  else if (evt.keyCode == 80) game.pause();
+	  else if (evt.keyCode == 90) game.speed();
+	  else if (evt.keyCode == 88) game.slow();
+	  else if (evt.keyCode == 86) game.embiggen();
+	  else if (evt.keyCode == 67) game.shrink();
+	  else if (evt.keyCode == 68) game.invinsible();
+	  else if (evt.keyCode == 70) game.paddlewidth(200);
+	}); 
+
+	if(!d.detectAndroid())
+	{
+		$("canvas").mousemove(function(e){
+			  game.mousemove(e.clientX);
+		});
+	}
+	
+	$("#canvas").click(function(){		
+		if(!game.started) {
+			game.startgame();
+		}
+		
+		if(game.started && !game.live) {
+			game.newlife();
+		}
+	});	
+	
+	if(d.detectAndroid()) {		
+		$("#canvas").bind("touchmove", function (event) {
+			game.mousemove(event.originalEvent.targetTouches[0].clientX);
+		});
+	}
+});
+
+
+</script>
+<meta charset=utf-8 />
+<title>.::SUPER BREAKOUT::.</title>
+<!--[if IE]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<style>
+  html, body {
+  width:  100%;
+  height: 100%;
+  margin: 0px;
+}
+</style>
+</head>
+<body>	
+  <canvas id="canvas"></canvas>
+ 
+</body>
+</html>
+<!--Created and Maintained by Richard Talbot-->

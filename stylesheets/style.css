@@ -1,0 +1,96 @@
+body {
+	margin: 0;
+	padding: 0;
+	position: relative;
+	display: block;	
+	background: black;	
+	color: white;
+}
+
+.clear {
+	clear: both;
+}
+
+#menu {
+	position: fixed;
+	width: 100%;
+	float: left;
+}
+
+#menu a {
+	color: white;
+	font: Helvetica;
+	font-size: 18;
+	margin-right: 24px;
+	float: right;	
+	text-decoration: none;
+	padding: 10px 10px 10px 10px;
+}
+
+#menu a.active{
+	border-bottom: solid white 1px;
+}
+
+#menu a:hover {
+	background-color:white;
+	color: black;
+}
+
+div #content{
+	width: 800px;
+	margin-top: 50px;
+	margin-left: 150px;	
+	float: left;
+}
+
+div.item{
+	width: auto;
+	padding: 20px 20px 20px 20px;
+	margin-left: 10px;
+	margin-top: 30px;
+	font-family: Futura, Helvetica, Arial;
+	font-size: 18px;
+	border: solid white 1px;
+}
+
+div .item img {
+	width: 100px;
+	height: 100px;
+	border: solid white 1px;
+	padding: 2px 2px 2px 2px;
+	margin: 5px 10px 5px 10px;
+	float: left;
+}
+
+div .itemcontent {	
+	margin: 0px 0px 0px 0px;
+	padding: 2px 0px 2px 25px;
+}
+
+div.item span.header{
+	font-size: 28px;
+	border-bottom: solid white 1px;
+	font-weight: bold;	
+}
+
+div.item p{
+	padding: 5px 0px 5px 0px;
+	font-size: 18px;	
+	line-height: 24px;
+	font-family: Minion, Garamond, Arial;
+}
+
+div.item span.sub {
+	font-size: 14px;
+	font-weight: italics;
+}
+
+div .item a {
+	text-decoration: none;
+	color: white;
+}
+
+
+
+	
+
