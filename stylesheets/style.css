@@ -90,11 +90,16 @@ div .item a {
 	color: white;
 }
 
-ul .icon-list {
-	display: inline;
-	list-style-type: none;
+div #social-bar {
+	margin-left: 20px 
+	margin-top: 25px;
 }
 
+#social-bar a {
+	text-decoration: none;
+	padding: 5px 0px 5px 0px;
+	color: white;
+}
 
 
 	
