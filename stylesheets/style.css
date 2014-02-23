@@ -90,6 +90,11 @@ div .item a {
 	color: white;
 }
 
+ul .icon-list {
+	display: inline;
+	list-style-type: none;
+}
+
 
 
 	
