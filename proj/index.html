@@ -1,10 +1,16 @@
 ---
 ---
-
 <html>
 <head>
-<title>home</title>
+<title>projects</title>
 <link href="\stylesheets\style.css" rel="stylesheet" type="text/css">
+<script src="\script\jquery.js"></script>
+<script src="\script\pixelnoise.js"></script>
+<script>
+$(document).ready(function() {
+	$("#flashycanvas").pixelNoise({ 'size' : 10, 'interval' : 1 });
+});
+</script>
 </head>
 <body>
 <div id="menu">
@@ -31,6 +37,16 @@
 			</div>
 		</a>
 	</div>
+	<div class="item">
+		<a href="\flashy.html">
+			<canvas id="flashycanvas" height="100" width="100"></canvas>
+			<div class="itemcontent">
+				<span class="header">Pixel Noise<span>
+				<p>A weird html5 canvas thing as a jQuery plug-in.</p>
+			</div>
+		</a>
+	</div>
+
 </div>
 </body>
 </html>

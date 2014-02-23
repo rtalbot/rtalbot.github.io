@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>FLASHY!</title>
+<script src="\script\jquery.js"></script>
+<script src="\script\pixelnoise.js"></script>
+<script>
+$(document).ready(function() {
+	$("#canvas").pixelNoise({ 'size' : 10 , 'updatecells' : 10 });
+	$("#canvas2").pixelNoise({ 'size' : 20, 'updatecells' : 1, 'r' : 0, 'g' : 0  });
+	$("#canvas3").pixelNoise({ 'size' : 30, 'updatecells' : 1, 'b' : 0, 'g' : 0 });
+	$("#canvas4").pixelNoise({ 'size' : 5, 'updatecells' : 100, 'b' : 0, 'r' : 127 });
+});
+</script>
+<style>
+.canvas{
+	margin: 0px;
+	padding: 0px;
+	position: relative;
+}
+</style>
+</head>
+<body>
+<canvas id="canvas" class="canvas" height="600" width="800"></canvas>
+<canvas id="canvas2" class="canvas" height="600" width="400"></canvas>
+<canvas id="canvas3" class="canvas" height="300" width="300"></canvas>
+<canvas id="canvas4" class="canvas" height="300" width="900"></canvas>
+</body>
+</html>
