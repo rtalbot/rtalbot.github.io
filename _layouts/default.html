@@ -4,12 +4,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Blog, Portfolio and Internet Home of Rich Talbot">
+    <meta name="author" content="Richard J Talbot">
 	<title>home</title>
 	<link href="stylesheets/blog.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+	<link href="/stylesheets/site.css" rel="stylesheet" type="text/css">
+	<link href="http://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet" type="text/css">
+	<link href="http://fonts.googleapis.com/css?family=Molengo" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div class="blog-masthead">
@@ -17,19 +20,29 @@
         <nav class="blog-nav">
           <a class="blog-nav-item active" href="#">Home</a>
           <a class="blog-nav-item" href="/proj">Projects</a>
-          <a class="blog-nav-item" href="#">About</a>
+          <a class="blog-nav-item" href="/about">About</a>
         </nav>
       </div>
     </div>
 	<div class="container">
 	 <div class="blog-header">
-        <h1 class="blog-title">Snappy Snapperson's Boastful Boasts</h1>
+        <h1 class="blog-title">yo tengo uno deseo</h1>
         <p class="lead blog-description">Commentary Unsanitized.</p>
       </div>
 
 	<div class="row">
 		<div class="col-sm-9 blog-main">
 			{{ content }}
+		</div>
+		<div class="col-sm-3">
+		<h4>Other Pages</h4>
+		<ul class="list-unstyled">
+		{% for page in site.pages %}
+			{% if page.title != 'index' %}
+			<li><div><a href="{{ page.url }}">{{ page.title }}</a></div></li>
+			{% endif %}
+		{% endfor %}
+		</ul>
 		</div>
 	</div>
 </div>

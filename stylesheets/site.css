@@ -1,0 +1,9 @@
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'PT Sans', Georgia, Times, serif;
+}
+p, div {
+    font-family: 'Molengo', Helvetica, Arial, sans-serif;
+}
+body { 
+    background: url(/imgs/crossword.png) repeat 0 0;
+}
