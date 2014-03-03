@@ -7,3 +7,54 @@ p, div {
 body { 
     background: url(/imgs/crossword.png) repeat 0 0;
 }
+
+div.item{
+	width: auto;
+	padding: 20px 20px 20px 20px;
+	margin-left: 10px;
+	margin-top: 30px;
+	border: solid black 1px;
+}
+
+div .item img {
+	width: 100px;
+	height: 100px;
+	padding: 2px 2px 20px 2px;
+	margin: 5px 10px 5px 10px;
+	float: left;
+}
+
+div .item canvas {
+	width: 100px;
+	height: 100px;
+	padding: 2px 2px 20px 2px;
+	margin: 5px 10px 5px 10px;
+	float: left;
+}
+
+div .itemcontent {	
+	margin: 0px 0px 0px 0px;
+	padding: 2px 0px 2px 25px;
+}
+
+div.item span.header{
+	font-size: 28px;
+	border-bottom: solid white 1px;
+	font-weight: bold;	
+}
+
+div.item p{
+	padding: 5px 0px 5px 0px;
+	font-size: 18px;	
+	line-height: 24px;
+}
+
+div.item span.sub {
+	font-size: 14px;
+	font-weight: italics;
+}
+
+div .item a {
+	text-decoration: none;
+	color: black;
+}
