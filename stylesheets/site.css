@@ -8,18 +8,26 @@ body {
     background: url(/imgs/crossword.png) repeat 0 0;
 }
 
+.transparent {
+	zoom: 1;
+	filter: alpha(opacity=50);
+	opacity: 0.5;
+}
+
 div.item{
-	width: auto;
+	width: 90%;
 	padding: 20px 20px 20px 20px;
 	margin-left: 10px;
 	margin-top: 30px;
 	border: solid black 1px;
+	float: left;
+	background: #F8F8FF;
 }
 
 div .item img {
 	width: 100px;
 	height: 100px;
-	padding: 2px 2px 20px 2px;
+	padding: 2px 2px 2px 2px;
 	margin: 5px 10px 5px 10px;
 	float: left;
 }
@@ -27,19 +35,19 @@ div .item img {
 div .item canvas {
 	width: 100px;
 	height: 100px;
-	padding: 2px 2px 20px 2px;
+	padding: 2px 2px 2px 2px;
 	margin: 5px 10px 5px 10px;
 	float: left;
 }
 
 div .itemcontent {	
 	margin: 0px 0px 0px 0px;
-	padding: 2px 0px 2px 25px;
+	padding: 2px 0px 2px 0px;
 }
 
 div.item span.header{
 	font-size: 28px;
-	border-bottom: solid white 1px;
+	border-bottom: solid black 1px;
 	font-weight: bold;	
 }
 
