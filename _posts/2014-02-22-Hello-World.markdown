@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Hello World
-date: 2014-02-22
+date: 2015-02-14
 ---
 
-This is a post.  Holla Holla yo. 
+This is the personal home page, portfolio and internet home of Rich Talbot.
