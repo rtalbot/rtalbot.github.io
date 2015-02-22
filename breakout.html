@@ -16,6 +16,7 @@ special: <img src="/imgs/breakout.png">
 <script>
 $(document).ready(function() {
 	var ctx = $('#canvas')[0].getContext("2d");
+	$("body").css('overflow', 'hidden');
 	var HEIGHT = ctx.canvas.height = window.innerHeight;
 	var WIDTH = ctx.canvas.width = window.innerWidth;
 	var d = new Device();
