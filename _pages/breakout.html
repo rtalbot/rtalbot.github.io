@@ -1,18 +1,13 @@
 ---
+layout: static
 title: Breakout
-type: project
-href: \breakout.html
-projectheader: Breakout Clone
-description: A clone of the classic paddle game written purely in javascript and using the html5 canvas element.
-special: <img src="/imgs/breakout.png">
+permalink: /breakout
 ---
-<!DOCTYPE html>
-<html>
 <head>
-<script src="script/jquery.js"></script>
-<script src="script/detectdevice.js"></script>
-<script src="script/breakout.js"></script>
-<script src="script/sprites.js"></script>
+<script src="\assets\js\jquery.js"></script>
+<script src="\assets\js\detectdevice.js"></script>
+<script src="\assets\js\breakout.js"></script>
+<script src="\assets\js\sprites.js"></script>
 <script>
 $(document).ready(function() {
 	var ctx = $('#canvas')[0].getContext("2d");
@@ -92,7 +87,5 @@ $(document).ready(function() {
 </head>
 <body>	
   <canvas id="canvas"></canvas>
- 
 </body>
-</html>
 <!--Created and Maintained by Richard Talbot-->

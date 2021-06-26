@@ -1,0 +1,21 @@
+- name: Breakout
+  link: /breakout
+  projectheader: Breakout Clone
+  description: A clone of the classic paddle game written purely in javascript and using the html5 canvas element.
+  special: <img src="/assets/img/breakout.png">
+- name: SpriteTest
+  link: /spritetest
+  projectheader: Sprite Test
+  description: A simple sprite powered by javascript and html5 canvas.
+  special: <img src="/assets/img/spttst.jpg">
+- name: Pixel Noise
+  link: /flashy
+  projectheader: Pixel Noise
+  description: A weird html5 canvas thing as a jQuery plug-in.
+  special: <canvas id="flashycanvas" height="100" width="100"></canvas>
+- name: ANOVA
+  type: draft
+  link: /anova.html
+  projectheader: ANOVA
+  description: A calculator for Analysis of Variance (ANOVA).
+  special: <img src="/assets/img/spttst.jpg">

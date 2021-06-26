@@ -1,0 +1,13 @@
+title: rjtalbot
+email: contact@rjtalbot.com
+description: >
+  Blog, Portfolio and Internet Home of Richard J Talbot.
+baseurl: ''
+url: 'http://localhost:4000'
+twitter_username: rtalbot
+github_username: rtalbot
+sass:
+  sass_dir: _sass
+include: ['_pages']
+kramdown:
+  input: GFM

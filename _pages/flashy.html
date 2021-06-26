@@ -1,17 +1,12 @@
 ---
-title: Pixel Noise
-type: project
-href: \flashy.html
-projectheader: Pixel Noise
-description: A weird html5 canvas thing as a jQuery plug-in.
-special: <canvas id="flashycanvas" height="100" width="100"></canvas>
+layout: static
+title: FLASHY
+permalink: /flashy
 ---
-<!DOCTYPE HTML>
-<html>
 <head>
 <title>FLASHY!</title>
-<script src="\script\jquery.js"></script>
-<script src="\script\pixelnoise.js"></script>
+<script src="\assets\js\jquery.js"></script>
+<script src="\assets\js\pixelnoise.js"></script>
 <script>
 $(document).ready(function() {
 	$("#canvas").pixelNoise({ 'size' : 10 , 'updatecells' : 10 });
@@ -34,4 +29,3 @@ $(document).ready(function() {
 <canvas id="canvas3" class="canvas" height="300" width="300"></canvas>
 <canvas id="canvas4" class="canvas" height="300" width="900"></canvas>
 </body>
-</html>

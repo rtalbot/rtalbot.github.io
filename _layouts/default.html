@@ -1,42 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Blog, Portfolio and Internet Home of Rich Talbot">
-    <meta name="author" content="Richard J Talbot">
-	<title>home</title>
-	<link href="stylesheets/blog.css" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
-	<link href="/stylesheets/site.css" rel="stylesheet" type="text/css">
-	<link href="http://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet" type="text/css">
-	<link href="http://fonts.googleapis.com/css?family=Molengo" rel="stylesheet" type="text/css">
-</head>
-<body>
-	<div class="blog-masthead">
-      <div class="container">
-        <nav class="blog-nav">	
-			<a class="blog-nav-item" href="/proj">Projects</a>
-			<a class="blog-nav-item active" href="#">Home</a>          
-        </nav>
-      </div>
-    </div>
-	<div class="container">
-	 <div class="blog-header">
-        <h1 class="blog-title"></h1>
-        <p class="lead blog-description"></p>
-      </div>
-
-	<div class="row">
-		<div class="col-sm-11 blog-main">
-			{{ content }}
-		</div>
-	</div>
-</div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-</body>
+<html>
+  {% include head.html %}
+  <body>
+    <main class="u-container">
+      {{ content }}
+    </main>
+    {% if jekyll.environment == 'production' %}
+    {% include analytics.html %}
+    {% endif %}
+  </body>
 </html>
-

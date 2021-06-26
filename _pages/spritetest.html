@@ -1,16 +1,11 @@
 ---
-title: SpriteTest
-type: project
-href: \spritetest.html
-projectheader: Sprite Test
-description: A simple sprite powered by javascript and html5 canvas.
-special: <img src="/imgs/spttst.jpg">
+layout: static
+title: Sprite Test
+permalink: /spritetest
 ---
-<!DOCTYPE html>
-<html>
 <head>
-<script src="script/jquery.js"></script>
-<script src="script/sprites.js"></script>
+<script src="assets/js/jquery.js"></script>
+<script src="assets/js/sprites.js"></script>
 <script>
 var Sprite = function(name, animations, image, x, y, curr) {
 	this._name = name;
@@ -124,10 +119,10 @@ $(document).ready(function() {
 	], marioSprites);
 	
 	var baddies = new Image();
-	baddies.src = 'imgs/baddies.png';
+	baddies.src = 'assets/img/baddies.png';
 	
 	var marioImg = new Image();
-	marioImg.src = 'imgs/mario3.gif';
+	marioImg.src = 'assets/img/mario3.gif';
  
 	var shyguy = new Sprite('shyguy',  
 		[{ name: 'walk_left', animation: sgrwalk },
@@ -210,5 +205,4 @@ $(document).ready(function() {
   <canvas id="canvas" style="background-color:#82CAFA"></canvas>
  
 </body>
-</html>
 <!--Created and Maintained by Richard Talbot-->
