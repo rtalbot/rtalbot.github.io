@@ -24,6 +24,7 @@ html {
 body {
     @include ff--sans-serif(400);
     -webkit-font-smoothing: antialiased;
+    background-color: $c-body_bg;
 }
 
 article,
@@ -91,7 +92,7 @@ svg {
 /* Links */
 
 a {
-    color: $c-accent__blue;
+    color: $c-link;
     background-color: transparent;
     text-decoration: none;
 
@@ -109,7 +110,7 @@ a {
       height: 0%;
       left: 0;
       bottom: 0;
-      background-color: $c-accent__blue;
+      background-color: $c-hover-after;
       transition: all ease 0.3s;
     }
 
@@ -129,7 +130,7 @@ a.no-hov {
 	}
 	
 	&:hover {
-		color: $c-accent__darkblue
+		color: $c-link-hover
 	}
 }
 

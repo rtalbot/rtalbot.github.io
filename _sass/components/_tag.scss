@@ -14,9 +14,9 @@
 }
 
 .c-tag {
-  background: #eee;
+  background: $c-tag-bg;
   border-radius: 3px 0 0 3px;
-  color: #999;
+  color: $c-tag-text;
   display: inline-block;
   height: 26px;
   line-height: 26px;
@@ -28,7 +28,7 @@
 }
 
 .c-tag::before {
-  background: #fff;
+  background: $c-tag-before;
   border-radius: 10px;
   box-shadow: inset 0 1px rgba(0, 0, 0, 0.25);
   content: '';
@@ -40,9 +40,9 @@
 }
 
 .c-tag::after {
-  background: #fff;
+  background: $c-body_bg;
   border-bottom: 13px solid transparent;
-  border-left: 10px solid #eee;
+  border-left: 10px solid $c-tag-bg;
   border-top: 13px solid transparent;
   content: '';
   position: absolute;
@@ -51,12 +51,12 @@
 }
 
 .c-tag:hover {
-  background-color: $c-accent__blue;
-  color: white;
+  background-color: $c-tag-hover;
+  color: $c-tag-hover-text;
 }
 
 .c-tag:hover::after {
-   border-left-color: $c-accent__blue;
+   border-left-color: $c-tag-hover;
 }
 
 .c-c-tag {

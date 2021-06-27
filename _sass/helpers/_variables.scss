@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Variabeles
+   Variables
    ========================================================================== */
 
 $c-base__03: #0D2B35;
@@ -14,6 +14,22 @@ $c-base__3: #FCF5E4;
 $c-accent__blue: #0067FB;
 $c-accent__darkblue: #0029F9;
 $c-accent__green: #8BE367;
+$c-accent__pink: #ff597d;
+$c-accent__lime_green: #00FF00;
+
+$c-base__dark_bg: #131418;
+
+$c-body_bg: $c-base__dark_bg;
+
+$c-link-hover: $c-accent__lime_green;
+$c-link: $c-accent__pink;
+$c-hover-after: $c-accent__lime_green;
+
+$c-tag-bg: $c-base__02;
+$c-tag-before: $c-base__00;
+$c-tag-text: $c-base__3;
+$c-tag-hover: $c-accent__lime_green;
+$c-tag-hover-text: $c-base__01;
 
 // Breakpoints
 $bp__sm: 45rem; // 450px
