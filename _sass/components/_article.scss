@@ -32,18 +32,18 @@
 
 .c-article__title {
     @include fs--heading-1;
-    color: $c-base__02;
+    color: var(--c-text-primary);
 }
 
 .c-article__time {
     @include fs--body;
-    color: $c-base__01;
+    color: var(--c-text-secondary);
 }
 
 .c-article__main {
     margin-bottom: 5rem; // 50px
     @include fs--body;
-    color: $c-base__01;
+    color: var(--c-text-primary);
 
     > * {
         margin-bottom: 1.8rem; // 18px
@@ -66,7 +66,7 @@
     }
 
     strong {
-        color: $c-base__02;
+        color: var(--c-text-primary);
         font-weight: 700;
     }
 
