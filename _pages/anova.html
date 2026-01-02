@@ -163,7 +163,7 @@ body {
 }
 
 .btn-primary:hover {
-    background: #ff7a97;
+    background: var(--c-link-hover);
     transform: translateY(-2px);
 }
 
@@ -173,7 +173,8 @@ body {
 }
 
 .btn-secondary:hover {
-    background: #2680fb;
+    background: var(--c-accent-blue);
+    opacity: 0.85;
     transform: translateY(-2px);
 }
 
@@ -185,7 +186,7 @@ body {
 
 .btn-outline:hover {
     border-color: var(--primary-color);
-    background: rgba(255, 89, 125, 0.1);
+    background: var(--card-bg);
 }
 
 .results-grid {
@@ -286,8 +287,8 @@ body {
     padding: 1.5rem;
     border-radius: 4px;
     margin-bottom: 1rem;
-    font-size: 1.6px;
-    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    line-height: 1.6;
 }
 
 .alert-info {
@@ -343,23 +344,23 @@ body {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
-}1rem 1.5rem;
+}
+
+.sample-menu button {
+    display: block;
+    width: 100%;
+    padding: 1rem 1.5rem;
     border: none;
     background: transparent;
     color: var(--text-primary);
     text-align: left;
     cursor: pointer;
-    font-size: 1.6
-    background: transparent;
-    color: var(--text-primary);
-    text-align: left;
-    cursor: pointer;
-    font-size: 0.95rem;
+    font-size: 1.6rem;
     transition: all 0.2s;
 }
 
 .sample-menu button:hover {
-    background: rgba(255, 89, 125, 0.1);
+    background: var(--c-base-02);
     color: var(--primary-color);
 }
 
@@ -515,6 +516,12 @@ body {
 
         <div class="card">
             <h2>Visualization</h2>
+            <div class="alert alert-info" style="font-size: 1.5rem; margin-bottom: 1.5rem;">
+                <strong>📊 Group Comparison Chart:</strong> This bar chart shows the mean (average) value for each group.
+                <strong>Taller bars</strong> indicate higher average values.
+                <strong>Hover over each bar</strong> to see detailed statistics including the mean, median, range, and quartiles (Q1, Q3).
+                The differences in bar heights help visualize whether groups are similar or different.
+            </div>
             <canvas id="visualization"></canvas>
         </div>
 
@@ -526,11 +533,12 @@ body {
                 <p>
                     Measures the total variation in the data. It's partitioned into:
                 </p>
-                <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
+                <ul style="color: var(--text-secondary); margin-left: 1.5rem; font-size: 1.6rem;">
                     <li><strong>SS Between:</strong> Variation due to differences between group means</li>
                     <li><strong>SS Within:</strong> Variation within each group (error)</li>
                 </ul>
                 <div class="formula">SS_total = SS_between + SS_within</div>
+                <div id="ssActual" class="formula" style="background: rgba(139, 227, 103, 0.1); display: none;"></div>
             </div>
 
             <div class="explanation-box">
@@ -538,10 +546,11 @@ body {
                 <p>
                     Number of independent values that can vary:
                 </p>
-                <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
+                <ul style="color: var(--text-secondary); margin-left: 1.5rem; font-size: 1.6rem;">
                     <li><strong>df_between:</strong> Number of groups - 1</li>
                     <li><strong>df_within:</strong> Total observations - Number of groups</li>
                 </ul>
+                <div id="dfActual" class="formula" style="background: rgba(139, 227, 103, 0.1); display: none;"></div>
             </div>
 
             <div class="explanation-box">
@@ -550,6 +559,7 @@ body {
                     Average variance, calculated by dividing Sum of Squares by degrees of freedom:
                 </p>
                 <div class="formula">MS = SS / df</div>
+                <div id="msActual" class="formula" style="background: rgba(139, 227, 103, 0.1); display: none;"></div>
             </div>
 
             <div class="explanation-box">
@@ -558,7 +568,8 @@ body {
                     The test statistic that compares the variance between groups to the variance within groups:
                 </p>
                 <div class="formula">F = MS_between / MS_within</div>
-                <p style="margin-top: 0.5rem;">
+                <div id="fActual" class="formula" style="background: rgba(139, 227, 103, 0.1); display: none;"></div>
+                <p style="margin-top: 0.5rem; font-size: 1.6rem;">
                     A larger F-value indicates that the group means are more different relative to the variation within groups.
                 </p>
             </div>
@@ -569,7 +580,7 @@ body {
                     The probability of observing an F-statistic as extreme as (or more extreme than) the one calculated, 
                     assuming the null hypothesis is true (that all group means are equal).
                 </p>
-                <ul style="color: var(--text-secondary); margin-left: 1.5rem; margin-top: 0.5rem;">
+                <ul style="color: var(--text-secondary); margin-left: 1.5rem; margin-top: 0.5rem; font-size: 1.6rem;">
                     <li>p < 0.05: Strong evidence against null hypothesis (groups likely differ)</li>
                     <li>p ≥ 0.05: Insufficient evidence to reject null hypothesis (groups may be similar)</li>
                 </ul>
@@ -959,6 +970,19 @@ function displayResults(results) {
     // Create visualization
     createVisualization(results.data, results.groupMeans, results.grandMean);
     
+    // Populate actual calculation values
+    document.getElementById('ssActual').style.display = 'block';
+    document.getElementById('ssActual').innerHTML = `${results.ssT.toFixed(4)} = ${results.ssB.toFixed(4)} + ${results.ssW.toFixed(4)}`;
+    
+    document.getElementById('dfActual').style.display = 'block';
+    document.getElementById('dfActual').innerHTML = `df_between = ${results.dfB}, df_within = ${results.dfW}`;
+    
+    document.getElementById('msActual').style.display = 'block';
+    document.getElementById('msActual').innerHTML = `MS_between = ${results.ssB.toFixed(4)} / ${results.dfB} = ${results.msB.toFixed(4)}<br>MS_within = ${results.ssW.toFixed(4)} / ${results.dfW} = ${results.msW.toFixed(4)}`;
+    
+    document.getElementById('fActual').style.display = 'block';
+    document.getElementById('fActual').innerHTML = `F = ${results.msB.toFixed(4)} / ${results.msW.toFixed(4)} = ${results.fStat.toFixed(4)}`;
+    
     // Scroll to results
     document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
 }
@@ -979,45 +1003,30 @@ function createVisualization(data, groupMeans, grandMean) {
         'rgba(0, 255, 255, 0.7)'
     ];
     
-    const boxplotData = data.map((group, i) => {
+    // Calculate quartiles and ranges for each group
+    const groupStats = data.map((group, i) => {
         const sorted = [...group].sort((a, b) => a - b);
-        const q1 = sorted[Math.floor(sorted.length * 0.25)];
-        const median = sorted[Math.floor(sorted.length * 0.5)];
-        const q3 = sorted[Math.floor(sorted.length * 0.75)];
-        const min = sorted[0];
-        const max = sorted[sorted.length - 1];
-        
+        const len = sorted.length;
         return {
-            label: `Group ${i + 1}`,
-            data: group,
-            backgroundColor: colors[i],
-            borderColor: colors[i].replace('0.7', '1'),
-            borderWidth: 2
+            min: sorted[0],
+            q1: sorted[Math.floor(len * 0.25)],
+            median: sorted[Math.floor(len * 0.5)],
+            q3: sorted[Math.floor(len * 0.75)],
+            max: sorted[len - 1],
+            mean: groupMeans[i]
         };
     });
     
     chart = new Chart(ctx, {
-        type: 'boxplot',
+        type: 'bar',
         data: {
             labels: data.map((_, i) => `Group ${i + 1}`),
             datasets: [{
-                label: 'Data Distribution',
-                data: data.map(group => {
-                    const sorted = [...group].sort((a, b) => a - b);
-                    return {
-                        min: sorted[0],
-                        q1: sorted[Math.floor(sorted.length * 0.25)],
-                        median: sorted[Math.floor(sorted.length * 0.5)],
-                        q3: sorted[Math.floor(sorted.length * 0.75)],
-                        max: sorted[sorted.length - 1],
-                        outliers: []
-                    };
-                }),
+                label: 'Group Means',
+                data: groupMeans,
                 backgroundColor: colors.slice(0, data.length),
                 borderColor: colors.slice(0, data.length).map(c => c.replace('0.7', '1')),
-                borderWidth: 2,
-                outlierBackgroundColor: 'rgba(255, 89, 125, 0.3)',
-                outlierBorderColor: 'rgba(255, 89, 125, 1)'
+                borderWidth: 2
             }]
         },
         options: {
@@ -1027,23 +1036,34 @@ function createVisualization(data, groupMeans, grandMean) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Box Plot Comparison',
-                    color: '#FCF5E4',
-                    font: { size: 16 }
+                    text: 'Group Means Comparison',
+                    color: 'var(--c-text-primary)',
+                    font: { size: 18, weight: 'bold' }
                 },
                 legend: {
                     display: false
                 },
                 tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: 'rgba(255, 255, 255, 0.3)',
+                    borderWidth: 1,
+                    padding: 12,
+                    displayColors: false,
                     callbacks: {
+                        title: function(context) {
+                            return context[0].label;
+                        },
                         label: function(context) {
-                            const d = context.parsed;
+                            const i = context.dataIndex;
+                            const stats = groupStats[i];
                             return [
-                                `Min: ${d.min.toFixed(2)}`,
-                                `Q1: ${d.q1.toFixed(2)}`,
-                                `Median: ${d.median.toFixed(2)}`,
-                                `Q3: ${d.q3.toFixed(2)}`,
-                                `Max: ${d.max.toFixed(2)}`
+                                `Mean: ${stats.mean.toFixed(2)}`,
+                                `Median: ${stats.median.toFixed(2)}`,
+                                `Range: ${stats.min.toFixed(2)} - ${stats.max.toFixed(2)}`,
+                                `Q1: ${stats.q1.toFixed(2)}`,
+                                `Q3: ${stats.q3.toFixed(2)}`
                             ];
                         }
                     }
@@ -1052,19 +1072,33 @@ function createVisualization(data, groupMeans, grandMean) {
             scales: {
                 y: {
                     beginAtZero: false,
+                    title: {
+                        display: true,
+                        text: 'Values',
+                        color: 'var(--c-text-secondary)',
+                        font: { size: 14 }
+                    },
                     grid: {
                         color: 'rgba(255, 255, 255, 0.1)'
                     },
                     ticks: {
-                        color: '#869395'
+                        color: 'var(--c-text-secondary)',
+                        font: { size: 12 }
                     }
                 },
                 x: {
+                    title: {
+                        display: true,
+                        text: 'Groups',
+                        color: 'var(--c-text-secondary)',
+                        font: { size: 14 }
+                    },
                     grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
+                        display: false
                     },
                     ticks: {
-                        color: '#869395'
+                        color: 'var(--c-text-secondary)',
+                        font: { size: 12 }
                     }
                 }
             }
@@ -1072,33 +1106,4 @@ function createVisualization(data, groupMeans, grandMean) {
     });
 }
 
-// Register boxplot controller
-Chart.register({
-    id: 'boxplot',
-    beforeInit(chart) {
-        const original = chart.config.type;
-        if (original !== 'boxplot') return;
-        chart.config.type = 'bar';
-        
-        const dataset = chart.config.data.datasets[0];
-        const colors = dataset.backgroundColor;
-        
-        chart.config.data.datasets = chart.config.data.labels.map((label, i) => {
-            const boxData = dataset.data[i];
-            return {
-                label: label,
-                data: [boxData.median],
-                backgroundColor: colors[i],
-                borderColor: dataset.borderColor[i],
-                borderWidth: 2,
-                errorBars: {
-                    [label]: {
-                        plus: boxData.max - boxData.median,
-                        minus: boxData.median - boxData.min
-                    }
-                }
-            };
-        });
-    }
-});
 </script>
