@@ -4,15 +4,26 @@ title: ANOVA Calculator
 permalink: /anova
 ---
 <style>
-:root {
-    --primary-color: #ff597d;
-    --secondary-color: #0067FB;
-    --background: #131418;
-    --card-bg: #1a1d23;
-    --text-primary: #FCF5E4;
-    --text-secondary: #869395;
-    --border: #2a2d35;
-    --success: #8BE367;
+html {
+    font-size: 62.5%;
+}
+
+body {
+    background-color: var(--c-body-bg);
+    min-height: 100vh;
+    font-size: 1.6rem;
+    line-height: 1.6;
+}
+
+.anova-page {
+    --primary-color: var(--c-link);
+    --secondary-color: var(--c-accent-blue);
+    --background: var(--c-body-bg);
+    --card-bg: var(--c-base-02);
+    --text-primary: var(--c-base-3);
+    --text-secondary: var(--c-base-0);
+    --border: var(--c-base-01);
+    --success: var(--c-accent-green);
     --warning: #ffa500;
 }
 
@@ -21,11 +32,13 @@ permalink: /anova
 }
 
 .anova-container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 2rem;
+    padding-top: 5rem;
     color: var(--text-primary);
     font-family: 'Roboto', sans-serif;
+    font-size: 1.6rem;
 }
 
 .anova-header {
@@ -36,20 +49,20 @@ permalink: /anova
 .anova-header h1 {
     color: var(--primary-color);
     margin-bottom: 1rem;
-    font-size: 2.5rem;
+    font-size: 3.2rem;
 }
 
 .anova-header p {
     color: var(--text-secondary);
-    font-size: 1.1rem;
-    max-width: 800px;
+    font-size: 1.8rem;
+    max-width: 900px;
     margin: 0 auto;
 }
 
 .card {
     background: var(--card-bg);
     border-radius: 8px;
-    padding: 2rem;
+    padding: 2.5rem;
     margin-bottom: 2rem;
     border: 1px solid var(--border);
 }
@@ -57,29 +70,30 @@ permalink: /anova
 .card h2 {
     color: var(--primary-color);
     margin-bottom: 1.5rem;
-    font-size: 1.5rem;
+    font-size: 2.4rem;
 }
 
 .card h3 {
     color: var(--secondary-color);
     margin-bottom: 1rem;
-    font-size: 1.2rem;
+    font-size: 1.8rem;
 }
 
 .assumptions {
     background: rgba(255, 89, 125, 0.05);
     border-left: 4px solid var(--primary-color);
-    padding: 1rem;
+    padding: 1.5rem;
     margin-bottom: 2rem;
 }
 
 .assumptions ul {
     margin: 0.5rem 0 0 1.5rem;
     color: var(--text-secondary);
+    font-size: 1.6rem;
 }
 
 .assumptions li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
 }
 
 .groups-container {
@@ -98,8 +112,7 @@ permalink: /anova
 
 .group h4 {
     color: var(--secondary-color);
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
+    margin-botto.6rem;
 }
 
 .group textarea {
@@ -109,9 +122,9 @@ permalink: /anova
     color: var(--text-primary);
     border: 1px solid var(--border);
     border-radius: 4px;
-    padding: 0.5rem;
+    padding: 0.8rem;
     font-family: 'Roboto Mono', monospace;
-    font-size: 0.9rem;
+    font-size: 1.5rem;
     resize: vertical;
 }
 
@@ -122,6 +135,7 @@ permalink: /anova
 
 .group-stats {
     margin-top: 0.5rem;
+    font-size: 1.4rem;
     font-size: 0.85rem;
     color: var(--text-secondary);
 }
@@ -134,10 +148,10 @@ permalink: /anova
 }
 
 .btn {
-    padding: 0.75rem 1.5rem;
+    padding: 1rem 2rem;
     border: none;
     border-radius: 4px;
-    font-size: 1rem;
+    font-size: 1.6rem;
     cursor: pointer;
     transition: all 0.2s;
     font-weight: 500;
@@ -190,19 +204,19 @@ permalink: /anova
 
 .stat-box .label {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 1.5rem;
     margin-bottom: 0.5rem;
 }
 
 .stat-box .value {
     color: var(--text-primary);
-    font-size: 1.5rem;
+    font-size: 2.4rem;
     font-weight: bold;
 }
 
 .stat-box .interpretation {
     color: var(--text-secondary);
-    font-size: 0.85rem;
+    font-size: 1.4rem;
     margin-top: 0.5rem;
 }
 
@@ -214,9 +228,10 @@ permalink: /anova
 
 .anova-table th,
 .anova-table td {
-    padding: 0.75rem;
+    padding: 1rem;
     text-align: left;
     border-bottom: 1px solid var(--border);
+    font-size: 1.5rem;
 }
 
 .anova-table th {
@@ -247,27 +262,31 @@ permalink: /anova
 
 .explanation-box h4 {
     color: var(--success);
-    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
 }
 
 .explanation-box p {
     color: var(--text-secondary);
     line-height: 1.6;
+    font-size: 1.6rem;
 }
 
 .formula {
     background: var(--background);
-    padding: 1rem;
+    padding: 1.5rem;
     border-radius: 4px;
     font-family: 'Roboto Mono', monospace;
     overflow-x: auto;
     margin: 1rem 0;
     color: var(--text-primary);
+    font-size: 1.5rem;
 }
 
 .alert {
-    padding: 1rem;
+    padding: 1.5rem;
     border-radius: 4px;
+    margin-bottom: 1rem;
+    font-size: 1.6px;
     margin-bottom: 1rem;
 }
 
@@ -299,6 +318,65 @@ permalink: /anova
     display: none;
 }
 
+.sample-data-dropdown {
+    position: relative;
+}
+
+.sample-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    min-width: 250px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+
+.sample-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}1rem 1.5rem;
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    text-align: left;
+    cursor: pointer;
+    font-size: 1.6
+    background: transparent;
+    color: var(--text-primary);
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.sample-menu button:hover {
+    background: rgba(255, 89, 125, 0.1);
+    color: var(--primary-color);
+}
+
+.dataset-info {
+    background: rgba(0, 103, 251, 0.1);
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--secondary-color);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+.dataset-info strong {
+    color: var(--secondary-color);
+}
+
 @media (max-width: 768px) {
     .anova-container {
         padding: 1rem;
@@ -311,10 +389,20 @@ permalink: /anova
     .results-grid {
         grid-template-columns: 1fr;
     }
+    
+    .controls {
+        flex-direction: column;
+    }
+    
+    .sample-menu {
+        left: 0;
+        right: 0;
+        min-width: 100%;
+    }
 }
 </style>
 
-<div class="anova-container">
+<div class="anova-container anova-page">
     <div class="anova-header">
         <h1>ANOVA Calculator & Visualizer</h1>
         <p>A comprehensive tool for one-way Analysis of Variance (ANOVA) with step-by-step explanations and interactive visualizations</p>
@@ -347,7 +435,15 @@ permalink: /anova
         <div class="controls">
             <button class="btn btn-secondary" onclick="addGroup()">+ Add Group</button>
             <button class="btn btn-outline" onclick="removeGroup()">- Remove Group</button>
-            <button class="btn btn-outline" onclick="loadSampleData()">Load Sample Data</button>
+            <div class="sample-data-dropdown">
+                <button class="btn btn-outline" onclick="toggleSampleMenu()">📊 Sample Data ▾</button>
+                <div class="sample-menu" id="sampleMenu">
+                    <button onclick="loadSampleData('coffee')">☕ Coffee Brewing Methods</button>
+                    <button onclick="loadSampleData('plants')">🌱 Plant Growth by Fertilizer</button>
+                    <button onclick="loadSampleData('exercise')">🏃 Exercise Program Results</button>
+                    <button onclick="loadSampleData('teaching')">📚 Teaching Methods</button>
+                </div>
+            </div>
             <button class="btn btn-outline" onclick="clearAll()">Clear All</button>
         </div>
 
@@ -483,9 +579,65 @@ permalink: /anova
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ '/assets/js/color-scheme.js' | prepend: site.baseurl }}"></script>
 <script>
 let groupCount = 3;
 let chart = null;
+
+const sampleDatasets = {
+    coffee: {
+        name: 'Coffee Brewing Methods',
+        description: 'Taste scores (0-100) for coffee brewed using different methods',
+        groups: [
+            { name: 'French Press', data: [78, 82, 80, 85, 79, 83, 81] },
+            { name: 'Pour Over', data: [85, 88, 86, 90, 87, 89, 88] },
+            { name: 'Drip Machine', data: [72, 75, 71, 76, 73, 74, 72] }
+        ]
+    },
+    plants: {
+        name: 'Plant Growth by Fertilizer Type',
+        description: 'Plant height (cm) after 30 days with different fertilizers',
+        groups: [
+            { name: 'Organic', data: [15, 18, 16, 19, 17, 16, 18, 17] },
+            { name: 'Chemical', data: [22, 25, 23, 26, 24, 25, 23, 24] },
+            { name: 'Control (no fertilizer)', data: [12, 14, 13, 15, 12, 13, 14] },
+            { name: 'Slow-Release', data: [20, 21, 19, 22, 20, 21, 20] }
+        ]
+    },
+    exercise: {
+        name: 'Exercise Program Results',
+        description: 'Weight loss (kg) after 8 weeks of different exercise programs',
+        groups: [
+            { name: 'HIIT', data: [5.2, 6.1, 5.8, 6.5, 5.5, 6.2, 5.9] },
+            { name: 'Cardio', data: [4.1, 4.8, 4.5, 5.0, 4.3, 4.7, 4.6] },
+            { name: 'Strength Training', data: [3.5, 4.2, 3.8, 4.5, 3.9, 4.0, 3.7] },
+            { name: 'Yoga', data: [2.8, 3.2, 3.0, 3.5, 2.9, 3.1, 3.0] }
+        ]
+    },
+    teaching: {
+        name: 'Teaching Methods',
+        description: 'Test scores (%) for students taught with different methods',
+        groups: [
+            { name: 'Interactive', data: [85, 88, 92, 87, 90, 89, 86, 91] },
+            { name: 'Lecture Only', data: [75, 78, 76, 80, 77, 79, 76] },
+            { name: 'Hybrid', data: [82, 84, 83, 86, 85, 84, 83, 85] }
+        ]
+    }
+};
+
+function toggleSampleMenu() {
+    const menu = document.getElementById('sampleMenu');
+    menu.classList.toggle('show');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    const dropdown = document.querySelector('.sample-data-dropdown');
+    const menu = document.getElementById('sampleMenu');
+    if (dropdown && !dropdown.contains(event.target)) {
+        menu.classList.remove('show');
+    }
+});
 
 function addGroup() {
     if (groupCount >= 6) {
@@ -518,20 +670,41 @@ function removeGroup() {
     }
 }
 
-function loadSampleData() {
-    const sampleData = [
-        [23, 25, 27, 24, 26, 28],
-        [30, 32, 31, 33, 29, 35],
-        [20, 22, 21, 23, 19, 24]
-    ];
+function loadSampleData(datasetName) {
+    const dataset = sampleDatasets[datasetName];
+    if (!dataset) return;
     
-    const groups = document.querySelectorAll('.group');
-    groups.forEach((group, index) => {
-        if (index < sampleData.length) {
-            const textarea = group.querySelector('textarea');
-            textarea.value = sampleData[index].join('\n');
-            updateGroupStats(index + 1);
-        }
+    // Close the dropdown
+    document.getElementById('sampleMenu').classList.remove('show');
+    
+    // Clear existing groups and create new ones
+    const container = document.getElementById('groupsContainer');
+    container.innerHTML = '';
+    groupCount = dataset.groups.length;
+    
+    // Show info about the dataset
+    const header = document.querySelector('.card h2');
+    const existingInfo = document.querySelector('.dataset-info');
+    if (existingInfo) existingInfo.remove();
+    
+    const info = document.createElement('div');
+    info.className = 'dataset-info';
+    info.style.cssText = 'background: rgba(0, 103, 251, 0.1); padding: 1rem; border-radius: 4px; margin-bottom: 1rem; border-left: 4px solid var(--secondary-color);';
+    info.innerHTML = `<strong>${dataset.name}:</strong> ${dataset.description}`;
+    header.parentNode.insertBefore(info, header.nextSibling);
+    
+    // Create groups with data
+    dataset.groups.forEach((group, index) => {
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'group';
+        groupDiv.setAttribute('data-group', index + 1);
+        groupDiv.innerHTML = `
+            <h4>${group.name}</h4>
+            <textarea placeholder="Enter values (one per line)" oninput="updateGroupStats(${index + 1})">${group.data.join('\n')}</textarea>
+            <div class="group-stats" id="stats-${index + 1}"></div>
+        `;
+        container.appendChild(groupDiv);
+        updateGroupStats(index + 1);
     });
 }
 
@@ -540,6 +713,8 @@ function clearAll() {
     textareas.forEach(textarea => textarea.value = '');
     const stats = document.querySelectorAll('.group-stats');
     stats.forEach(stat => stat.innerHTML = '');
+    const datasetInfo = document.querySelector('.dataset-info');
+    if (datasetInfo) datasetInfo.remove();
     document.getElementById('resultsSection').classList.add('hidden');
 }
 

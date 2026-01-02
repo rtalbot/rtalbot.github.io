@@ -5,7 +5,7 @@
 .color-scheme-picker {
   position: fixed;
   top: 20px;
-  left: 20px;
+  right: 20px;
   z-index: 1000;
 }
 
@@ -26,7 +26,7 @@
 
   &:hover {
     transform: scale(1.05);
-    border-color: var(--c-accent-pink);
+    border-color: var(--c-link);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   }
 
@@ -39,7 +39,7 @@
 .color-scheme-menu {
   position: absolute;
   top: 50px;
-  left: 0;
+  right: 0;
   min-width: 200px;
   background: var(--c-body-bg);
   border: 2px solid var(--c-border);
@@ -76,17 +76,17 @@
 
   &:hover {
     background: var(--c-base-02);
-    color: var(--c-accent-pink);
+    color: var(--c-link);
   }
 
   &.is-active {
     background: var(--c-base-02);
-    color: var(--c-accent-pink);
+    color: var(--c-link);
     font-weight: 600;
 
     .theme-indicator {
-      background: var(--c-accent-pink);
-      box-shadow: 0 0 8px var(--c-accent-pink);
+      background: var(--c-link);
+      box-shadow: 0 0 8px var(--c-link);
     }
   }
 }
@@ -105,7 +105,7 @@
 @media (max-width: 768px) {
   .color-scheme-picker {
     top: 10px;
-    left: 10px;
+    right: 10px;
   }
 
   .color-scheme-toggle {
@@ -120,6 +120,7 @@
 
   .color-scheme-menu {
     top: 46px;
+    right: 0;
     min-width: 180px;
   }
 

@@ -1,0 +1,60 @@
+/* ==========================================================================
+   Static Page Navigation Component
+   ========================================================================== */
+
+.static-home-link {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 999;
+  
+  a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--c-body-bg);
+    color: var(--c-text-primary);
+    border: 2px solid var(--c-border);
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    
+    &:hover {
+      border-color: var(--c-link);
+      background: var(--c-link);
+      color: var(--c-body-bg);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      
+      svg {
+        stroke: var(--c-body-bg);
+      }
+    }
+    
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .static-home-link {
+    top: 10px;
+    left: 10px;
+    
+    a {
+      padding: 6px 12px;
+      font-size: 13px;
+      
+      svg {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+}

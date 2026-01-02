@@ -13,12 +13,11 @@ After refreshing this site from its five-year slumber, I wanted to immediately p
 
 Analysis of Variance (ANOVA) is a fundamental statistical test used across sciences, from biology to psychology to business analytics. It answers a deceptively simple question: **Are the means of three or more groups significantly different?**
 
-While the concept is straightforward, the calculations involve:
-- Sum of squares (between groups, within groups, total)
-- Degrees of freedom
-- Mean squares
-- F-statistics
-- p-value calculation from the F-distribution
+While the concept is straightforward, the calculations involve multiple steps:
+- Calculating how much groups differ from each other
+- Calculating how much variation exists within each group
+- Comparing these two types of variation
+- Determining if the differences are "real" or just random chance
 
 The challenge wasn't just implementing the math—it was making it **understandable and interactive**.
 
@@ -52,37 +51,41 @@ This isn't a toy. It implements proper statistical methods:
 
 ### The Math
 
-The core ANOVA calculation breaks down variance into components:
+The core ANOVA calculation compares two types of variation:
 
 ```
-F = MS_between / MS_within
+F = Variation Between Groups / Variation Within Groups
 ```
 
 Where:
-- **MS_between** measures variance between group means
-- **MS_within** measures variance within each group
+- **Variation Between Groups** measures how different the group averages are from each other
+- **Variation Within Groups** measures how spread out the data is within each group
 
 A large F-statistic suggests the groups are genuinely different, not just random variation.
 
-The tricky part? Calculating the p-value. This requires evaluating the F-distribution's cumulative distribution function (CDF), which involves incomplete beta functions and gamma functions. I implemented approximations that are accurate enough for practical use:
-
-```javascript
-function fCDF(f, df1, df2) {
-    const x = df2 / (df2 + df1 * f);
-    return 1 - incompleteBeta(x, df2/2, df1/2);
-}
-```
+The trickiest part? Calculating the p-value. This tells us the probability that we'd see these differences just by chance. I had to implement some mathematical approximations to make this work, but the details aren't as important as the result: accurate p-values that tell you whether your results are statistically significant.
 
 ### The Interface
 
 Built with vanilla JavaScript (no framework bloat), Chart.js for visualization, and CSS custom properties for theming. The UI is organized into clear sections:
 
 1. **Introduction** - What is ANOVA? What are the assumptions?
-2. **Data Entry** - Dynamic groups with real-time statistics
+2. **Data Entry** - Dynamic groups with real-time statistics and relatable sample datasets
 3. **Results** - F-statistic, p-value, significance interpretation
 4. **ANOVA Table** - Complete breakdown of calculations
 5. **Visualization** - Box plots showing data distribution
 6. **Educational Content** - Deep dive into each component
+
+### Sample Datasets
+
+One thing I learned: abstract numbers are boring. So I added real-world examples:
+
+- **Coffee brewing methods** - Compare taste scores across different brewing techniques
+- **Plant growth** - See how different fertilizers affect plant height
+- **Exercise programs** - Compare weight loss across different workout types  
+- **Teaching methods** - Evaluate which teaching approach works best
+
+These examples make it easier to understand what ANOVA is actually measuring. When you see "Coffee brewing methods," you can immediately visualize why pour-over might score differently than French press.
 
 ### Real-Time Validation
 
@@ -95,35 +98,36 @@ This immediate feedback helps catch data entry errors and understand your data b
 
 ## What I Learned
 
-### 1. **Statistical Computing is Hard**
-Implementing statistical distributions from scratch reminded me why libraries like SciPy and R exist. The math isn't conceptually difficult, but the numerical methods require careful handling of edge cases and precision issues.
+### 1. **Statistical Computing is Tricky**
+Implementing statistics from scratch reminded me why professional libraries exist. The concepts make sense on paper, but getting the computer to calculate them accurately requires careful attention to detail and handling edge cases.
 
-### 2. **Education Through Interaction**
-Seeing the box plots update and watching how different data patterns affect the F-statistic is far more intuitive than reading a textbook. Interactive tools can make abstract concepts concrete.
+### 2. **Real Examples Matter**
+Seeing the box plots update with actual scenarios (like coffee brewing!) makes abstract concepts click. Interactive tools with relatable examples are way better than textbook explanations.
 
-### 3. **Design Matters for Technical Tools**
-A well-designed calculator doesn't just look nice—it guides users toward correct usage. Clear visual hierarchy, helpful hints, and progressive disclosure make complex tools accessible.
+### 3. **Design Makes Statistics Less Scary**
+A well-designed calculator doesn't just look nice—it guides users toward understanding. Clear labels, helpful hints, and smooth animations make complex statistics feel approachable instead of intimidating.
 
 ## Use Cases
 
 This calculator is useful for:
 
-**Students** learning ANOVA for the first time—the explanations walk through each step
+**Students** learning ANOVA for the first time—the sample datasets and explanations walk through each step
 
 **Researchers** needing quick analysis—load your data, get results immediately
 
-**Teachers** demonstrating concepts—use sample data to show how ANOVA responds to different patterns
+**Teachers** demonstrating concepts—use the built-in examples to show how ANOVA responds to different patterns
 
 **Anyone** checking homework or verifying results from other software
 
 ## Try It
 
-The calculator is live at [/anova](/anova). Try the sample data to see how it works, or load your own data.
+The calculator is live at [/anova](/anova). Try one of the sample datasets (coffee brewing is my favorite!) to see how it works, or load your own data.
 
 Some interesting things to explore:
+- Compare the coffee brewing methods - why is the p-value so low?
 - What happens when group means are very similar?
-- How does increasing variance within groups affect the results?
-- What's the minimum sample size needed for reliable results?
+- How does increasing variation within groups affect the results?
+- Which exercise program is most effective, statistically speaking?
 
 ## Future Enhancements
 
@@ -146,11 +150,11 @@ More projects like this are coming. Statistical calculators, data visualizations
 For the curious:
 - **JavaScript** - Vanilla, no frameworks
 - **Chart.js** - For box plot visualization
-- **CSS Custom Properties** - For theming
+- **CSS Custom Properties** - For dynamic theming (try the color picker!)
 - **Jekyll** - Static site generation
 - **GitHub Pages** - Free hosting
 
-Total development time: About 3 hours from blank page to fully functional calculator.
+Total development time: About 4 hours from blank page to fully functional calculator with multiple themes and sample datasets.
 
 ## Open Source
 
