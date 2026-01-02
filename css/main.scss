@@ -4,23 +4,23 @@
 @charset "utf-8";
 
 // Helpers
-@use 'helpers/mixins';
-@use 'helpers/variables';
+@import 'helpers/mixins';
+@import 'helpers/variables';
 
 // Base
-@use 'base/reset';
+@import 'base/reset';
 
 // Utilities
-@use 'utilities/layout';
-@use 'utilities/separator';
+@import 'utilities/layout';
+@import 'utilities/separator';
 
 // Components
-@use 'components/page';
-@use 'components/article';
-@use 'components/tag';
-@use 'components/archives';
-@use 'components/color-scheme-picker';
+@import 'components/page';
+@import 'components/article';
+@import 'components/tag';
+@import 'components/archives';
+@import 'components/color-scheme-picker';
 
 // Vendor
-@use 'vendor/highlight';
+@import 'vendor/highlight';
 
