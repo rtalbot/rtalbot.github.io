@@ -1,0 +1,44 @@
+title: rjtalbot
+email: contact@rjtalbot.com
+description: >
+  Blog, Portfolio and Internet Home of Richard J Talbot.
+author: Richard J Talbot
+baseurl: ''
+url: 'https://rjtalbot.com'
+github_username: rtalbot
+timezone: America/Los_Angeles
+
+# Build settings
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+sass:
+  sass_dir: _sass
+  style: compressed
+
+include: ['_pages']
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Excerpt
+excerpt_separator: <!--more-->
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/
+  - .bundle/
+  - README.md
+  - SETUP_GUIDE.md
+  - RECOMMENDATIONS.md
+  - QUICK_REFERENCE.md
+  - PROJECT_REVIEW_SUMMARY.md
+  - UPDATE_CHECKLIST.md

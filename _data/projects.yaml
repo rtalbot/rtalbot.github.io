@@ -1,0 +1,15 @@
+- name: Breakout Game
+  link: /breakout.html
+  description: Classic Breakout game built with JavaScript
+
+- name: Pixel Noise Generator
+  link: /flashy.html
+  description: Interactive pixel noise visualization
+
+- name: Sprite Test
+  link: /spritetest.html
+  description: Sprite animation demonstration
+
+- name: ANOVA Visualization
+  link: /anova.html
+  description: Statistical ANOVA analysis visualization

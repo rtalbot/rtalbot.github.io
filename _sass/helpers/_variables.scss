@@ -2,34 +2,69 @@
    Variables
    ========================================================================== */
 
-$c-base__03: #0D2B35;
-$c-base__02: #163541;
-$c-base__01: #5C6E74;
-$c-base__00: #697B82;
-$c-base__0: #869395;
-$c-base__1: #96A0A0;
-$c-base__2: #EDE7D6;
-$c-base__3: #FCF5E4;
+// CSS Custom Properties (can be changed at runtime)
+:root {
+  // Base colors - Dark theme (default)
+  --c-base-03: #0D2B35;
+  --c-base-02: #163541;
+  --c-base-01: #5C6E74;
+  --c-base-00: #697B82;
+  --c-base-0: #869395;
+  --c-base-1: #96A0A0;
+  --c-base-2: #EDE7D6;
+  --c-base-3: #FCF5E4;
 
-$c-accent__blue: #0067FB;
-$c-accent__darkblue: #0029F9;
-$c-accent__green: #8BE367;
-$c-accent__pink: #ff597d;
-$c-accent__lime_green: #00FF00;
+  --c-accent-blue: #0067FB;
+  --c-accent-darkblue: #0029F9;
+  --c-accent-green: #8BE367;
+  --c-accent-pink: #ff597d;
+  --c-accent-lime-green: #00FF00;
 
-$c-base__dark_bg: #131418;
+  --c-body-bg: #131418;
+  
+  --c-link: var(--c-accent-pink);
+  --c-link-hover: var(--c-accent-pink);
+  --c-hover-after: var(--c-accent-pink);
+  
+  --c-tag-bg: var(--c-base-02);
+  --c-tag-before: var(--c-base-00);
+  --c-tag-text: var(--c-base-3);
+  --c-tag-hover: var(--c-accent-lime-green);
+  --c-tag-hover-text: var(--c-base-01);
+  
+  --c-text-primary: #FCF5E4;
+  --c-text-secondary: #869395;
+  --c-border: #EDE7D6;
+}
 
-$c-body_bg: $c-base__dark_bg;
+// SCSS variables for backwards compatibility and static values
+$c-base__03: var(--c-base-03);
+$c-base__02: var(--c-base-02);
+$c-base__01: var(--c-base-01);
+$c-base__00: var(--c-base-00);
+$c-base__0: var(--c-base-0);
+$c-base__1: var(--c-base-1);
+$c-base__2: var(--c-base-2);
+$c-base__3: var(--c-base-3);
 
-$c-link-hover: $c-accent__pink;
-$c-link: $c-accent__pink;
-$c-hover-after: $c-accent__pink;
+$c-accent__blue: var(--c-accent-blue);
+$c-accent__darkblue: var(--c-accent-darkblue);
+$c-accent__green: var(--c-accent-green);
+$c-accent__pink: var(--c-accent-pink);
+$c-accent__lime_green: var(--c-accent-lime-green);
 
-$c-tag-bg: $c-base__02;
-$c-tag-before: $c-base__00;
-$c-tag-text: $c-base__3;
-$c-tag-hover: $c-accent__lime_green;
-$c-tag-hover-text: $c-base__01;
+$c-base__dark_bg: var(--c-body-bg);
+$c-body_bg: var(--c-body-bg);
+
+$c-link-hover: var(--c-link-hover);
+$c-link: var(--c-link);
+$c-hover-after: var(--c-hover-after);
+
+$c-tag-bg: var(--c-tag-bg);
+$c-tag-before: var(--c-tag-before);
+$c-tag-text: var(--c-tag-text);
+$c-tag-hover: var(--c-tag-hover);
+$c-tag-hover-text: var(--c-tag-hover-text);
 
 // Breakpoints
 $bp__sm: 45rem; // 450px
