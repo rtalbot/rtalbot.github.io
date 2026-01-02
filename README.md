@@ -1,14 +1,24 @@
-rtalbot.github.io
-=================
+# rtalbot.github.io
 
-Github Pages Pages Pages Pages
+Personal website and portfolio of Richard J Talbot.
 
-AKA http://rjtalbot.com
+**Live Site:** [https://rjtalbot.com](https://rjtalbot.com)
 
-Projects, Writing, and a Portfolio of Work hosted from within a Portfolio of Work!
+## About
 
-Mundane Wonders that Astound and Dull the Senses!
+This is a Jekyll-based static site hosted on GitHub Pages, featuring blog posts, projects, and portfolio work.
 
-Free to all brave enough to enter.
+## Technology Stack
 
-I will eat your head.
+- **Jekyll** 4.3+ - Static site generator
+- **Ruby** 3.1.4+ - Programming language
+- **GitHub Pages** - Hosting
+- **Sass** - CSS preprocessor
+
+## License
+
+See [LICENSE](LICENSE) file.
+
+---
+
+**Last Updated:** January 2026

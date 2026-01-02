@@ -1,42 +1,1109 @@
 ---
 layout: static
-title: ANOVA
+title: ANOVA Calculator
 permalink: /anova
 ---
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Blog, Portfolio and Internet Home of Rich Talbot">
-    <meta name="author" content="Richard J Talbot">
-	<title>home</title>
-	<link href="stylesheets/blog.css" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
-	<link href="/stylesheets/site.css" rel="stylesheet" type="text/css">
-	<link href="http://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet" type="text/css">
-	<link href="http://fonts.googleapis.com/css?family=Molengo" rel="stylesheet" type="text/css">
-</head>
-<body>
-	<div class="container">
-	<h1>ANOVA Calculator</h1>
-	<p>A calculator for a simple Analysis of Variance or <a href="https://en.wikipedia.org/wiki/One-way_analysis_of_variance">ANOVA</a>.  This statistical test is used to compare the means of two or more samples provided the following:</p>
-<ul>
-	<li>The samples are independent</li>
-	<li>Variances of populations are equal</li>
-	<li>Responses are normally distributed</li>
-</ul>	
-	<div class="row">
-  <div class="col-lg-6">
-    <div class="input-group">
-      <input type="text" class="form-control" placeholder="Treatments">
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="button">Enter</button>
-      </span>
-    </div><!-- /input-group -->
-  </div><!-- /.col-lg-6 -->
-</div><!-- /.row -->
+<style>
+html {
+    font-size: 62.5%;
+}
+
+body {
+    background-color: var(--c-body-bg);
+    min-height: 100vh;
+    font-size: 1.6rem;
+    line-height: 1.6;
+}
+
+.anova-page {
+    --primary-color: var(--c-link);
+    --secondary-color: var(--c-accent-blue);
+    --background: var(--c-body-bg);
+    --card-bg: var(--c-base-02);
+    --text-primary: var(--c-base-3);
+    --text-secondary: var(--c-base-0);
+    --border: var(--c-base-01);
+    --success: var(--c-accent-green);
+    --warning: #ffa500;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.anova-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    padding-top: 5rem;
+    color: var(--text-primary);
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.6rem;
+}
+
+.anova-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.anova-header h1 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 3.2rem;
+}
+
+.anova-header p {
+    color: var(--text-secondary);
+    font-size: 1.8rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border);
+}
+
+.card h2 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-size: 2.4rem;
+}
+
+.card h3 {
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+}
+
+.assumptions {
+    background: rgba(255, 89, 125, 0.05);
+    border-left: 4px solid var(--primary-color);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.assumptions ul {
+    margin: 0.5rem 0 0 1.5rem;
+    color: var(--text-secondary);
+    font-size: 1.6rem;
+}
+
+.assumptions li {
+    margin-bottom: 0.8rem;
+}
+
+.groups-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.group {
+    background: rgba(255, 255, 255, 0.02);
+    padding: 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+}
+
+.group h4 {
+    color: var(--secondary-color);
+    margin-botto.6rem;
+}
+
+.group textarea {
+    width: 100%;
+    min-height: 120px;
+    background: var(--background);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.8rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.5rem;
+    resize: vertical;
+}
+
+.group textarea:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+}
+
+.group-stats {
+    margin-top: 0.5rem;
+    font-size: 1.4rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.btn {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.6rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--c-link-hover);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: var(--c-accent-blue);
+    opacity: 0.85;
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+}
+
+.btn-outline:hover {
+    border-color: var(--primary-color);
+    background: var(--card-bg);
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-box {
+    background: rgba(0, 103, 251, 0.05);
+    padding: 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--secondary-color);
+}
+
+.stat-box .label {
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-box .value {
+    color: var(--text-primary);
+    font-size: 2.4rem;
+    font-weight: bold;
+}
+
+.stat-box .interpretation {
+    color: var(--text-secondary);
+    font-size: 1.4rem;
+    margin-top: 0.5rem;
+}
+
+.anova-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+}
+
+.anova-table th,
+.anova-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 1.5rem;
+}
+
+.anova-table th {
+    color: var(--primary-color);
+    font-weight: 600;
+    background: rgba(255, 89, 125, 0.05);
+}
+
+.anova-table td {
+    color: var(--text-primary);
+}
+
+.anova-table tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.chart-container {
+    margin: 2rem 0;
+    min-height: 400px;
+}
+
+.explanation-box {
+    background: rgba(139, 227, 103, 0.05);
+    border-left: 4px solid var(--success);
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.explanation-box h4 {
+    color: var(--success);
+    font-size: 1.8rem;
+}
+
+.explanation-box p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-size: 1.6rem;
+}
+
+.formula {
+    background: var(--background);
+    padding: 1.5rem;
+    border-radius: 4px;
+    font-family: 'Roboto Mono', monospace;
+    overflow-x: auto;
+    margin: 1rem 0;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+}
+
+.alert {
+    padding: 1.5rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    line-height: 1.6;
+}
+
+.alert-info {
+    background: rgba(0, 103, 251, 0.1);
+    border: 1px solid var(--secondary-color);
+    color: var(--text-primary);
+}
+
+.alert-success {
+    background: rgba(139, 227, 103, 0.1);
+    border: 1px solid var(--success);
+    color: var(--text-primary);
+}
+
+.alert-warning {
+    background: rgba(255, 165, 0, 0.1);
+    border: 1px solid var(--warning);
+    color: var(--text-primary);
+}
+
+#visualization {
+    width: 100%;
+    height: 300px;
+    max-height: 300px;
+}
+
+.hidden {
+    display: none;
+}
+
+.sample-data-dropdown {
+    position: relative;
+}
+
+.sample-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    min-width: 250px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+
+.sample-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.sample-menu button {
+    display: block;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    text-align: left;
+    cursor: pointer;
+    font-size: 1.6rem;
+    transition: all 0.2s;
+}
+
+.sample-menu button:hover {
+    background: var(--c-base-02);
+    color: var(--primary-color);
+}
+
+.dataset-info {
+    background: rgba(0, 103, 251, 0.1);
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--secondary-color);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+.dataset-info strong {
+    color: var(--secondary-color);
+}
+
+@media (max-width: 768px) {
+    .anova-container {
+        padding: 1rem;
+    }
+    
+    .groups-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .controls {
+        flex-direction: column;
+    }
+    
+    .sample-menu {
+        left: 0;
+        right: 0;
+        min-width: 100%;
+    }
+}
+</style>
+
+<div class="anova-container anova-page">
+    <div class="anova-header">
+        <h1>ANOVA Calculator & Visualizer</h1>
+        <p>A comprehensive tool for one-way Analysis of Variance (ANOVA) with step-by-step explanations and interactive visualizations</p>
+    </div>
+
+    <div class="card">
+        <h2>What is ANOVA?</h2>
+        <p style="color: var(--text-secondary); line-height: 1.6;">
+            Analysis of Variance (ANOVA) is a statistical test used to determine whether there are significant differences 
+            between the means of three or more independent groups. It analyzes the variance within groups versus the variance 
+            between groups to determine if the group means are different enough to be statistically significant.
+        </p>
+        
+        <div class="assumptions">
+            <h3>Assumptions for ANOVA:</h3>
+            <ul>
+                <li><strong>Independence:</strong> Observations in each group are independent of each other</li>
+                <li><strong>Normality:</strong> Data in each group follows a normal distribution</li>
+                <li><strong>Homogeneity of variance:</strong> Variances across groups are approximately equal</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Enter Your Data</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+            Enter numeric values for each group (one value per line). You can add up to 6 groups.
+        </p>
+        
+        <div class="controls">
+            <button class="btn btn-secondary" onclick="addGroup()">+ Add Group</button>
+            <button class="btn btn-outline" onclick="removeGroup()">- Remove Group</button>
+            <div class="sample-data-dropdown">
+                <button class="btn btn-outline" onclick="toggleSampleMenu()">📊 Sample Data ▾</button>
+                <div class="sample-menu" id="sampleMenu">
+                    <button onclick="loadSampleData('coffee')">☕ Coffee Brewing Methods</button>
+                    <button onclick="loadSampleData('plants')">🌱 Plant Growth by Fertilizer</button>
+                    <button onclick="loadSampleData('exercise')">🏃 Exercise Program Results</button>
+                    <button onclick="loadSampleData('teaching')">📚 Teaching Methods</button>
+                </div>
+            </div>
+            <button class="btn btn-outline" onclick="clearAll()">Clear All</button>
+        </div>
+
+        <div class="groups-container" id="groupsContainer">
+            <div class="group" data-group="1">
+                <h4>Group 1</h4>
+                <textarea placeholder="Enter values (one per line)&#10;e.g.&#10;23&#10;25&#10;27" oninput="updateGroupStats(1)"></textarea>
+                <div class="group-stats" id="stats-1"></div>
+            </div>
+            <div class="group" data-group="2">
+                <h4>Group 2</h4>
+                <textarea placeholder="Enter values (one per line)" oninput="updateGroupStats(2)"></textarea>
+                <div class="group-stats" id="stats-2"></div>
+            </div>
+            <div class="group" data-group="3">
+                <h4>Group 3</h4>
+                <textarea placeholder="Enter values (one per line)" oninput="updateGroupStats(3)"></textarea>
+                <div class="group-stats" id="stats-3"></div>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="calculateANOVA()" style="width: 100%; font-size: 1.1rem;">
+            Calculate ANOVA
+        </button>
+    </div>
+
+    <div id="resultsSection" class="hidden">
+        <div class="card">
+            <h2>Results</h2>
+            
+            <div class="results-grid">
+                <div class="stat-box">
+                    <div class="label">F-Statistic</div>
+                    <div class="value" id="fStatistic">-</div>
+                    <div class="interpretation">Ratio of between-group to within-group variance</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">p-value</div>
+                    <div class="value" id="pValue">-</div>
+                    <div class="interpretation" id="pInterpretation">Probability of observing this result by chance</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">Degrees of Freedom</div>
+                    <div class="value" id="dfValue">-</div>
+                    <div class="interpretation">Between groups (df1) and within groups (df2)</div>
+                </div>
+            </div>
+
+            <div id="conclusionAlert"></div>
+
+            <h3>ANOVA Table</h3>
+            <div style="overflow-x: auto;">
+                <table class="anova-table">
+                    <thead>
+                        <tr>
+                            <th>Source</th>
+                            <th>Sum of Squares</th>
+                            <th>df</th>
+                            <th>Mean Square</th>
+                            <th>F</th>
+                            <th>p-value</th>
+                        </tr>
+                    </thead>
+                    <tbody id="anovaTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Visualization</h2>
+            <div class="alert alert-info" style="font-size: 1.5rem; margin-bottom: 1.5rem;">
+                <strong>📊 Group Comparison Chart:</strong> This bar chart shows the mean (average) value for each group.
+                <strong>Taller bars</strong> indicate higher average values.
+                <strong>Hover over each bar</strong> to see detailed statistics including the mean, median, range, and quartiles (Q1, Q3).
+                The differences in bar heights help visualize whether groups are similar or different.
+            </div>
+            <canvas id="visualization"></canvas>
+        </div>
+
+        <div class="card">
+            <h2>Understanding the Results</h2>
+            
+            <div class="explanation-box">
+                <h4>Sum of Squares (SS)</h4>
+                <p>
+                    Measures the total variation in the data. It's partitioned into:
+                </p>
+                <ul style="color: var(--text-secondary); margin-left: 1.5rem; font-size: 1.6rem;">
+                    <li><strong>SS Between:</strong> Variation due to differences between group means</li>
+                    <li><strong>SS Within:</strong> Variation within each group (error)</li>
+                </ul>
+                <div class="formula">SS_total = SS_between + SS_within</div>
+                <div id="ssActual" class="formula" style="background: rgba(139, 227, 103, 0.1); display: none;"></div>
+            </div>
+
+            <div class="explanation-box">
+                <h4>Degrees of Freedom (df)</h4>
+                <p>
+                    Number of independent values that can vary:
+                </p>
+                <ul style="color: var(--text-secondary); margin-left: 1.5rem; font-size: 1.6rem;">
+                    <li><strong>df_between:</strong> Number of groups - 1</li>
+                    <li><strong>df_within:</strong> Total observations - Number of groups</li>
+                </ul>
+                <div id="dfActual" class="formula" style="background: rgba(139, 227, 103, 0.1); display: none;"></div>
+            </div>
+
+            <div class="explanation-box">
+                <h4>Mean Square (MS)</h4>
+                <p>
+                    Average variance, calculated by dividing Sum of Squares by degrees of freedom:
+                </p>
+                <div class="formula">MS = SS / df</div>
+                <div id="msActual" class="formula" style="background: rgba(139, 227, 103, 0.1); display: none;"></div>
+            </div>
+
+            <div class="explanation-box">
+                <h4>F-Statistic</h4>
+                <p>
+                    The test statistic that compares the variance between groups to the variance within groups:
+                </p>
+                <div class="formula">F = MS_between / MS_within</div>
+                <div id="fActual" class="formula" style="background: rgba(139, 227, 103, 0.1); display: none;"></div>
+                <p style="margin-top: 0.5rem; font-size: 1.6rem;">
+                    A larger F-value indicates that the group means are more different relative to the variation within groups.
+                </p>
+            </div>
+
+            <div class="explanation-box">
+                <h4>p-value</h4>
+                <p>
+                    The probability of observing an F-statistic as extreme as (or more extreme than) the one calculated, 
+                    assuming the null hypothesis is true (that all group means are equal).
+                </p>
+                <ul style="color: var(--text-secondary); margin-left: 1.5rem; margin-top: 0.5rem; font-size: 1.6rem;">
+                    <li>p < 0.05: Strong evidence against null hypothesis (groups likely differ)</li>
+                    <li>p ≥ 0.05: Insufficient evidence to reject null hypothesis (groups may be similar)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-</body>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ '/assets/js/color-scheme.js' | prepend: site.baseurl }}"></script>
+<script>
+let groupCount = 3;
+let chart = null;
+
+const sampleDatasets = {
+    coffee: {
+        name: 'Coffee Brewing Methods',
+        description: 'Taste scores (0-100) for coffee brewed using different methods',
+        groups: [
+            { name: 'French Press', data: [78, 82, 80, 85, 79, 83, 81] },
+            { name: 'Pour Over', data: [85, 88, 86, 90, 87, 89, 88] },
+            { name: 'Drip Machine', data: [72, 75, 71, 76, 73, 74, 72] }
+        ]
+    },
+    plants: {
+        name: 'Plant Growth by Fertilizer Type',
+        description: 'Plant height (cm) after 30 days with different fertilizers',
+        groups: [
+            { name: 'Organic', data: [15, 18, 16, 19, 17, 16, 18, 17] },
+            { name: 'Chemical', data: [22, 25, 23, 26, 24, 25, 23, 24] },
+            { name: 'Control (no fertilizer)', data: [12, 14, 13, 15, 12, 13, 14] },
+            { name: 'Slow-Release', data: [20, 21, 19, 22, 20, 21, 20] }
+        ]
+    },
+    exercise: {
+        name: 'Exercise Program Results',
+        description: 'Weight loss (kg) after 8 weeks of different exercise programs',
+        groups: [
+            { name: 'HIIT', data: [5.2, 6.1, 5.8, 6.5, 5.5, 6.2, 5.9] },
+            { name: 'Cardio', data: [4.1, 4.8, 4.5, 5.0, 4.3, 4.7, 4.6] },
+            { name: 'Strength Training', data: [3.5, 4.2, 3.8, 4.5, 3.9, 4.0, 3.7] },
+            { name: 'Yoga', data: [2.8, 3.2, 3.0, 3.5, 2.9, 3.1, 3.0] }
+        ]
+    },
+    teaching: {
+        name: 'Teaching Methods',
+        description: 'Test scores (%) for students taught with different methods',
+        groups: [
+            { name: 'Interactive', data: [85, 88, 92, 87, 90, 89, 86, 91] },
+            { name: 'Lecture Only', data: [75, 78, 76, 80, 77, 79, 76] },
+            { name: 'Hybrid', data: [82, 84, 83, 86, 85, 84, 83, 85] }
+        ]
+    }
+};
+
+function toggleSampleMenu() {
+    const menu = document.getElementById('sampleMenu');
+    menu.classList.toggle('show');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    const dropdown = document.querySelector('.sample-data-dropdown');
+    const menu = document.getElementById('sampleMenu');
+    if (dropdown && !dropdown.contains(event.target)) {
+        menu.classList.remove('show');
+    }
+});
+
+function addGroup() {
+    if (groupCount >= 6) {
+        alert('Maximum 6 groups allowed');
+        return;
+    }
+    groupCount++;
+    const container = document.getElementById('groupsContainer');
+    const groupDiv = document.createElement('div');
+    groupDiv.className = 'group';
+    groupDiv.setAttribute('data-group', groupCount);
+    groupDiv.innerHTML = `
+        <h4>Group ${groupCount}</h4>
+        <textarea placeholder="Enter values (one per line)" oninput="updateGroupStats(${groupCount})"></textarea>
+        <div class="group-stats" id="stats-${groupCount}"></div>
+    `;
+    container.appendChild(groupDiv);
+}
+
+function removeGroup() {
+    if (groupCount <= 2) {
+        alert('Minimum 2 groups required');
+        return;
+    }
+    const container = document.getElementById('groupsContainer');
+    const lastGroup = container.querySelector(`[data-group="${groupCount}"]`);
+    if (lastGroup) {
+        container.removeChild(lastGroup);
+        groupCount--;
+    }
+}
+
+function loadSampleData(datasetName) {
+    const dataset = sampleDatasets[datasetName];
+    if (!dataset) return;
+    
+    // Close the dropdown
+    document.getElementById('sampleMenu').classList.remove('show');
+    
+    // Clear existing groups and create new ones
+    const container = document.getElementById('groupsContainer');
+    container.innerHTML = '';
+    groupCount = dataset.groups.length;
+    
+    // Show info about the dataset
+    const header = document.querySelector('.card h2');
+    const existingInfo = document.querySelector('.dataset-info');
+    if (existingInfo) existingInfo.remove();
+    
+    const info = document.createElement('div');
+    info.className = 'dataset-info';
+    info.style.cssText = 'background: rgba(0, 103, 251, 0.1); padding: 1rem; border-radius: 4px; margin-bottom: 1rem; border-left: 4px solid var(--secondary-color);';
+    info.innerHTML = `<strong>${dataset.name}:</strong> ${dataset.description}`;
+    header.parentNode.insertBefore(info, header.nextSibling);
+    
+    // Create groups with data
+    dataset.groups.forEach((group, index) => {
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'group';
+        groupDiv.setAttribute('data-group', index + 1);
+        groupDiv.innerHTML = `
+            <h4>${group.name}</h4>
+            <textarea placeholder="Enter values (one per line)" oninput="updateGroupStats(${index + 1})">${group.data.join('\n')}</textarea>
+            <div class="group-stats" id="stats-${index + 1}"></div>
+        `;
+        container.appendChild(groupDiv);
+        updateGroupStats(index + 1);
+    });
+}
+
+function clearAll() {
+    const textareas = document.querySelectorAll('.group textarea');
+    textareas.forEach(textarea => textarea.value = '');
+    const stats = document.querySelectorAll('.group-stats');
+    stats.forEach(stat => stat.innerHTML = '');
+    const datasetInfo = document.querySelector('.dataset-info');
+    if (datasetInfo) datasetInfo.remove();
+    document.getElementById('resultsSection').classList.add('hidden');
+}
+
+function updateGroupStats(groupNum) {
+    const group = document.querySelector(`[data-group="${groupNum}"]`);
+    const textarea = group.querySelector('textarea');
+    const statsDiv = document.getElementById(`stats-${groupNum}`);
+    
+    const values = textarea.value.split('\n')
+        .map(v => parseFloat(v.trim()))
+        .filter(v => !isNaN(v));
+    
+    if (values.length === 0) {
+        statsDiv.innerHTML = '';
+        return;
+    }
+    
+    const mean = values.reduce((a, b) => a + b, 0) / values.length;
+    const variance = values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / values.length;
+    
+    statsDiv.innerHTML = `n=${values.length} | mean=${mean.toFixed(2)} | σ²=${variance.toFixed(2)}`;
+}
+
+function getGroupData() {
+    const groups = document.querySelectorAll('.group');
+    const data = [];
+    
+    groups.forEach(group => {
+        const textarea = group.querySelector('textarea');
+        const values = textarea.value.split('\n')
+            .map(v => parseFloat(v.trim()))
+            .filter(v => !isNaN(v));
+        
+        if (values.length > 0) {
+            data.push(values);
+        }
+    });
+    
+    return data;
+}
+
+function mean(arr) {
+    return arr.reduce((a, b) => a + b, 0) / arr.length;
+}
+
+function fCDF(f, df1, df2) {
+    // Approximation of F-distribution CDF using beta distribution
+    const x = df2 / (df2 + df1 * f);
+    return 1 - incompleteBeta(x, df2/2, df1/2);
+}
+
+function incompleteBeta(x, a, b) {
+    // Approximation of incomplete beta function
+    if (x <= 0) return 0;
+    if (x >= 1) return 1;
+    
+    const bt = Math.exp(
+        gammaLn(a + b) - gammaLn(a) - gammaLn(b) +
+        a * Math.log(x) + b * Math.log(1 - x)
+    );
+    
+    if (x < (a + 1) / (a + b + 2)) {
+        return bt * betaCF(x, a, b) / a;
+    } else {
+        return 1 - bt * betaCF(1 - x, b, a) / b;
+    }
+}
+
+function betaCF(x, a, b) {
+    const maxIterations = 100;
+    const epsilon = 3e-7;
+    const qab = a + b;
+    const qap = a + 1;
+    const qam = a - 1;
+    let c = 1;
+    let d = 1 - qab * x / qap;
+    
+    if (Math.abs(d) < epsilon) d = epsilon;
+    d = 1 / d;
+    let h = d;
+    
+    for (let m = 1; m <= maxIterations; m++) {
+        const m2 = 2 * m;
+        let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+        d = 1 + aa * d;
+        if (Math.abs(d) < epsilon) d = epsilon;
+        c = 1 + aa / c;
+        if (Math.abs(c) < epsilon) c = epsilon;
+        d = 1 / d;
+        h *= d * c;
+        
+        aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+        d = 1 + aa * d;
+        if (Math.abs(d) < epsilon) d = epsilon;
+        c = 1 + aa / c;
+        if (Math.abs(c) < epsilon) c = epsilon;
+        d = 1 / d;
+        const del = d * c;
+        h *= del;
+        
+        if (Math.abs(del - 1) < epsilon) break;
+    }
+    
+    return h;
+}
+
+function gammaLn(x) {
+    const cof = [
+        76.18009172947146, -86.50532032941677,
+        24.01409824083091, -1.231739572450155,
+        0.1208650973866179e-2, -0.5395239384953e-5
+    ];
+    
+    let y = x;
+    let tmp = x + 5.5;
+    tmp -= (x + 0.5) * Math.log(tmp);
+    let ser = 1.000000000190015;
+    
+    for (let j = 0; j < 6; j++) {
+        ser += cof[j] / ++y;
+    }
+    
+    return -tmp + Math.log(2.5066282746310005 * ser / x);
+}
+
+function calculateANOVA() {
+    const data = getGroupData();
+    
+    if (data.length < 2) {
+        alert('Please enter data for at least 2 groups');
+        return;
+    }
+    
+    if (data.some(group => group.length < 2)) {
+        alert('Each group must have at least 2 values');
+        return;
+    }
+    
+    // Calculate group means
+    const groupMeans = data.map(group => mean(group));
+    
+    // Calculate grand mean
+    const allValues = data.flat();
+    const grandMean = mean(allValues);
+    const n = allValues.length;
+    const k = data.length;
+    
+    // Calculate SS Between
+    const ssB = data.reduce((sum, group, i) => {
+        return sum + group.length * Math.pow(groupMeans[i] - grandMean, 2);
+    }, 0);
+    
+    // Calculate SS Within
+    const ssW = data.reduce((sum, group, i) => {
+        return sum + group.reduce((groupSum, value) => {
+            return groupSum + Math.pow(value - groupMeans[i], 2);
+        }, 0);
+    }, 0);
+    
+    // Calculate SS Total
+    const ssT = allValues.reduce((sum, value) => {
+        return sum + Math.pow(value - grandMean, 2);
+    }, 0);
+    
+    // Degrees of freedom
+    const dfB = k - 1;
+    const dfW = n - k;
+    const dfT = n - 1;
+    
+    // Mean squares
+    const msB = ssB / dfB;
+    const msW = ssW / dfW;
+    
+    // F-statistic
+    const fStat = msB / msW;
+    
+    // p-value
+    const pValue = 1 - fCDF(fStat, dfB, dfW);
+    
+    // Display results
+    displayResults({
+        fStat, pValue, dfB, dfW, ssB, ssW, ssT, msB, msW,
+        groupMeans, grandMean, data
+    });
+}
+
+function displayResults(results) {
+    document.getElementById('resultsSection').classList.remove('hidden');
+    
+    document.getElementById('fStatistic').textContent = results.fStat.toFixed(4);
+    document.getElementById('pValue').textContent = results.pValue.toFixed(6);
+    document.getElementById('dfValue').textContent = `${results.dfB}, ${results.dfW}`;
+    
+    // Interpretation
+    const conclusionDiv = document.getElementById('conclusionAlert');
+    const alpha = 0.05;
+    if (results.pValue < alpha) {
+        conclusionDiv.className = 'alert alert-success';
+        conclusionDiv.innerHTML = `
+            <strong>Significant Result!</strong> 
+            With p = ${results.pValue.toFixed(6)} < ${alpha}, we reject the null hypothesis. 
+            There is strong statistical evidence that at least one group mean is significantly different from the others.
+        `;
+    } else {
+        conclusionDiv.className = 'alert alert-warning';
+        conclusionDiv.innerHTML = `
+            <strong>Not Significant.</strong> 
+            With p = ${results.pValue.toFixed(6)} ≥ ${alpha}, we fail to reject the null hypothesis. 
+            There is insufficient evidence to conclude that the group means are different.
+        `;
+    }
+    
+    // ANOVA table
+    const tableBody = document.getElementById('anovaTableBody');
+    tableBody.innerHTML = `
+        <tr>
+            <td>Between Groups</td>
+            <td>${results.ssB.toFixed(4)}</td>
+            <td>${results.dfB}</td>
+            <td>${results.msB.toFixed(4)}</td>
+            <td>${results.fStat.toFixed(4)}</td>
+            <td>${results.pValue.toFixed(6)}</td>
+        </tr>
+        <tr>
+            <td>Within Groups</td>
+            <td>${results.ssW.toFixed(4)}</td>
+            <td>${results.dfW}</td>
+            <td>${results.msW.toFixed(4)}</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        <tr>
+            <td><strong>Total</strong></td>
+            <td><strong>${results.ssT.toFixed(4)}</strong></td>
+            <td><strong>${results.dfB + results.dfW}</strong></td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+    `;
+    
+    // Create visualization
+    createVisualization(results.data, results.groupMeans, results.grandMean);
+    
+    // Populate actual calculation values
+    document.getElementById('ssActual').style.display = 'block';
+    document.getElementById('ssActual').innerHTML = `${results.ssT.toFixed(4)} = ${results.ssB.toFixed(4)} + ${results.ssW.toFixed(4)}`;
+    
+    document.getElementById('dfActual').style.display = 'block';
+    document.getElementById('dfActual').innerHTML = `df_between = ${results.dfB}, df_within = ${results.dfW}`;
+    
+    document.getElementById('msActual').style.display = 'block';
+    document.getElementById('msActual').innerHTML = `MS_between = ${results.ssB.toFixed(4)} / ${results.dfB} = ${results.msB.toFixed(4)}<br>MS_within = ${results.ssW.toFixed(4)} / ${results.dfW} = ${results.msW.toFixed(4)}`;
+    
+    document.getElementById('fActual').style.display = 'block';
+    document.getElementById('fActual').innerHTML = `F = ${results.msB.toFixed(4)} / ${results.msW.toFixed(4)} = ${results.fStat.toFixed(4)}`;
+    
+    // Scroll to results
+    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+function createVisualization(data, groupMeans, grandMean) {
+    const ctx = document.getElementById('visualization').getContext('2d');
+    
+    if (chart) {
+        chart.destroy();
+    }
+    
+    const colors = [
+        'rgba(255, 89, 125, 0.7)',
+        'rgba(0, 103, 251, 0.7)',
+        'rgba(139, 227, 103, 0.7)',
+        'rgba(255, 165, 0, 0.7)',
+        'rgba(138, 43, 226, 0.7)',
+        'rgba(0, 255, 255, 0.7)'
+    ];
+    
+    // Calculate quartiles and ranges for each group
+    const groupStats = data.map((group, i) => {
+        const sorted = [...group].sort((a, b) => a - b);
+        const len = sorted.length;
+        return {
+            min: sorted[0],
+            q1: sorted[Math.floor(len * 0.25)],
+            median: sorted[Math.floor(len * 0.5)],
+            q3: sorted[Math.floor(len * 0.75)],
+            max: sorted[len - 1],
+            mean: groupMeans[i]
+        };
+    });
+    
+    chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: data.map((_, i) => `Group ${i + 1}`),
+            datasets: [{
+                label: 'Group Means',
+                data: groupMeans,
+                backgroundColor: colors.slice(0, data.length),
+                borderColor: colors.slice(0, data.length).map(c => c.replace('0.7', '1')),
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 2.5,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Group Means Comparison',
+                    color: 'var(--c-text-primary)',
+                    font: { size: 18, weight: 'bold' }
+                },
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: 'rgba(255, 255, 255, 0.3)',
+                    borderWidth: 1,
+                    padding: 12,
+                    displayColors: false,
+                    callbacks: {
+                        title: function(context) {
+                            return context[0].label;
+                        },
+                        label: function(context) {
+                            const i = context.dataIndex;
+                            const stats = groupStats[i];
+                            return [
+                                `Mean: ${stats.mean.toFixed(2)}`,
+                                `Median: ${stats.median.toFixed(2)}`,
+                                `Range: ${stats.min.toFixed(2)} - ${stats.max.toFixed(2)}`,
+                                `Q1: ${stats.q1.toFixed(2)}`,
+                                `Q3: ${stats.q3.toFixed(2)}`
+                            ];
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    title: {
+                        display: true,
+                        text: 'Values',
+                        color: 'var(--c-text-secondary)',
+                        font: { size: 14 }
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: 'var(--c-text-secondary)',
+                        font: { size: 12 }
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Groups',
+                        color: 'var(--c-text-secondary)',
+                        font: { size: 14 }
+                    },
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: 'var(--c-text-secondary)',
+                        font: { size: 12 }
+                    }
+                }
+            }
+        }
+    });
+}
+
+</script>

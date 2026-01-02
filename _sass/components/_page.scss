@@ -1,3 +1,6 @@
+@import '../helpers/mixins';
+@import '../helpers/variables';
+
 /* ==========================================================================
    Page
    ========================================================================== */
@@ -12,7 +15,7 @@
     h1 {
         margin-bottom: 2.5rem; // 25px
         @include fs--heading-2;
-        color: $c-base__02;
+        color: var(--c-text-primary);
     }
 
     p {
@@ -39,7 +42,7 @@
             align-items: center;
     p {
         @include fs--body;
-        color: $c-base__01;
+        color: var(--c-text-secondary);
     }
 }
 

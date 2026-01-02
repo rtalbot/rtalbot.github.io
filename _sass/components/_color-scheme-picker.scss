@@ -1,0 +1,147 @@
+/* ==========================================================================
+   Color Scheme Picker Component
+   ========================================================================== */
+
+.color-scheme-picker {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.color-scheme-toggle {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 2px solid var(--c-border);
+  background: var(--c-body-bg);
+  color: var(--c-text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    transform: scale(1.05);
+    border-color: var(--c-link);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.color-scheme-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  min-width: 200px;
+  background: var(--c-body-bg);
+  border: 2px solid var(--c-border);
+  border-radius: 8px;
+  padding: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+
+  .color-scheme-picker.is-open & {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+.color-scheme-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  color: var(--c-text-primary);
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  position: relative;
+
+  &:hover {
+    background: var(--c-base-02);
+    color: var(--c-link);
+  }
+
+  &.is-active {
+    background: var(--c-base-02);
+    color: var(--c-link);
+    font-weight: 600;
+
+    .theme-indicator {
+      background: var(--c-link);
+      box-shadow: 0 0 8px var(--c-link);
+    }
+  }
+}
+
+.theme-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--c-border);
+  background: var(--c-text-secondary);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .color-scheme-picker {
+    top: 10px;
+    right: 10px;
+  }
+
+  .color-scheme-toggle {
+    width: 36px;
+    height: 36px;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .color-scheme-menu {
+    top: 46px;
+    right: 0;
+    min-width: 180px;
+  }
+
+  .color-scheme-option {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+}
+
+// Animation for theme transitions
+body {
+  transition: background-color 0.3s ease;
+}
+
+* {
+  transition-property: color, background-color, border-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+// Exceptions for elements that shouldn't transition
+a, button, input, textarea, pre, code {
+  transition-property: color, background-color, border-color, transform, box-shadow;
+}
