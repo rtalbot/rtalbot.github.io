@@ -1,0 +1,34 @@
+{
+  "baddies": {
+    "image": "assets/img/baddies.png",
+    "frameWidth": 26,
+    "frameHeight": 26,
+    "sprites": {
+      "sg_rightwalk_1": { "x": 20, "y": 20 },
+      "sg_rightwalk_2": { "x": 50, "y": 20 },
+      "sg_leftwalk_1": { "x": 80, "y": 20 },
+      "sg_leftwalk_2": { "x": 110, "y": 20 },
+      "fg_rightwalk_1": { "x": 140, "y": 20 },
+      "fg_rightwalk_2": { "x": 170, "y": 20 },
+      "fg_leftwalk_1": { "x": 200, "y": 20 },
+      "fg_leftwalk_2": { "x": 230, "y": 20 },
+      "pp_rightwalk_1": { "x": 260, "y": 20 },
+      "pp_rightwalk_2": { "x": 290, "y": 20 },
+      "pp_leftwalk_1": { "x": 320, "y": 20 },
+      "pp_leftwalk_2": { "x": 350, "y": 20 },
+      "cti_open1": { "x": 380, "y": 20 },
+      "cti_open2": { "x": 410, "y": 20 },
+      "cti_open3": { "x": 440, "y": 20 }
+    }
+  },
+  "mario": {
+    "image": "assets/img/mario3.gif",
+    "frameWidth": 24,
+    "frameHeight": 24,
+    "sprites": {
+      "mario_rightwalk_1": { "x": 0, "y": 0 },
+      "mario_rightwalk_2": { "x": 109, "y": 0 },
+      "mario_rightwalk_3": { "x": 180, "y": 0 }
+    }
+  }
+}

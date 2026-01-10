@@ -1,0 +1,51 @@
+{
+  "shyguy": {
+    "spritesheet": "baddies",
+    "animations": {
+      "walk_right": [
+        { "sprite": "sg_rightwalk_1", "time": 0.2 },
+        { "sprite": "sg_rightwalk_2", "time": 0.2 }
+      ],
+      "walk_left": [
+        { "sprite": "sg_leftwalk_1", "time": 0.2 },
+        { "sprite": "sg_leftwalk_2", "time": 0.2 }
+      ]
+    }
+  },
+  "flyguy": {
+    "spritesheet": "baddies",
+    "animations": {
+      "walk_right": [
+        { "sprite": "fg_rightwalk_1", "time": 0.2 },
+        { "sprite": "fg_rightwalk_2", "time": 0.2 }
+      ],
+      "walk_left": [
+        { "sprite": "fg_leftwalk_1", "time": 0.2 },
+        { "sprite": "fg_leftwalk_2", "time": 0.2 }
+      ]
+    }
+  },
+  "ppguy": {
+    "spritesheet": "baddies",
+    "animations": {
+      "walk_right": [
+        { "sprite": "pp_rightwalk_1", "time": 0.2 },
+        { "sprite": "pp_rightwalk_2", "time": 0.2 }
+      ],
+      "walk_left": [
+        { "sprite": "pp_leftwalk_1", "time": 0.2 },
+        { "sprite": "pp_leftwalk_2", "time": 0.2 }
+      ]
+    }
+  },
+  "mario": {
+    "spritesheet": "mario",
+    "animations": {
+      "walk_right": [
+        { "sprite": "mario_rightwalk_1", "time": 0.2 },
+        { "sprite": "mario_rightwalk_2", "time": 0.2 },
+        { "sprite": "mario_rightwalk_3", "time": 0.2 }
+      ]
+    }
+  }
+}

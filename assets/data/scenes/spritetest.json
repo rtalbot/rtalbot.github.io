@@ -1,0 +1,45 @@
+{
+  "canvas": {
+    "backgroundColor": "#82CAFA"
+  },
+  "entities": [
+    {
+      "id": "mario",
+      "type": "mario",
+      "x": 0,
+      "y": "50%",
+      "scale": 2,
+      "initialAnimation": "walk_right",
+      "controllable": true,
+      "controls": {
+        "ArrowRight": { "action": "moveRight", "amount": 10 },
+        "ArrowLeft": { "action": "moveLeft", "amount": 10 },
+        "ArrowUp": { "action": "moveUp", "amount": 10 },
+        "ArrowDown": { "action": "moveDown", "amount": 10 },
+        "KeyN": { "action": "spawnEntity", "entityType": "flyguy" }
+      }
+    },
+    {
+      "id": "shyguy1",
+      "type": "shyguy",
+      "x": 0,
+      "y": 0,
+      "scale": 2,
+      "initialAnimation": "walk_left"
+    },
+    {
+      "id": "flyguy1",
+      "type": "flyguy",
+      "x": "100%-52",
+      "y": "50%",
+      "scale": 2,
+      "initialAnimation": "walk_left",
+      "behavior": {
+        "type": "patrol",
+        "speed": 4,
+        "direction": "left",
+        "wrap": true
+      }
+    }
+  ]
+}
