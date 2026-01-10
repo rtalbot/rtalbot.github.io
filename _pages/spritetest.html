@@ -4,205 +4,78 @@ title: Sprite Test
 permalink: /spritetest
 ---
 <head>
-<script src="assets/js/jquery.js"></script>
 <script src="assets/js/sprites.js"></script>
+<script src="assets/js/game-scene.js"></script>
+<script src="assets/js/input-handler.js"></script>
 <script>
-var Sprite = function(name, animations, image, x, y, curr) {
-	this._name = name;
-	this._animations = animations;
-	this._image = image;
-	this.x = x;
-	this.y = y;
-	this.currAnimation = curr;
-}
-
-Sprite.prototype = {	
-	draw: function(ctx, di) {
-		for(i=0;i<this._animations.length;i++) {
-			if(this._animations[i].name == this.currAnimation) {
-				this._animations[i].animation.animate(di);
-				var f = this._animations[i].animation.getFrame();			
-				ctx.drawImage(this._image, f.x, f.y, f.width, f.height, 
-					this.x, this.y, 2*f.width, 2*f.height);			
-			}
-		}
-	},
-	moveright: function(x) {
-		this.currAnimation = "walk_right";
-		this.x += x;
-	},
-	moveleft: function(x) {
-		this.currAnimation = "walk_left";
-		this.x -= x;
-	},
-	moveup: function() {
-		this.y -= 10;
-	},
-	movedown: function() {
-		this.y += 10;
-	}
-}
-
-$(document).ready(function() {
-    var timer = new FrameTimer();
-    timer.tick();
-	
-	var marioSprites = new SpriteSheet({
-		width: 24,
-        height: 24,
-        sprites: [
-            { name: 'mario_rightwalk_1', xpos: 0, ypos: 0 },
-            { name: 'mario_rightwalk_2', xpos: 109, ypos: 0 },
-			{ name: 'mario_rightwalk_3', xpos: 180, ypos: 0 }]
-	});
- 
-    var sprites = new SpriteSheet({
-        width: 26,
-        height: 26,
-        sprites: [
-            { name: 'sg_rightwalk_1', xpos: 20, ypos: 20 },
-            { name: 'sg_rightwalk_2', xpos: 50, ypos: 20 },
-			{ name: 'sg_leftwalk_1', xpos: 80, ypos: 20 },
-			{ name: 'sg_leftwalk_2', xpos: 110, ypos: 20 },
-			{ name: 'fg_rightwalk_1', xpos: 140, ypos: 20 },
-            { name: 'fg_rightwalk_2', xpos: 170, ypos: 20 },
-			{ name: 'fg_leftwalk_1', xpos: 200, ypos: 20 },
-			{ name: 'fg_leftwalk_2', xpos: 230, ypos: 20 },
-			{ name: 'pp_rightwalk_1', xpos: 260, ypos: 20 },
-            { name: 'pp_rightwalk_2', xpos: 290, ypos: 20 },
-			{ name: 'pp_leftwalk_1', xpos: 320, ypos: 20 },
-			{ name: 'pp_leftwalk_2', xpos: 350, ypos: 20 },
-			{ name: 'cti_open1', xpos: 380, ypos: 20 },
-			{ name: 'cti_open2', xpos: 410, ypos: 20 },
-			{ name: 'cti_open3', xpos: 440, ypos: 20 }
-        ]
-    });
-  
-   var ctx = document.getElementById('canvas').getContext('2d');
-   var HEIGHT = ctx.canvas.height = window.innerHeight;
-   var WIDTH = ctx.canvas.width = window.innerWidth;
-	
-   var sgrwalk = new Animation([
-        { sprite: 'sg_rightwalk_1', time: 0.2 },
-        { sprite: 'sg_rightwalk_2', time: 0.2 }
-    ], sprites);
-	
-	var sglwalk = new Animation([
-		{ sprite: 'sg_leftwalk_1', time: 0.2 },
-		{ sprite: 'sg_leftwalk_2', time: 0.2 }
-	], sprites);
-	
-	var fgrwalk = new Animation([
-        { sprite: 'fg_rightwalk_1', time: 0.2 },
-        { sprite: 'fg_rightwalk_2', time: 0.2 }
-    ], sprites);
-	
-	var fglwalk = new Animation([
-		{ sprite: 'fg_leftwalk_1', time: 0.2 },
-		{ sprite: 'fg_leftwalk_2', time: 0.2 }
-	], sprites);
-	
-	var pprwalk = new Animation([
-        { sprite: 'pp_rightwalk_1', time: 0.2 },
-        { sprite: 'pp_rightwalk_2', time: 0.2 }
-    ], sprites);
-	
-	var pplwalk = new Animation([
-		{ sprite: 'pp_leftwalk_1', time: 0.2 },
-		{ sprite: 'pp_leftwalk_2', time: 0.2 }
-	], sprites);
-	
-	var mariowalk = new Animation([
-		{ sprite: 'mario_rightwalk_1', time: 0.2 },
-		{ sprite: 'mario_rightwalk_2', time: 0.2 },
-		{ sprite: 'mario_rightwalk_3', time: 0.2 }
-	], marioSprites);
-	
-	var baddies = new Image();
-	baddies.src = 'assets/img/baddies.png';
-	
-	var marioImg = new Image();
-	marioImg.src = 'assets/img/mario3.gif';
- 
-	var shyguy = new Sprite('shyguy',  
-		[{ name: 'walk_left', animation: sgrwalk },
-		{ name: 'walk_right', animation: sglwalk }],
-		baddies, 0, 0, "walk_left");
-		
-	var flyguy = new Sprite('flyguy',  
-		[{ name: 'walk_left', animation: fgrwalk },
-		{ name: 'walk_right', animation: fglwalk }],
-		baddies, WIDTH-52, HEIGHT/2, "walk_left");
-	
-	var mario = new Sprite('mario',
-		[{ name: 'walk_right', animation: mariowalk }],
-		marioImg, 0, HEIGHT/2, 'walk_right');
-	
-	var ppguy = new Sprite('ppguy',  
-		[{ name: 'walk_left', animation: pprwalk },
-		{ name: 'walk_right', animation: pplwalk }],
-		baddies, WIDTH/2, HEIGHT/2, "walk_left");
-		
-	function clear() {
-	  ctx.clearRect(0, 0, WIDTH, HEIGHT);
-	}
-	
-	var guys = [flyguy];
-	
-	function draw(){
-		clear();
-		
-		var t = timer.getSeconds();
-		
-		for(j=0;j<guys.length;j++) {
-			if(guys[j].x < 0) {
-				guys[j].x = WIDTH + 100;
-			}			
-			guys[j].moveleft(4);
-			guys[j].draw(ctx,t);
-		}
-		mario.draw(ctx, t);
-		shyguy.draw(ctx, t);
-		//flyguy.draw(ctx, t);
-		//ppguy.draw(ctx, t);	
-		
-		timer.tick();
-	}	
-
-	function addguy() {
-		guys.push(new Sprite('flyguy',  
-		[{ name: 'walk_left', animation: fgrwalk }],
-		baddies, WIDTH-52, Math.floor(Math.random()*HEIGHT), "walk_left"));
-	}
-	
-	setInterval(draw, 12);   
-	
-	$(document).keydown(function(evt) {
-	  if (evt.keyCode == 39) mario.moveright(10);
-	  else if (evt.keyCode == 37) mario.moveleft(10);
-	  else if (evt.keyCode == 38) mario.moveup();
-	  else if (evt.keyCode == 40) mario.movedown();
-	  else if (evt.keyCode == 78) addguy();
-	});
+// Initialize the sprite system when DOM is ready
+Utils.domReady(async () => {
+    try {
+        // Get canvas element
+        const canvas = document.getElementById('canvas');
+        
+        // Set canvas background color
+        canvas.style.backgroundColor = '#82CAFA';
+        
+        // Create sprite manager
+        const spriteManager = new SpriteManager();
+        
+        // Load sprite and animation data
+        await spriteManager.loadSpriteSheetData('assets/data/spritesheets.json');
+        await spriteManager.loadAnimationData('assets/data/animations.json');
+        
+        // Create game scene
+        const scene = new GameScene(canvas, spriteManager);
+        await scene.loadScene('assets/data/scenes/spritetest.json');
+        
+        // Setup input handling
+        const input = new InputHandler(document);
+        
+        // Get controllable entity (mario) and bind controls
+        const controllableEntity = scene.getControllableEntity();
+        if (controllableEntity) {
+            input.bindScene(scene, controllableEntity);
+        }
+        
+        // Start the game loop
+        scene.start();
+        
+        console.log('Sprite system initialized successfully!');
+    } catch (error) {
+        console.error('Failed to initialize sprite system:', error);
+    }
 });
-
-
 </script>
 <meta charset=utf-8 />
 <title>sprites</title>
-<!--[if IE]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
 <style>
   html, body {
-  width:  100%;
-  height: 100%;
-  margin: 0px;
-}
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  #canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  
+  /* Hide color scheme picker and header on this page */
+  .color-scheme-picker,
+  header,
+  .static-home-link {
+    display: none !important;
+  }
 </style>
 </head>
 <body>	
-  <canvas id="canvas" style="background-color:#82CAFA"></canvas>
+  <canvas id="canvas"></canvas>
  
 </body>
 <!--Created and Maintained by Richard Talbot-->

@@ -1,0 +1,133 @@
+---
+layout: static
+title: Sprite Sheet Generator
+permalink: /spritegen
+---
+<style>
+  /* Hide color scheme picker and header on this page */
+  .color-scheme-picker,
+  .static-home-link {
+    display: none !important;
+  }
+</style>
+<link rel="stylesheet" href="{{ "/assets/css/spritegen.css" | prepend: site.baseurl }}">
+<script src="{{ "/assets/js/sprites.js" | prepend: site.baseurl }}"></script>
+<script src="{{ "/assets/js/game-scene.js" | prepend: site.baseurl }}"></script>
+<script src="{{ "/assets/js/input-handler.js" | prepend: site.baseurl }}"></script>
+<script src="{{ "/assets/js/spritegen.js" | prepend: site.baseurl }}"></script>
+<script>
+Utils.domReady(() => {
+    const app = new SpriteGenApp();
+    app.initialize();
+});
+</script>
+<body>
+    <div id="app">
+        <aside id="controls-panel">
+            <h2>Sprite Sheet Generator</h2>
+            
+            <section id="upload-section">
+                <h3>1. Upload Image</h3>
+                <div class="upload-area" id="upload-area">
+                    <p>Drag & Drop or Click to Upload</p>
+                    <input type="file" id="file-input" accept="image/*" style="display:none">
+                </div>
+                <div id="image-info" style="display:none">
+                    <p><strong>Image:</strong> <span id="image-name"></span></p>
+                    <p><strong>Size:</strong> <span id="image-dimensions"></span></p>
+                </div>
+            </section>
+
+            <section id="detect-section" style="display:none">
+                <h3>2. Detect Frames</h3>
+                <div class="control-group">
+                    <label>Frame Width: <input type="number" id="frame-width" value="32" min="1"></label>
+                    <label>Frame Height: <input type="number" id="frame-height" value="32" min="1"></label>
+                    <label>Padding: <input type="number" id="frame-padding" value="0" min="0"></label>
+                </div>
+                <div class="button-group">
+                    <button id="detect-grid" class="btn btn-primary">Grid Detection</button>
+                    <button id="detect-auto" class="btn btn-secondary">Auto Detect</button>
+                    <button id="manual-mode" class="btn btn-secondary">Manual Select</button>
+                </div>
+                <div class="button-group" style="display:none" id="suggest-animations-group">
+                    <button id="suggest-animations" class="btn btn-secondary">Suggest Animations</button>
+                </div>
+                <div class="control-group">
+                    <button id="clear-frames" class="btn btn-danger">Clear All Frames</button>
+                </div>
+            </section>
+
+            <section id="frames-section" style="display:none">
+                <h3>3. Frames (<span id="frame-count">0</span>)</h3>
+                <div class="control-group">
+                    <label>Spritesheet Name: <input type="text" id="spritesheet-name" value="my_spritesheet"></label>
+                    <label>Entity Type: <input type="text" id="entity-type" value="my_entity"></label>
+                </div>
+                <div id="frame-list"></div>
+            </section>
+
+            <section id="animation-section" style="display:none">
+                <h3>4. Animations</h3>
+                <div class="control-group">
+                    <input type="text" id="new-animation-name" placeholder="Animation name (e.g., walk_left)">
+                    <button id="new-animation" class="btn btn-primary">New Animation</button>
+                </div>
+                <div id="animation-list"></div>
+            </section>
+
+            <section id="export-section" style="display:none">
+                <h3>5. Export</h3>
+                <div class="button-group">
+                    <button id="export-json" class="btn btn-success">Export JSON</button>
+                    <button id="export-combined" class="btn btn-success">Export Combined</button>
+                </div>
+                <div class="control-group">
+                    <label><input type="checkbox" id="include-scene"> Include Scene Template</label>
+                </div>
+            </section>
+        </aside>
+
+        <main id="editor-panel">
+            <div id="canvas-container">
+                <canvas id="editor-canvas"></canvas>
+                <div id="canvas-overlay"></div>
+            </div>
+            <div id="editor-controls">
+                <span>Zoom: <span id="zoom-level">100%</span></span>
+                <button id="zoom-in" class="btn-small">+</button>
+                <button id="zoom-out" class="btn-small">−</button>
+                <button id="zoom-fit" class="btn-small">Fit</button>
+                <label><input type="checkbox" id="show-grid"> Show Grid</label>
+                <label><input type="checkbox" id="show-labels" checked> Show Labels</label>
+                <label><input type="checkbox" id="snap-to-grid"> Snap to Grid</label>
+            </div>
+        </main>
+
+        <aside id="preview-panel">
+            <h3>Preview</h3>
+            <canvas id="preview-canvas"></canvas>
+            <div id="preview-controls">
+                <select id="animation-select">
+                    <option value="">-- Select Animation --</option>
+                </select>
+                <div class="button-group">
+                    <button id="play-animation" class="btn btn-primary">▶ Play</button>
+                    <button id="pause-animation" class="btn btn-secondary">⏸ Pause</button>
+                </div>
+                <div class="control-group">
+                    <label>Scale: <input type="range" id="preview-scale" min="4" max="20" value="8"></label>
+                    <span id="preview-scale-value">8x</span>
+                </div>
+                <div class="control-group">
+                    <label>Speed: <input type="range" id="preview-speed" min="0.1" max="3" step="0.1" value="1"></label>
+                    <span id="preview-speed-value">1.0x</span>
+                </div>
+            </div>
+            <div id="preview-info">
+                <p><strong>Selected Frame:</strong> <span id="selected-frame-info">None</span></p>
+                <p><strong>Animation:</strong> <span id="current-animation-info">None</span></p>
+            </div>
+        </aside>
+    </div>
+</body>

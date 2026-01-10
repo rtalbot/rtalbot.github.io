@@ -10,6 +10,10 @@
   link: /spritetest.html
   description: Sprite animation demonstration
 
+- name: Sprite Sheet Generator
+  link: /spritegen
+  description: Generate sprite sheet data with auto-detection and animation preview
+
 - name: ANOVA Visualization
   link: /anova.html
   description: Statistical ANOVA analysis visualization
