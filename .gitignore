@@ -69,3 +69,5 @@ vendor/
 
 # Project documentation (keep private)
 /docs/
+
+.agent-docs/

@@ -1,0 +1,347 @@
+---
+layout: static
+title: PDF Collator
+permalink: /pdfcollator
+---
+<style>
+  /* Hide color scheme picker and header on this page */
+  .color-scheme-picker,
+  .static-home-link {
+    display: none !important;
+  }
+  
+  /* Ensure upload zone is clickable */
+  #upload-zone {
+    cursor: pointer;
+    position: relative;
+  }
+  
+  /* The content inside doesn't need pointer events except the button */
+  .upload-content {
+    pointer-events: none;
+  }
+  
+  #browse-files {
+    pointer-events: auto !important;
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+  }
+</style>
+<link rel="stylesheet" href="{{ "/assets/css/pdfcollator.css" | prepend: site.baseurl }}">
+
+<!-- Libraries loaded synchronously -->
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://unpkg.com/sortablejs@1.15.2/Sortable.min.js"></script>
+<!-- Using PDF.js 3.11.174 (legacy build) which exposes pdfjsLib globally -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<script src="{{ "/assets/js/pdfcollator/utils.js" | prepend: site.baseurl }}"></script>
+<script src="{{ "/assets/js/pdfcollator/file-manager.js" | prepend: site.baseurl }}"></script>
+<script src="{{ "/assets/js/pdfcollator/pdf-analyzer.js" | prepend: site.baseurl }}"></script>
+<script src="{{ "/assets/js/pdfcollator/pdf-renderer.js" | prepend: site.baseurl }}"></script>
+<script src="{{ "/assets/js/pdfcollator/pdf-collator.js" | prepend: site.baseurl }}"></script>
+<script src="{{ "/assets/js/pdfcollator/pdf-exporter.js" | prepend: site.baseurl }}"></script>
+<script src="{{ "/assets/js/pdfcollator/ui-controller.js" | prepend: site.baseurl }}"></script>
+<script src="{{ "/assets/js/pdfcollator/app.js" | prepend: site.baseurl }}"></script>
+  <div id="pdf-collator-app">
+    <!-- Header -->
+    <header class="app-header">
+      <h1>PDF Collator</h1>
+      <p class="app-subtitle">Intelligently merge and reorder PDF documents</p>
+    </header>
+
+    <!-- Main Content -->
+    <div class="app-container">
+      <!-- Left Panel: Source Files -->
+      <aside class="source-panel">
+        <div class="panel-header">
+          <h2>📁 Source Files</h2>
+        </div>
+
+        <!-- Upload Zone -->
+        <div class="upload-zone" id="upload-zone">
+          <div class="upload-content">
+            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <p class="upload-text">Drag & Drop PDF files here</p>
+            <p class="upload-subtext">or</p>
+            <button class="btn btn-primary" id="browse-files" onclick="document.getElementById('file-input').click(); return false;">Browse Files</button>
+            <input type="file" id="file-input" accept=".pdf,application/pdf" multiple style="display:none">
+          </div>
+        </div>
+
+        <!-- File List -->
+        <div class="file-list-container">
+          <div class="file-list-header">
+            <span id="file-count">No files loaded</span>
+            <button class="btn btn-text btn-sm" id="clear-all" disabled>Clear All</button>
+          </div>
+          <div class="file-list" id="file-list">
+            <!-- Files will be added here dynamically -->
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Panel: Collated Preview -->
+      <main class="preview-panel">
+        <div class="panel-header">
+          <h2>📄 Collated Preview</h2>
+        </div>
+
+        <!-- Collation Controls -->
+        <div class="collation-controls">
+          <div class="control-group">
+            <label for="strategy-select">Collation Strategy:</label>
+            <select id="strategy-select" class="select-input">
+              <option value="date">Date-based (Chronological)</option>
+              <option value="filename">Filename-based (Alphabetical)</option>
+              <option value="interleaved">Interleaved (Round-robin)</option>
+              <option value="manual">Manual (Drag to reorder)</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" id="apply-collation" disabled>
+            Apply Collation
+          </button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container" id="progress-container" style="display: none;">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <p class="progress-text" id="progress-text">Processing...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="empty-state">
+          <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+          <h3>No PDFs loaded yet</h3>
+          <p>Upload PDF files to get started</p>
+        </div>
+
+        <!-- Page Grid -->
+        <div class="page-grid" id="page-grid" style="display: none;">
+          <!-- Pages will be added here dynamically -->
+        </div>
+
+        <!-- Collation Stats -->
+        <div class="collation-stats" id="collation-stats" style="display: none;">
+          <div class="stat-item">
+            <span class="stat-label">Total Pages:</span>
+            <span class="stat-value" id="stat-total-pages">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Pages with Dates:</span>
+            <span class="stat-value" id="stat-pages-with-dates">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Strategy:</span>
+            <span class="stat-value" id="stat-strategy">-</span>
+          </div>
+        </div>
+
+        <!-- Export Button -->
+        <div class="export-controls" id="export-controls" style="display: none;">
+          <button class="btn btn-success btn-lg" id="export-pdf">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Save Collated PDF
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <!-- Page Detail Modal -->
+    <div class="modal" id="page-modal" style="display: none;">
+      <div class="modal-overlay" id="modal-overlay"></div>
+      <div class="modal-content">
+        <button class="modal-close" id="modal-close">×</button>
+        <div class="modal-body">
+          <canvas id="modal-canvas"></canvas>
+          <div class="modal-info">
+            <h3 id="modal-title">Page Details</h3>
+            <div class="modal-details" id="modal-details">
+              <!-- Page details will be added here -->
+            </div>
+          </div>
+        </div>
+        <div class="modal-nav">
+          <button class="btn btn-secondary" id="modal-prev">← Previous</button>
+          <button class="btn btn-secondary" id="modal-next">Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+      
+      // ==========================================
+      // GLOBAL DRAG-DROP PREVENTION
+      // Must prevent browser from handling drops
+      // ==========================================
+      
+      // Prevent drag/drop on document BODY to stop browser opening files
+      // Use bubbling phase (false) so upload zone handlers fire first
+      document.body.addEventListener('dragenter', function(e) {
+        e.preventDefault();
+      }, false);
+      
+      document.body.addEventListener('dragover', function(e) {
+        e.preventDefault();
+      }, false);
+      
+      document.body.addEventListener('drop', function(e) {
+        // Only prevent if not handled by upload zone
+        e.preventDefault();
+      }, false);
+      
+      // ==========================================
+      // DIRECT FILE INPUT SETUP
+      // Set up handlers directly, not through app
+      // ==========================================
+      
+      function setupDirectFileHandlers() {
+        var uploadZone = document.getElementById('upload-zone');
+        var fileInput = document.getElementById('file-input');
+        var browseBtn = document.getElementById('browse-files');
+        
+        if (!uploadZone || !fileInput || !browseBtn) {
+          console.error('PDF Collator: Required elements not found, retrying...');
+          setTimeout(setupDirectFileHandlers, 100);
+          return;
+        }
+        
+        console.log('PDF Collator: Setting up file handlers directly');
+        
+        // ---- BROWSE BUTTON ----
+        // Handled by inline onclick in HTML
+        
+        // ---- UPLOAD ZONE CLICK ----
+        // Don't add onclick to upload zone - conflicts with button
+        
+        // ---- FILE INPUT CHANGE ----
+        fileInput.onchange = function(e) {
+          console.log('File input changed:', e.target.files.length, 'files');
+          if (e.target.files.length > 0 && window.pdfCollatorApp) {
+            window.pdfCollatorApp.handleFiles(e.target.files);
+          }
+          // Reset for next selection
+          e.target.value = '';
+        };
+        
+        // ---- DRAG AND DROP ON UPLOAD ZONE ----
+        uploadZone.ondragenter = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          uploadZone.classList.add('drag-over');
+        };
+        
+        uploadZone.ondragover = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          uploadZone.classList.add('drag-over');
+        };
+        
+        uploadZone.ondragleave = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          uploadZone.classList.remove('drag-over');
+        };
+        
+        uploadZone.ondrop = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          uploadZone.classList.remove('drag-over');
+          
+          console.log('Files dropped on upload zone:', e.dataTransfer ? e.dataTransfer.files.length : 0);
+          
+          var files = [];
+          if (e.dataTransfer && e.dataTransfer.files) {
+            for (var i = 0; i < e.dataTransfer.files.length; i++) {
+              var file = e.dataTransfer.files[i];
+              console.log('File:', file.name, file.type);
+              if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+                files.push(file);
+              }
+            }
+          }
+          
+          console.log('PDF files found:', files.length);
+          
+          if (files.length > 0 && window.pdfCollatorApp) {
+            window.pdfCollatorApp.handleFiles(files);
+          } else if (files.length === 0 && e.dataTransfer && e.dataTransfer.files.length > 0) {
+            alert('Please drop PDF files only.');
+          }
+        };
+        
+        console.log('PDF Collator: File handlers ready');
+      }
+      
+      // ==========================================
+      // APP INITIALIZATION
+      // ==========================================
+      
+      function initializeApp() {
+        // Check if all dependencies are loaded
+        if (typeof PDFCollatorApp === 'undefined') {
+          console.log('Waiting for PDFCollatorApp...');
+          setTimeout(initializeApp, 100);
+          return;
+        }
+        
+        // PDF.js might expose itself under different names depending on version
+        var pdfjs = window.pdfjsLib || window['pdfjs-dist/build/pdf'] || window.pdfjsDistBuildPdf;
+        if (!pdfjs) {
+          console.log('Waiting for PDF.js... (checked: pdfjsLib, pdfjs-dist/build/pdf)');
+          console.log('Available globals with pdf:', Object.keys(window).filter(function(k) { return k.toLowerCase().indexOf('pdf') >= 0; }));
+          setTimeout(initializeApp, 100);
+          return;
+        }
+        // Make sure pdfjsLib is available globally
+        window.pdfjsLib = pdfjs;
+        
+        if (typeof PDFLib === 'undefined') {
+          console.log('Waiting for PDFLib...');
+          setTimeout(initializeApp, 100);
+          return;
+        }
+        if (typeof Sortable === 'undefined') {
+          console.log('Waiting for Sortable...');
+          setTimeout(initializeApp, 100);
+          return;
+        }
+        
+        // Set PDF.js worker
+        pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        // Initialize app
+        console.log('PDF Collator: All dependencies loaded, initializing...');
+        window.pdfCollatorApp = new PDFCollatorApp();
+        window.pdfCollatorApp.initialize();
+        
+        // Set up direct file handlers (in addition to app's handlers)
+        setupDirectFileHandlers();
+      }
+
+      // Start when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeApp);
+      } else {
+        initializeApp();
+      }
+      
+    })();
+  </script>

@@ -17,3 +17,7 @@
 - name: ANOVA Visualization
   link: /anova.html
   description: Statistical ANOVA analysis visualization
+
+- name: PDF Collator
+  link: /pdfcollator
+  description: Intelligently merge and reorder PDF documents with automatic date detection
