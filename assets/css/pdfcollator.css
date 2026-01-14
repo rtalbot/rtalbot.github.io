@@ -1,0 +1,798 @@
+/* ============================================
+   PDF Collator Styles
+   ============================================ */
+
+:root {
+  /* Light Mode Colors */
+  --pdf-bg-primary: #f8f9fa;
+  --pdf-bg-secondary: #ffffff;
+  --pdf-bg-tertiary: #f1f3f5;
+  --pdf-border: #dee2e6;
+  --pdf-text-primary: #212529;
+  --pdf-text-secondary: #6c757d;
+  --pdf-text-muted: #adb5bd;
+  
+  /* Accent Colors */
+  --pdf-primary: #2196f3;
+  --pdf-primary-hover: #1976d2;
+  --pdf-success: #4caf50;
+  --pdf-success-hover: #388e3c;
+  --pdf-danger: #f44336;
+  --pdf-danger-hover: #d32f2f;
+  --pdf-warning: #ff9800;
+  
+  /* Date Highlighting */
+  --pdf-date-highlight: #fff59d;
+  --pdf-date-text: #f57c00;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+  
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --pdf-bg-primary: #1a1a1a;
+    --pdf-bg-secondary: #2d2d2d;
+    --pdf-bg-tertiary: #3a3a3a;
+    --pdf-border: #404040;
+    --pdf-text-primary: #e0e0e0;
+    --pdf-text-secondary: #b0b0b0;
+    --pdf-text-muted: #808080;
+    
+    --pdf-primary: #64b5f6;
+    --pdf-primary-hover: #42a5f5;
+    --pdf-success: #81c784;
+    --pdf-success-hover: #66bb6a;
+    --pdf-danger: #e57373;
+    --pdf-danger-hover: #ef5350;
+    
+    --pdf-date-highlight: #fdd835;
+    --pdf-date-text: #ffb300;
+    
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.5);
+  }
+}
+
+/* ============================================
+   Layout
+   ============================================ */
+
+#pdf-collator-app {
+  min-height: 100vh;
+  background: var(--pdf-bg-primary);
+  color: var(--pdf-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.app-header {
+  background: var(--pdf-bg-secondary);
+  border-bottom: 1px solid var(--pdf-border);
+  padding: 1.5rem 2rem;
+  text-align: center;
+}
+
+.app-header h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.app-subtitle {
+  margin: 0;
+  color: var(--pdf-text-secondary);
+  font-size: 1rem;
+}
+
+.app-container {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 0;
+  height: calc(100vh - 120px);
+}
+
+.source-panel,
+.preview-panel {
+  background: var(--pdf-bg-secondary);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.source-panel {
+  border-right: 1px solid var(--pdf-border);
+}
+
+.panel-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--pdf-border);
+  background: var(--pdf-bg-tertiary);
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* ============================================
+   Upload Zone
+   ============================================ */
+
+.upload-zone {
+  margin: 1.5rem;
+  border: 2px dashed var(--pdf-border);
+  border-radius: 8px;
+  padding: 2rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  background: var(--pdf-bg-tertiary);
+}
+
+.upload-zone:hover,
+.upload-zone.drag-over {
+  border-color: var(--pdf-primary);
+  background: var(--pdf-bg-primary);
+}
+
+.upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.upload-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--pdf-text-muted);
+}
+
+.upload-text {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--pdf-text-primary);
+}
+
+.upload-subtext {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--pdf-text-secondary);
+}
+
+/* ============================================
+   File List
+   ============================================ */
+
+.file-list-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.file-list-header {
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--pdf-border);
+  background: var(--pdf-bg-tertiary);
+}
+
+#file-count {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--pdf-text-secondary);
+}
+
+.file-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background: var(--pdf-bg-tertiary);
+  border: 1px solid var(--pdf-border);
+  border-radius: 6px;
+  transition: all var(--transition-fast);
+}
+
+.file-item:hover {
+  background: var(--pdf-bg-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.file-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--pdf-primary);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.file-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-name {
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin: 0 0 0.25rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-meta {
+  font-size: 0.75rem;
+  color: var(--pdf-text-secondary);
+  display: flex;
+  gap: 0.5rem;
+}
+
+.file-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+/* ============================================
+   Collation Controls
+   ============================================ */
+
+.collation-controls {
+  padding: 1.5rem;
+  background: var(--pdf-bg-tertiary);
+  border-bottom: 1px solid var(--pdf-border);
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.control-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.control-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--pdf-text-secondary);
+}
+
+.select-input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--pdf-border);
+  border-radius: 4px;
+  background: var(--pdf-bg-secondary);
+  color: var(--pdf-text-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.select-input:hover {
+  border-color: var(--pdf-primary);
+}
+
+.select-input:focus {
+  outline: none;
+  border-color: var(--pdf-primary);
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+/* ============================================
+   Progress Bar
+   ============================================ */
+
+.progress-container {
+  padding: 1.5rem;
+  background: var(--pdf-bg-tertiary);
+  border-bottom: 1px solid var(--pdf-border);
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--pdf-border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--pdf-primary);
+  transition: width var(--transition-normal);
+  width: 0%;
+}
+
+.progress-text {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--pdf-text-secondary);
+  text-align: center;
+}
+
+/* ============================================
+   Empty State
+   ============================================ */
+
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+}
+
+.empty-icon {
+  width: 64px;
+  height: 64px;
+  color: var(--pdf-text-muted);
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--pdf-text-secondary);
+  font-weight: 500;
+}
+
+.empty-state p {
+  margin: 0;
+  color: var(--pdf-text-muted);
+}
+
+/* ============================================
+   Page Grid
+   ============================================ */
+
+.page-grid {
+  flex: 1;
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+  align-content: start;
+  overflow-y: auto;
+}
+
+.page-card {
+  background: var(--pdf-bg-tertiary);
+  border: 2px solid var(--pdf-border);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+}
+
+.page-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--pdf-primary);
+}
+
+.page-card.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+.page-card.manual-mode {
+  cursor: grab;
+}
+
+.page-thumbnail {
+  width: 100%;
+  height: auto;
+  min-height: 200px;
+  display: block;
+  background: white;
+  object-fit: contain;
+}
+
+.page-info {
+  padding: 0.75rem;
+  background: var(--pdf-bg-secondary);
+}
+
+.page-number {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+}
+
+.page-date {
+  font-size: 0.75rem;
+  color: var(--pdf-date-text);
+  margin: 0 0 0.25rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.page-date::before {
+  content: '📅';
+  font-size: 0.875rem;
+}
+
+.page-source {
+  font-size: 0.75rem;
+  color: var(--pdf-text-muted);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.page-no-date {
+  font-size: 0.75rem;
+  color: var(--pdf-text-muted);
+  font-style: italic;
+  margin: 0;
+}
+
+/* ============================================
+   Collation Stats
+   ============================================ */
+
+.collation-stats {
+  padding: 1rem 1.5rem;
+  background: var(--pdf-bg-tertiary);
+  border-top: 1px solid var(--pdf-border);
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--pdf-text-secondary);
+}
+
+.stat-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--pdf-text-primary);
+}
+
+/* ============================================
+   Export Controls
+   ============================================ */
+
+.export-controls {
+  padding: 1.5rem;
+  background: var(--pdf-bg-tertiary);
+  border-top: 1px solid var(--pdf-border);
+  display: flex;
+  justify-content: center;
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: inherit;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--pdf-primary);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--pdf-primary-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-success {
+  background: var(--pdf-success);
+  color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+  background: var(--pdf-success-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-danger {
+  background: var(--pdf-danger);
+  color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--pdf-danger-hover);
+}
+
+.btn-secondary {
+  background: var(--pdf-bg-tertiary);
+  color: var(--pdf-text-primary);
+  border: 1px solid var(--pdf-border);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--pdf-bg-primary);
+}
+
+.btn-text {
+  background: transparent;
+  color: var(--pdf-primary);
+  padding: 0.25rem 0.5rem;
+}
+
+.btn-text:hover:not(:disabled) {
+  background: var(--pdf-bg-primary);
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+}
+
+.btn-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.btn-icon-only {
+  padding: 0.5rem;
+  aspect-ratio: 1;
+}
+
+/* ============================================
+   Modal
+   ============================================ */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+}
+
+.modal-content {
+  position: relative;
+  max-width: 900px;
+  max-height: 90vh;
+  margin: 5vh auto;
+  background: var(--pdf-bg-secondary);
+  border-radius: 8px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--pdf-bg-tertiary);
+  color: var(--pdf-text-primary);
+  font-size: 1.5rem;
+  line-height: 1;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 10;
+  transition: all var(--transition-fast);
+}
+
+.modal-close:hover {
+  background: var(--pdf-danger);
+  color: white;
+}
+
+.modal-body {
+  flex: 1;
+  overflow: auto;
+  padding: 2rem;
+  display: flex;
+  gap: 2rem;
+}
+
+#modal-canvas {
+  max-width: 500px;
+  height: auto;
+  border: 1px solid var(--pdf-border);
+  border-radius: 4px;
+  background: white;
+}
+
+.modal-info {
+  flex: 1;
+}
+
+.modal-info h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+}
+
+.modal-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detail-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--pdf-text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-size: 0.875rem;
+  color: var(--pdf-text-primary);
+}
+
+.date-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background: var(--pdf-date-highlight);
+  color: var(--pdf-date-text);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.modal-nav {
+  padding: 1rem 2rem;
+  background: var(--pdf-bg-tertiary);
+  border-top: 1px solid var(--pdf-border);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .app-container {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  
+  .source-panel {
+    border-right: none;
+    border-bottom: 1px solid var(--pdf-border);
+    max-height: 400px;
+  }
+  
+  .preview-panel {
+    min-height: 600px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .page-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  
+  .collation-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .modal-body {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  
+  #modal-canvas {
+    max-width: 100%;
+  }
+  
+  .collation-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+
+.hidden {
+  display: none !important;
+}
+
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Sortable.js styling */
+.sortable-ghost {
+  opacity: 0.4;
+}
+
+.sortable-chosen {
+  cursor: grabbing !important;
+}
