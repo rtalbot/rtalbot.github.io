@@ -144,6 +144,14 @@ class SpriteGenApp {
     setupImageCanvas() {
         this.canvas.width = this.image.width;
         this.canvas.height = this.image.height;
+        
+        // Constrain visual size with CSS to prevent layout breaking
+        this.canvas.style.maxWidth = '100%';
+        this.canvas.style.maxHeight = '100%';
+        this.canvas.style.width = 'auto';
+        this.canvas.style.height = 'auto';
+        this.canvas.style.objectFit = 'contain';
+        
         this.redrawCanvas();
         this.zoomToFit();
     }

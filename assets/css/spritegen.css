@@ -24,12 +24,16 @@ html, body {
     background: #1e1e1e;
     color: #e0e0e0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 
 /* Controls Panel - Left */
 #controls-panel {
     width: 300px;
     min-width: 300px;
+    flex-shrink: 0; /* Prevent panel from shrinking */
     background: #252526;
     border-right: 1px solid #3e3e42;
     overflow-y: auto;
@@ -348,7 +352,9 @@ html, body {
 
 /* Editor Panel - Center */
 #editor-panel {
-    flex: 1;
+    flex: 1 1 auto;
+    min-width: 0; /* Important: allows flex item to shrink below content size */
+    max-width: calc(100vw - 600px); /* Ensure it doesn't exceed viewport minus side panels */
     display: flex;
     flex-direction: column;
     background: #2a2a2a;
@@ -360,6 +366,7 @@ html, body {
     position: relative;
     overflow: auto;
     background: #1e1e1e;
+    min-height: 0; /* Important: allows flex item to shrink */
 }
 
 #editor-canvas {
@@ -395,11 +402,13 @@ html, body {
 #preview-panel {
     width: 300px;
     min-width: 300px;
+    flex-shrink: 0; /* Prevent panel from shrinking */
     background: #252526;
     border-left: 1px solid #3e3e42;
     padding: 20px;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
 }
 
 #preview-panel h3 {
