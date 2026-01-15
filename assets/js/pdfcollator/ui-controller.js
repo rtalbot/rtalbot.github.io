@@ -72,6 +72,11 @@ class UIController {
     item.className = 'file-item';
     item.dataset.id = doc.id;
 
+    // Show detected document type if available
+    const detectionBadge = doc.detectedType ? 
+      `<span class="doc-type-badge doc-type-${doc.detectedType}" title="Detected: ${doc.detectedType} (${doc.detectionConfidence}% confidence)">${doc.detectedType.toUpperCase()}</span>` 
+      : '';
+
     item.innerHTML = `
       <div class="file-icon">PDF</div>
       <div class="file-info">
@@ -81,6 +86,7 @@ class UIController {
         <div class="file-meta">
           <span>${doc.pageCount} page${doc.pageCount !== 1 ? 's' : ''}</span>
           <span>${PDFCollatorUtils.formatFileSize(doc.fileSize)}</span>
+          ${detectionBadge}
         </div>
       </div>
       <div class="file-actions">
@@ -197,6 +203,15 @@ class UIController {
     source.textContent = PDFCollatorUtils.truncate(pdfDoc.filename, 20);
 
     info.appendChild(pageNumber);
+
+    // Add document type badge if available
+    if (pdfDoc.detectedType && pdfDoc.detectedType !== 'unknown') {
+      const typeBadge = document.createElement('span');
+      typeBadge.className = `doc-type-badge doc-type-${pdfDoc.detectedType}`;
+      typeBadge.textContent = pdfDoc.detectedType.toUpperCase();
+      typeBadge.title = `Detected: ${pdfDoc.detectedType}`;
+      info.appendChild(typeBadge);
+    }
 
     // Add date if available
     if (pageInfo.primaryDate) {
