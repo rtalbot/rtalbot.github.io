@@ -252,6 +252,48 @@
   color: var(--pdf-text-secondary);
   display: flex;
   gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.doc-type-badge {
+  display: inline-block;
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.doc-type-invoice {
+  background: rgba(34, 139, 230, 0.15);
+  color: #228be6;
+}
+
+.doc-type-ledger {
+  background: rgba(82, 196, 26, 0.15);
+  color: #52c41a;
+}
+
+.doc-type-1500 {
+  background: rgba(250, 173, 20, 0.15);
+  color: #faad14;
+}
+
+.doc-type-consent {
+  background: rgba(114, 46, 209, 0.15);
+  color: #722ed1;
+}
+
+.doc-type-soap {
+  background: rgba(235, 47, 150, 0.15);
+  color: #eb2f96;
+}
+
+.doc-type-unknown {
+  background: rgba(128, 128, 128, 0.15);
+  color: #808080;
 }
 
 .file-actions {

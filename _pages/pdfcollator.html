@@ -101,6 +101,7 @@ permalink: /pdfcollator
               <option value="filename">Filename-based (Alphabetical)</option>
               <option value="interleaved">Interleaved (Round-robin)</option>
               <option value="manual">Manual (Drag to reorder)</option>
+              <option value="final-billing" selected>Final Billing (Invoice→Ledger→1500→Consent→SOAP)</option>
             </select>
           </div>
           <button class="btn btn-primary" id="apply-collation" disabled>
@@ -235,10 +236,15 @@ permalink: /pdfcollator
         fileInput.onchange = function(e) {
           console.log('File input changed:', e.target.files.length, 'files');
           if (e.target.files.length > 0 && window.pdfCollatorApp) {
-            window.pdfCollatorApp.handleFiles(e.target.files);
+            var files = Array.from(e.target.files);
+            window.pdfCollatorApp.handleFiles(files).then(function() {
+              // Reset after handling completes
+              e.target.value = '';
+            }).catch(function(err) {
+              console.error('Error handling files:', err);
+              e.target.value = '';
+            });
           }
-          // Reset for next selection
-          e.target.value = '';
         };
         
         // ---- DRAG AND DROP ON UPLOAD ZONE ----
