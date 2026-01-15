@@ -216,44 +216,63 @@ CanvasText.prototype = {
 	}
 }
 
-var Level = function(w, h) {
+var Level = function(w, h, levelData) {
 	this.b = [];
 	this.aframes = 10;
 	this.acount = 0;
-	var ycount = 5;
-	var xcount = 20;
-	var bh = 10;
-	var bw = (w-200)/xcount;
-	var bx = 81;
-	var by = 100;
-	var bpad = 2;	 
+	this.completed = false;
+	this.name = levelData.name;
+	this.totalBricks = 0;
+	this.activeBricks = 0;
 	
-	for(v=0;v<ycount;v++){
+	var ycount = levelData.rows;
+	var xcount = levelData.cols;
+	var bh = levelData.brickHeight;
+	var bw = (w - 200) / xcount;
+	var bx = 81;
+	var by = levelData.startY;
+	var bpad = levelData.brickPadding;
+	
+	for(v = 0; v < ycount; v++) {
 		var temp = [];
-		for(z=0;z<xcount;z++){
+		for(z = 0; z < xcount; z++) {
 			var vby = by + ((bh + bpad) * v);
-			var vbx = bx + ((bw + bpad) * z);			
-			temp[z] = new Brick(vbx, vby, bw, bh, Math.ceil((ycount-v)/ 2));			
+			var vbx = bx + ((bw + bpad) * z);
+			var hitpoints = levelData.layout[v][z];
+			
+			if (hitpoints > 0) {
+				temp[z] = new Brick(vbx, vby, bw, bh, hitpoints);
+				this.totalBricks++;
+				this.activeBricks++;
+			} else {
+				temp[z] = null;
+			}
 		}
 		this.b[v] = temp;
 	}
 }
 
 Level.prototype = {
-	render: function(context) {		
-			for(v=0;v<this.b.length;v++){
-				var temp = this.b[v];
-				for(z=0;z<temp.length;z++){	
+	render: function(context) {
+		var activeBrickCount = 0;
+		for(v = 0; v < this.b.length; v++) {
+			var temp = this.b[v];
+			for(z = 0; z < temp.length; z++) {
+				if (temp[z]) {
 					temp[z].color = this.getcolor(temp[z].hitpoints);
 					temp[z].render(context);
+					if (temp[z].active) activeBrickCount++;
+				}
 			}
-		  }
-		  if(this.acount < this.aframes) {
+		}
+		this.activeBricks = activeBrickCount;
+		this.completed = (activeBrickCount === 0);
+		
+		if(this.acount < this.aframes) {
 			this.acount++;
-		  }
-		  else {
+		} else {
 			this.acount = 0;
-		  }
+		}
 	},
 	getcolor: function(n) {
 		switch(n) {
@@ -265,14 +284,14 @@ Level.prototype = {
 		}
 	},
 	collides: function(crc, onsuccess) {
-		for(v=0;v<this.b.length;v++) {
+		for(v = 0; v < this.b.length; v++) {
 			var temp = this.b[v];
-			for(z=0;z<temp.length;z++){					
-				if(crc.collides(temp[z])) {
+			for(z = 0; z < temp.length; z++) {
+				if (temp[z] && crc.collides(temp[z])) {
 					onsuccess();
-				}			
+				}
 			}
-		} 
+		}
 	}
 }
 
@@ -281,6 +300,7 @@ var Game = function(w, h){
 	this.height = h;
 	this.lifecount = 5;
 	this.levels = [];
+	this.levelData = [];
 	this.activelevel = 0;
 	this.score = 0;
 	this.balls = [];
@@ -290,27 +310,98 @@ var Game = function(w, h){
 	this.starttxt = new CanvasText("CLICK TO START", this.width/2, this.height/2, true);
 	this.gameovertxt = new CanvasText("GAME OVER", this.width/2, this.height/2, true);
 	this.nextBallTxt = new CanvasText("NEXT BALL", this.width/2, this.height/2 - 80, true);
+	this.levelCompleteTxt = new CanvasText("LEVEL COMPLETE!", this.width/2, this.height/2, true);
 	this.lifetxt = new CanvasText("Lives: " + this.lifecount, 5, 30);
 	this.scrtxt = new CanvasText("Score: " + this.score, 5, 5);
+	this.leveltxt = new CanvasText("Level: 1", this.width - 120, 5);
 	this.waitingBall = null;
 	this.showInstructions = false;
+	this.levelComplete = false;
+	this.allLevelsComplete = false;
 	
 	// Sound effects
 	this.sounds = {
 		paddle: this.createSound(200, 0.1),
 		brick: this.createSound(400, 0.1),
 		wall: this.createSound(150, 0.05),
-		gameover: this.createSound(100, 0.3)
+		gameover: this.createSound(100, 0.3),
+		levelcomplete: this.createSound(600, 0.5)
 	};
+	
 	this.started = false;
 	this.paused = false;
 	this.gameover = false;
-	this.live = false;	
+	this.live = false;
 	
-	this.levels[0] = new Level(this.width, this.height);
+	// Load levels
+	this.loadLevels();
 }
 
 Game.prototype = {
+	loadLevels: function() {
+		var self = this;
+		fetch('/assets/data/breakout-levels.json')
+			.then(function(response) { return response.json(); })
+			.then(function(data) {
+				self.levelData = data.levels;
+				self.loadLevel(0);
+			})
+			.catch(function(error) {
+				console.error('Error loading levels:', error);
+			});
+	},
+	loadLevel: function(levelIndex) {
+		if (levelIndex < this.levelData.length) {
+			this.activelevel = levelIndex;
+			this.levels[levelIndex] = new Level(this.width, this.height, this.levelData[levelIndex]);
+			this.leveltxt.text = "Level: " + (levelIndex + 1);
+			this.levelComplete = false;
+		} else {
+			this.allLevelsComplete = true;
+		}
+	},
+	nextLevel: function() {
+		this.levelComplete = false;
+		// Clear all balls
+		for(var i = 0; i < this.balls.length; i++) {
+			this.balls[i].active = false;
+		}
+		this.balls = [];
+		this.ballindex = 0;
+		this.waitingBall = null;
+		this.live = false;
+		
+		this.loadLevel(this.activelevel + 1);
+		if (!this.allLevelsComplete) {
+			this.sounds.levelcomplete();
+			setTimeout(function() {
+				this.addball();
+			}.bind(this), 1000);
+		}
+	},
+	reset: function() {
+		// Reset game state
+		this.lifecount = 5;
+		this.activelevel = 0;
+		this.score = 0;
+		this.started = false;
+		this.paused = false;
+		this.gameover = false;
+		this.live = false;
+		this.levelComplete = false;
+		this.allLevelsComplete = false;
+		this.waitingBall = null;
+		
+		// Clear all balls
+		for(var i = 0; i < this.balls.length; i++) {
+			this.balls[i].active = false;
+		}
+		this.balls = [];
+		this.ballindex = 0;
+		
+		// Reload first level
+		this.loadLevel(0);
+	},
 	createSound: function(frequency, duration) {
 		return function() {
 			try {
@@ -336,6 +427,12 @@ Game.prototype = {
 		this.showInstructions = !this.showInstructions;
 	},
 	draw: function(context, drawinterval) {
+		if(this.allLevelsComplete) {
+			var winTxt = new CanvasText("YOU WIN! ALL LEVELS COMPLETE!", this.width/2, this.height/2, true);
+			winTxt.render(context);
+			return;
+		}
+		
 		if(this.gameover) {
 			this.gameovertxt.render(context);
 			return;			
@@ -346,13 +443,30 @@ Game.prototype = {
 			return;
 		}
 		
+		if(this.levelComplete) {
+			this.levelCompleteTxt.render(context);
+			return;
+		}
+		
 		this.paddle.render(context);		
 		this.lifetxt.text = "Lives: " + this.lifecount;
 		this.scrtxt.text = "Score: " + this.score;
 		this.lifetxt.render(context);
-		this.scrtxt.render(context);		
+		this.scrtxt.render(context);
+		this.leveltxt.render(context);
 			 
-		this.levels[0].render(context);	  
+		if (this.levels[this.activelevel]) {
+			this.levels[this.activelevel].render(context);
+			
+			// Check if level is complete
+			if (this.levels[this.activelevel].completed && !this.levelComplete) {
+				this.levelComplete = true;
+				var self = this;
+				setTimeout(function() {
+					self.nextLevel();
+				}, 2000);
+			}
+		}	  
 		
 		// Show waiting ball if no active balls
 		if (!this.live && this.waitingBall) {
@@ -375,10 +489,12 @@ Game.prototype = {
 				}
 				
 				var self = this;
-				this.levels[0].collides(this.balls[n], function() {
-					self.addscore(10)();
-					self.sounds.brick();
-				});
+				if (this.levels[this.activelevel]) {
+					this.levels[this.activelevel].collides(this.balls[n], function() {
+						self.addscore(10)();
+						self.sounds.brick();
+					});
+				}
 				
 				if(!this.paused) {
 					this.balls[n].move();

@@ -78,7 +78,9 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 
     document.getElementById('canvas').addEventListener('click', function() {
-        if (!game.started) {
+        if (game.gameover) {
+            game.reset();
+        } else if (!game.started) {
             game.startgame();
         } else if (!game.live && !game.gameover) {
             game.launchBall();
