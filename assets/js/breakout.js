@@ -33,7 +33,7 @@ Rectangle.prototype = {
 	}
 }
 
-var Circle = function(xpos, ypos, radius, dox, doy, dobtm, img) { 
+var Circle = function(xpos, ypos, radius, dox, doy, dobtm) { 
 	this.x = xpos; 
 	this.y = ypos; 
 	this.r = radius; 
@@ -43,27 +43,10 @@ var Circle = function(xpos, ypos, radius, dox, doy, dobtm, img) {
 	this.active = true;
 	this.acount = 0;
 	this.aframes = 7;
-	this.image = img;
-	this.sprites = new SpriteSheet({
-                width: 32,
-                height: 32,
-                sprites: [
-                    { name: "roll_1", x: 0, y: 0 },
-                    { name: "roll_2", x: 18, y: 0 },
-                    { name: "roll_3", x: 36, y: 0 },
-					{ name: "roll_4", x: 46, y: 0 }
-                ]
-            });
-	this.roll = new Animation([
-                    { sprite: "roll_1", time: 0.1 },
-                    { sprite: "roll_2", time: 0.1 },
-                    { sprite: "roll_3", time: 0.1 },
-					{ sprite: "roll_4", time: 0.1 }
-            ], this.sprites);
 }
 
 Circle.prototype = {
-	speedfactor: 5,
+	speedfactor: 3,
 	box: function() { 
 		var pareto = (4 * this.r/5);
 		return new Rectangle(this.x - pareto, this.y - pareto, pareto, pareto);
@@ -72,23 +55,19 @@ Circle.prototype = {
 	setcolor: function(rval, gval, bval, tval) { this.color = "rgba("+rval+","+gval+","+bval+","+tval+")"; },
 	setvector: function(dox, doy) { this.vector = new vector(dox, doy); },	 
 	render: function(context, di) {
-		if(this.active) {
-		  context.fillStyle = this.getcolor();
-		  context.beginPath();
-		  context.arc(this.x, this.y, this.r, 0, Math.PI*2, true);
-		  context.closePath();
-		  context.fill();
-		  //this.roll.animate(di);
-          //var frame = this.roll.getSprite();	  
-          //context.drawImage(this.image, frame.x, frame.y, 18, 18, this.x, this.y, 32, 32);
-	  }
-	  
-	  if(this.acount < this.aframes) {
-		this.acount++;
-	  }
-	  else {
-		this.acount = 0;
-	  }
+		if (this.active) {
+			context.fillStyle = this.getcolor();
+			context.beginPath();
+			context.arc(this.x, this.y, this.r, 0, Math.PI * 2, true);
+			context.closePath();
+			context.fill();
+		}
+
+		if (this.acount < this.aframes) {
+			this.acount++;
+		} else {
+			this.acount = 0;
+		}
 	},
 	getcolor: function() {
 		return "#0088FF";
@@ -203,18 +182,37 @@ Brick.prototype = {
 	}
 } 
 
-var CanvasText = function(txt, xpos, ypos) {	
+var CanvasText = function(txt, xpos, ypos, animated) {	
 	this.x = xpos;
 	this.y = ypos;
-	this.text = txt;	
+	this.text = txt;
+	this.animated = animated || false;
+	this.animTime = 0;	
 }
 
 CanvasText.prototype = {
-	render: function(context) {	
-		context.fillStyle = "#000000";
-		context.font = "bold 20px sans-serif";
-		context.textBaseline = "top"; 	
-		context.fillText(this.text, this.x, this.y);
+	render: function(context) {
+		if (this.animated) {
+			this.animTime += 0.05;
+			var scale = 1 + Math.sin(this.animTime * 2) * 0.1;
+			var alpha = 0.7 + Math.sin(this.animTime * 3) * 0.3;
+			
+			context.save();
+			context.translate(this.x, this.y);
+			context.scale(scale, scale);
+			context.globalAlpha = alpha;
+			context.fillStyle = "#000000";
+			context.font = "bold 40px sans-serif";
+			context.textAlign = "center";
+			context.textBaseline = "middle";
+			context.fillText(this.text, 0, 0);
+			context.restore();
+		} else {
+			context.fillStyle = "#000000";
+			context.font = "bold 20px sans-serif";
+			context.textBaseline = "top";
+			context.fillText(this.text, this.x, this.y);
+		}
 	}
 }
 
@@ -278,8 +276,7 @@ Level.prototype = {
 	}
 }
 
-var Game = function(w, h, spriteimg){
-	this.sprites = spriteimg;
+var Game = function(w, h){
 	this.width = w;
 	this.height = h;
 	this.lifecount = 5;
@@ -290,10 +287,21 @@ var Game = function(w, h, spriteimg){
 	this.ballcount = 0;
 	this.ballindex = 0;
 	this.paddle = new Paddle(this.width/2 - 75, this.height - 18, 150, 15);
-	this.starttxt = new CanvasText("CLICK TO START", this.width/2, this.height/2);
-	this.gameovertxt = new CanvasText("GAME OVER", this.width/2, this.height/2);
+	this.starttxt = new CanvasText("CLICK TO START", this.width/2, this.height/2, true);
+	this.gameovertxt = new CanvasText("GAME OVER", this.width/2, this.height/2, true);
+	this.nextBallTxt = new CanvasText("NEXT BALL", this.width/2, this.height/2 - 80, true);
 	this.lifetxt = new CanvasText("Lives: " + this.lifecount, 5, 30);
 	this.scrtxt = new CanvasText("Score: " + this.score, 5, 5);
+	this.waitingBall = null;
+	this.showInstructions = false;
+	
+	// Sound effects
+	this.sounds = {
+		paddle: this.createSound(200, 0.1),
+		brick: this.createSound(400, 0.1),
+		wall: this.createSound(150, 0.05),
+		gameover: this.createSound(100, 0.3)
+	};
 	this.started = false;
 	this.paused = false;
 	this.gameover = false;
@@ -303,6 +311,30 @@ var Game = function(w, h, spriteimg){
 }
 
 Game.prototype = {
+	createSound: function(frequency, duration) {
+		return function() {
+			try {
+				var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+				var oscillator = audioCtx.createOscillator();
+				var gainNode = audioCtx.createGain();
+				
+				oscillator.connect(gainNode);
+				gainNode.connect(audioCtx.destination);
+				
+				oscillator.frequency.value = frequency;
+				oscillator.type = 'sine';
+				
+				gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+				gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+				
+				oscillator.start(audioCtx.currentTime);
+				oscillator.stop(audioCtx.currentTime + duration);
+			} catch(e) {}
+		};
+	},
+	toggleInstructions: function() {
+		this.showInstructions = !this.showInstructions;
+	},
 	draw: function(context, drawinterval) {
 		if(this.gameover) {
 			this.gameovertxt.render(context);
@@ -321,16 +353,66 @@ Game.prototype = {
 		this.scrtxt.render(context);		
 			 
 		this.levels[0].render(context);	  
+		
+		// Show waiting ball if no active balls
+		if (!this.live && this.waitingBall) {
+			this.waitingBall.render(context, drawinterval);
+			
+			// Show animated "Next Ball" text with semi-transparency
+			context.save();
+			context.globalAlpha = 0.7;
+			this.nextBallTxt.render(context);
+			context.restore();
+		}
 		  
 		for(n=0;n<this.balls.length;n++) {
 			if(this.balls[n].active) {
 				this.balls[n].render(context, drawinterval);
 				this.balls[n].collideswall(this.width, this.height);
-				this.balls[n].collides(this.paddle.box(), this.paddle.collider());
-				this.levels[0].collides(this.balls[n], this.addscore(10));
+				
+				if(this.balls[n].collides(this.paddle.box(), this.paddle.collider())) {
+					this.sounds.paddle();
+				}
+				
+				var self = this;
+				this.levels[0].collides(this.balls[n], function() {
+					self.addscore(10)();
+					self.sounds.brick();
+				});
+				
 				if(!this.paused) {
 					this.balls[n].move();
 				}
+			}
+		}
+		
+		// Draw instructions panel
+		if (this.showInstructions) {
+			context.fillStyle = "rgba(0, 0, 0, 0.8)";
+			context.fillRect(this.width/2 - 200, this.height/2 - 150, 400, 300);
+			
+			context.fillStyle = "#FFFFFF";
+			context.font = "bold 24px sans-serif";
+			context.textAlign = "center";
+			context.fillText("CONTROLS", this.width/2, this.height/2 - 110);
+			
+			context.font = "16px sans-serif";
+			context.textAlign = "left";
+			var instructions = [
+				"Mouse/Touch: Move paddle",
+				"Click: Start game / Launch ball",
+				"Arrow Keys: Move paddle",
+				"P: Pause",
+				"Z: Speed up",
+				"X: Slow down",
+				"V: Bigger ball",
+				"C: Smaller ball",
+				"I: Toggle instructions"
+			];
+			var yPos = this.height/2 - 70;
+			for (var i = 0; i < instructions.length; i++) {
+				context.fillText(instructions[i], this.width/2 - 180, yPos);
+				yPos += 30;
 			}
 		}		
 	},
@@ -339,9 +421,17 @@ Game.prototype = {
 		this.addball();
 	},
 	addball: function() {			
-		this.live = true;
-		var newball = new Circle(this.width/2,this.height/2,10,0,1, this.endlife(), this.sprites);		
+		var newball = new Circle(this.width/2, this.height/2, 10, 0, 1, this.endlife());
+		newball.active = false;
+		this.waitingBall = newball;
 		this.balls[this.ballindex++] = newball;
+	},
+	launchBall: function() {
+		if (this.waitingBall) {
+			this.waitingBall.active = true;
+			this.live = true;
+			this.waitingBall = null;
+		}
 	},
 	pause: function() {
 		this.paused = !this.paused;
@@ -368,6 +458,14 @@ Game.prototype = {
 			g.lifecount -= 1;
 			g.live = false;
 			g.gameover = g.lifecount == 0;
+			if (g.gameover) {
+				g.sounds.gameover();
+			} else {
+				// Automatically create waiting ball for next life
+				setTimeout(function() {
+					g.addball();
+				}, 500);
+			}
 		}
 	},
 	addscore: function(n) {

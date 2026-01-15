@@ -1,91 +1,108 @@
 ---
-layout: static
-title: Breakout
+layout: none
 permalink: /breakout
 ---
+<!DOCTYPE html>
+<html>
 <head>
-<script src="\assets\js\jquery.js"></script>
-<script src="\assets\js\detectdevice.js"></script>
-<script src="\assets\js\breakout.js"></script>
-<script src="\assets\js\sprites.js"></script>
-<script>
-$(document).ready(function() {
-	var ctx = $('#canvas')[0].getContext("2d");
-	$("body").css('overflow', 'hidden');
-	var HEIGHT = ctx.canvas.height = window.innerHeight;
-	var WIDTH = ctx.canvas.width = window.innerWidth;
-	var d = new Device();
-	var happyimg = new Image();
-	happyimg.src = 'baddies.png';
-	var game = new Game(WIDTH, HEIGHT, happyimg);
-	var timer = new FrameTimer();
-    timer.tick();
-	var timerinterval = 1;
-
-	function clear() {
-	  ctx.clearRect(0, 0, WIDTH, HEIGHT);
-	}
-
-	function draw() {
-		clear();
-		game.draw(ctx, timer.getSeconds());
-		timer.tick();
-	}
-
-	setInterval(draw, timerinterval);
-
-	$(document).keydown(function(evt) {
-	  if (evt.keyCode == 39) game.moveright();
-	  else if (evt.keyCode == 37) game.moveleft();
-	  else if (evt.keyCode == 80) game.pause();
-	  else if (evt.keyCode == 90) game.speed();
-	  else if (evt.keyCode == 88) game.slow();
-	  else if (evt.keyCode == 86) game.embiggen();
-	  else if (evt.keyCode == 67) game.shrink();
-	  else if (evt.keyCode == 68) game.invinsible();
-	  else if (evt.keyCode == 70) game.paddlewidth(200);
-	}); 
-
-	if(!d.detectAndroid())
-	{
-		$("canvas").mousemove(function(e){
-			  game.mousemove(e.clientX);
-		});
-	}
-	
-	$("#canvas").click(function(){		
-		if(!game.started) {
-			game.startgame();
-		}
-		
-		if(game.started && !game.live) {
-			game.newlife();
-		}
-	});	
-	
-	if(d.detectAndroid()) {		
-		$("#canvas").bind("touchmove", function (event) {
-			game.mousemove(event.originalEvent.targetTouches[0].clientX);
-		});
-	}
-});
-
-
-</script>
-<meta charset=utf-8 />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>.::SUPER BREAKOUT::.</title>
-<!--[if IE]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
+<script src="/assets/js/jquery.js"></script>
+<script src="/assets/js/detectdevice.js"></script>
+<script src="/assets/js/breakout.js"></script>
+<script src="/assets/js/sprites.js"></script>
 <style>
-  html, body {
-  width:  100%;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
   height: 100%;
-  margin: 0px;
+  overflow: hidden;
+  background-color: white;
+}
+
+#canvas {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+    var ctx = document.getElementById('canvas').getContext('2d');
+    var HEIGHT = ctx.canvas.height = window.innerHeight;
+    var WIDTH = ctx.canvas.width = window.innerWidth;
+    var d = new Device();
+    var game = new Game(WIDTH, HEIGHT);
+    var timer = new FrameTimer();
+    timer.tick();
+    var timerinterval = 1;
+
+    function clear() {
+        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+    }
+
+    function draw() {
+        clear();
+        game.draw(ctx, timer.getSeconds());
+        timer.tick();
+    }
+
+    setInterval(draw, timerinterval);
+
+    document.addEventListener('keydown', function(evt) {
+        if (evt.keyCode == 39) game.moveright();
+        else if (evt.keyCode == 37) game.moveleft();
+        else if (evt.keyCode == 80) game.pause();
+        else if (evt.keyCode == 90) game.speed();
+        else if (evt.keyCode == 88) game.slow();
+        else if (evt.keyCode == 86) game.embiggen();
+        else if (evt.keyCode == 67) game.shrink();
+        else if (evt.keyCode == 68) game.invinsible();
+        else if (evt.keyCode == 70) game.paddlewidth(200);
+        else if (evt.keyCode == 73) game.toggleInstructions();
+    });
+
+    if (!d.detectAndroid()) {
+        document.querySelector('canvas').addEventListener('mousemove', function(e) {
+            game.mousemove(e.clientX);
+        });
+    }
+
+    document.getElementById('canvas').addEventListener('click', function() {
+        if (!game.started) {
+            game.startgame();
+        } else if (!game.live && !game.gameover) {
+            game.launchBall();
+        }
+    });
+
+    if (d.detectAndroid()) {
+        document.getElementById('canvas').addEventListener('touchmove', function(event) {
+            game.mousemove(event.targetTouches[0].clientX);
+        });
+    }
+
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        HEIGHT = ctx.canvas.height = window.innerHeight;
+        WIDTH = ctx.canvas.width = window.innerWidth;
+        game.width = WIDTH;
+        game.height = HEIGHT;
+    });
+});
+</script>
 </head>
 <body>	
   <canvas id="canvas"></canvas>
 </body>
+</html>
 <!--Created and Maintained by Richard Talbot-->
