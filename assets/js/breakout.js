@@ -200,14 +200,14 @@ class CanvasText {
 			context.translate(this.x, this.y);
 			context.scale(scale, scale);
 			context.globalAlpha = alpha;
-			context.fillStyle = "#000000";
+			context.fillStyle = "#FFFFFF";
 			context.font = "bold 40px sans-serif";
 			context.textAlign = "center";
 			context.textBaseline = "middle";
 			context.fillText(this.text, 0, 0);
 			context.restore();
 		} else {
-			context.fillStyle = "#000000";
+			context.fillStyle = "#FFFFFF";
 			context.font = "bold 20px sans-serif";
 			context.textBaseline = "top";
 			context.fillText(this.text, this.x, this.y);

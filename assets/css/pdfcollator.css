@@ -1,5 +1,16 @@
 /* ============================================
    PDF Collator Styles
+
+   INTENTIONALLY ISOLATED PALETTE
+   This stylesheet uses its own --pdf-* custom properties and responds to
+   @media (prefers-color-scheme: dark) rather than the site's JS theme switcher.
+   This is a deliberate product choice: the PDF Collator is a full-screen
+   productivity tool targeting medical billing users who expect a standard
+   OS-native UI. The colour scheme picker is hidden on this page.
+
+   If the tool is ever connected to the site theme switcher, map --pdf-* variables
+   to --c-* tokens and remove the prefers-color-scheme media query
+   (see docs/designs/a3-design-system-audit.md).
    ============================================ */
 
 :root {
