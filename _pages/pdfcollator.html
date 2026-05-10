@@ -69,7 +69,7 @@ permalink: /pdfcollator
             </svg>
             <p class="upload-text">Drag & Drop PDF files here</p>
             <p class="upload-subtext">or</p>
-            <button class="btn btn-primary" id="browse-files" onclick="document.getElementById('file-input').click(); return false;">Browse Files</button>
+            <button class="btn btn-primary" id="browse-files">Browse Files</button>
             <input type="file" id="file-input" accept=".pdf,application/pdf" multiple style="display:none">
           </div>
         </div>
@@ -227,7 +227,9 @@ permalink: /pdfcollator
         console.log('PDF Collator: Setting up file handlers directly');
         
         // ---- BROWSE BUTTON ----
-        // Handled by inline onclick in HTML
+        browseBtn.addEventListener('click', function() {
+          fileInput.click();
+        });
         
         // ---- UPLOAD ZONE CLICK ----
         // Don't add onclick to upload zone - conflicts with button

@@ -1,5 +1,5 @@
-@import '../helpers/mixins';
-@import '../helpers/variables';
+@use '../helpers/mixins' as *;
+@use '../helpers/variables' as *;
 
 /* ==========================================================================
    Reset
@@ -167,7 +167,7 @@ hr {
     width: 100%;
     height: 1px;
     border: 0;
-    background: #EFF1F3;
+    background: var(--c-border);
 }
 
 /* Code Blocks */

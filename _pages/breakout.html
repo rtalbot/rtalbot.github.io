@@ -8,7 +8,6 @@ permalink: /breakout
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>.::SUPER BREAKOUT::.</title>
-<script src="/assets/js/jquery.js"></script>
 <script src="/assets/js/detectdevice.js"></script>
 <script src="/assets/js/breakout.js"></script>
 <script src="/assets/js/sprites.js"></script>
@@ -37,14 +36,14 @@ html, body {
 </style>
 <script>
 window.addEventListener('DOMContentLoaded', function() {
-    var ctx = document.getElementById('canvas').getContext('2d');
-    var HEIGHT = ctx.canvas.height = window.innerHeight;
-    var WIDTH = ctx.canvas.width = window.innerWidth;
-    var d = new Device();
-    var game = new Game(WIDTH, HEIGHT);
-    var timer = new FrameTimer();
+    const ctx = document.getElementById('canvas').getContext('2d');
+    let HEIGHT = ctx.canvas.height = window.innerHeight;
+    let WIDTH = ctx.canvas.width = window.innerWidth;
+    const d = new Device();
+    const game = new Game(WIDTH, HEIGHT);
+    const timer = new FrameTimer();
     timer.tick();
-    var timerinterval = 1;
+    const timerinterval = 1;
 
     function clear() {
         ctx.clearRect(0, 0, WIDTH, HEIGHT);

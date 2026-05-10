@@ -5,14 +5,13 @@ permalink: /flashy
 ---
 <head>
 <title>FLASHY!</title>
-<script src="\assets\js\jquery.js"></script>
-<script src="\assets\js\pixelnoise.js"></script>
+<script src="/assets/js/pixelnoise.js"></script>
 <script>
-$(document).ready(function() {
-	$("#canvas").pixelNoise({ 'size' : 10 , 'updatecells' : 10 });
-	$("#canvas2").pixelNoise({ 'size' : 20, 'updatecells' : 1, 'r' : 0, 'g' : 0  });
-	$("#canvas3").pixelNoise({ 'size' : 30, 'updatecells' : 1, 'b' : 0, 'g' : 0 });
-	$("#canvas4").pixelNoise({ 'size' : 5, 'updatecells' : 100, 'b' : 0, 'r' : 127 });
+document.addEventListener('DOMContentLoaded', function() {
+	pixelNoise(document.getElementById('canvas'), { size: 10, updatecells: 10 });
+	pixelNoise(document.getElementById('canvas2'), { size: 20, updatecells: 1, r: 0, g: 0 });
+	pixelNoise(document.getElementById('canvas3'), { size: 30, updatecells: 1, b: 0, g: 0 });
+	pixelNoise(document.getElementById('canvas4'), { size: 5, updatecells: 100, b: 0, r: 127 });
 });
 </script>
 <style>

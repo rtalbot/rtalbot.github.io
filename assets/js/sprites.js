@@ -1,49 +1,40 @@
-var FrameTimer = function() {
-    this._lastTick = (new Date()).getTime();
-}
- 
-FrameTimer.prototype = {
-    getSeconds: function() {
-        var seconds = this._frameSpacing / 1000;
-        if(isNaN(seconds)) {
-            return 0;
-        }
- 
-        return seconds;
-    },
- 
-    tick: function() {
-        var currentTick = (new Date()).getTime();
+class FrameTimer {
+    constructor() {
+        this._lastTick = Date.now();
+    }
+
+    getSeconds() {
+        const seconds = this._frameSpacing / 1000;
+        return isNaN(seconds) ? 0 : seconds;
+    }
+
+    tick() {
+        const currentTick = Date.now();
         this._frameSpacing = currentTick - this._lastTick;
         this._lastTick = currentTick;
     }
 }
 
-var SpriteSheet = function(data) {
-    this.load(data);
-}
- 
-SpriteSheet.prototype = {
-    _sprites: [],
-    _width: 0,
-    _height: 0,
-	_xpad: 0,
-	_ypad: 0,
- 
-    load: function(data) {
+class SpriteSheet {
+    constructor(data) {
+        this._sprites = [];
+        this._width = 0;
+        this._height = 0;
+        this._xpad = 0;
+        this._ypad = 0;
+        this.load(data);
+    }
+
+    load(data) {
         this._height = data.height;
         this._width = data.width;
-        this._sprites = data.sprites;		
-    },
- 
-    getSprite: function(spriteName) {
-        //Go through all sprites to find the required one
-        for(var i = 0, len = this._sprites.length; i < len; i++) {
-            var sprite = this._sprites[i];
- 
-            if(sprite.name == spriteName) {
-                //To get the offset, multiply by sprite width
-                //Sprite-specific x and y offset is then added into it.
+        this._sprites = data.sprites;
+    }
+
+    getSprite(spriteName) {
+        for (let i = 0, len = this._sprites.length; i < len; i++) {
+            const sprite = this._sprites[i];
+            if (sprite.name === spriteName) {
                 return {
                     x: sprite.xpos,
                     y: sprite.ypos,
@@ -52,48 +43,38 @@ SpriteSheet.prototype = {
                 };
             }
         }
- 
         return null;
     }
 }
 
-var Animation = function(data, sprites) {
-    this.load(data);
-    this._sprites = sprites;
-}
- 
-Animation.prototype = {
-    _frames: [],
-    _frame: null,
-    _frameDuration: 0,
- 
-    load: function(data) {
+class Animation {
+    constructor(data, sprites) {
+        this._frames = [];
+        this._frame = null;
+        this._frameDuration = 0;
+        this._frameIndex = 0;
+        this._sprites = sprites;
+        this.load(data);
+    }
+
+    load(data) {
         this._frames = data;
- 
-        //Initialize the first frame
         this._frameIndex = 0;
         this._frameDuration = data[0].time;
-    },
- 
-    animate: function(deltaTime) {
-        //Reduce time passed from the duration to show a frame        
+    }
+
+    animate(deltaTime) {
         this._frameDuration -= deltaTime;
- 
-        //When the display duration has passed
-        if(this._frameDuration <= 0) {
-            //Change to next frame, or the first if ran out of frames
+        if (this._frameDuration <= 0) {
             this._frameIndex++;
-            if(this._frameIndex == this._frames.length) {
+            if (this._frameIndex === this._frames.length) {
                 this._frameIndex = 0;
             }
- 
-            //Change duration to duration of new frame
             this._frameDuration = this._frames[this._frameIndex].time;
         }
-    },
- 
-    getFrame: function() {
-        //Return the sprite for the current frame
+    }
+
+    getFrame() {
         return this._sprites.getSprite(this._frames[this._frameIndex].sprite);
     }
 }

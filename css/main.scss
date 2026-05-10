@@ -3,25 +3,21 @@
 ---
 @charset "utf-8";
 
-// Helpers
-@import 'helpers/mixins';
-@import 'helpers/variables';
-
 // Base
-@import 'base/reset';
+@use 'base/reset';
 
 // Utilities
-@import 'utilities/layout';
-@import 'utilities/separator';
+@use 'utilities/layout';
+@use 'utilities/separator';
 
 // Components
-@import 'components/page';
-@import 'components/article';
-@import 'components/tag';
-@import 'components/archives';
-@import 'components/color-scheme-picker';
-@import 'components/static-nav';
+@use 'components/page';
+@use 'components/article';
+@use 'components/tag';
+@use 'components/archives';
+@use 'components/color-scheme-picker';
+@use 'components/static-nav';
 
 // Vendor
-@import 'vendor/highlight';
+@use 'vendor/highlight';
 
