@@ -437,7 +437,7 @@ body {
             <button class="btn btn-secondary" id="add-group-btn">+ Add Group</button>
             <button class="btn btn-outline" id="remove-group-btn">- Remove Group</button>
             <div class="sample-data-dropdown">
-                <button class="btn btn-outline" id="sample-data-btn">📊 Sample Data ▾</button>
+                <button class="btn btn-outline" id="sample-data-btn" aria-haspopup="true" aria-expanded="false">📊 Sample Data ▾</button>
                 <div class="sample-menu" id="sampleMenu">
                     <button data-dataset="coffee">☕ Coffee Brewing Methods</button>
                     <button data-dataset="plants">🌱 Plant Growth by Fertilizer</button>
@@ -450,19 +450,19 @@ body {
 
         <div class="groups-container" id="groupsContainer">
             <div class="group" data-group="1">
-                <h4>Group 1</h4>
-                <textarea placeholder="Enter values (one per line)&#10;e.g.&#10;23&#10;25&#10;27"></textarea>
-                <div class="group-stats" id="stats-1"></div>
+                <h4 id="group-label-1">Group 1</h4>
+                <textarea aria-labelledby="group-label-1" aria-describedby="stats-1" placeholder="Enter values (one per line)&#10;e.g.&#10;23&#10;25&#10;27"></textarea>
+                <div class="group-stats" id="stats-1" aria-live="polite"></div>
             </div>
             <div class="group" data-group="2">
-                <h4>Group 2</h4>
-                <textarea placeholder="Enter values (one per line)"></textarea>
-                <div class="group-stats" id="stats-2"></div>
+                <h4 id="group-label-2">Group 2</h4>
+                <textarea aria-labelledby="group-label-2" aria-describedby="stats-2" placeholder="Enter values (one per line)"></textarea>
+                <div class="group-stats" id="stats-2" aria-live="polite"></div>
             </div>
             <div class="group" data-group="3">
-                <h4>Group 3</h4>
-                <textarea placeholder="Enter values (one per line)"></textarea>
-                <div class="group-stats" id="stats-3"></div>
+                <h4 id="group-label-3">Group 3</h4>
+                <textarea aria-labelledby="group-label-3" aria-describedby="stats-3" placeholder="Enter values (one per line)"></textarea>
+                <div class="group-stats" id="stats-3" aria-live="polite"></div>
             </div>
         </div>
 
@@ -471,7 +471,7 @@ body {
         </button>
     </div>
 
-    <div id="resultsSection" class="hidden">
+    <div id="resultsSection" class="hidden" aria-live="polite" aria-atomic="false">
         <div class="card">
             <h2>Results</h2>
             
@@ -522,7 +522,7 @@ body {
                 <strong>Hover over each bar</strong> to see detailed statistics including the mean, median, range, and quartiles (Q1, Q3).
                 The differences in bar heights help visualize whether groups are similar or different.
             </div>
-            <canvas id="visualization"></canvas>
+            <canvas id="visualization" role="img" aria-label="Bar chart comparing ANOVA group means. Results shown in the table above."></canvas>
         </div>
 
         <div class="card">

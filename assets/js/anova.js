@@ -44,7 +44,12 @@ const sampleDatasets = {
 
 function toggleSampleMenu() {
     const menu = document.getElementById('sampleMenu');
-    menu.classList.toggle('show');
+    const btn = document.getElementById('sample-data-btn');
+    const isOpen = menu.classList.toggle('show');
+    btn.setAttribute('aria-expanded', isOpen);
+    if (isOpen) {
+        menu.querySelector('button').focus();
+    }
 }
 
 function addGroup() {
@@ -58,9 +63,9 @@ function addGroup() {
     groupDiv.className = 'group';
     groupDiv.setAttribute('data-group', groupCount);
     groupDiv.innerHTML = `
-        <h4>Group ${groupCount}</h4>
-        <textarea placeholder="Enter values (one per line)"></textarea>
-        <div class="group-stats" id="stats-${groupCount}"></div>
+        <h4 id="group-label-${groupCount}">Group ${groupCount}</h4>
+        <textarea aria-labelledby="group-label-${groupCount}" aria-describedby="stats-${groupCount}" placeholder="Enter values (one per line)"></textarea>
+        <div class="group-stats" id="stats-${groupCount}" aria-live="polite"></div>
     `;
     container.appendChild(groupDiv);
 }
@@ -83,6 +88,7 @@ function loadSampleData(datasetName) {
     if (!dataset) return;
 
     document.getElementById('sampleMenu').classList.remove('show');
+    document.getElementById('sample-data-btn').setAttribute('aria-expanded', 'false');
 
     const container = document.getElementById('groupsContainer');
     container.innerHTML = '';
@@ -102,9 +108,9 @@ function loadSampleData(datasetName) {
         groupDiv.className = 'group';
         groupDiv.setAttribute('data-group', index + 1);
         groupDiv.innerHTML = `
-            <h4>${group.name}</h4>
-            <textarea placeholder="Enter values (one per line)">${group.data.join('\n')}</textarea>
-            <div class="group-stats" id="stats-${index + 1}"></div>
+            <h4 id="group-label-${index + 1}">${group.name}</h4>
+            <textarea aria-labelledby="group-label-${index + 1}" aria-describedby="stats-${index + 1}" placeholder="Enter values (one per line)">${group.data.join('\n')}</textarea>
+            <div class="group-stats" id="stats-${index + 1}" aria-live="polite"></div>
         `;
         container.appendChild(groupDiv);
         updateGroupStats(index + 1);
@@ -494,6 +500,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const menu = document.getElementById('sampleMenu');
         if (dropdown && !dropdown.contains(event.target)) {
             menu.classList.remove('show');
+            document.getElementById('sample-data-btn').setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    // Close sample dropdown on Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            const menu = document.getElementById('sampleMenu');
+            if (menu.classList.contains('show')) {
+                menu.classList.remove('show');
+                document.getElementById('sample-data-btn').setAttribute('aria-expanded', 'false');
+                document.getElementById('sample-data-btn').focus();
+            }
         }
     });
 

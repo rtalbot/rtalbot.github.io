@@ -343,7 +343,8 @@
 }
 
 .select-input:focus {
-  outline: none;
+  outline: 2px solid var(--pdf-primary);
+  outline-offset: 1px;
   border-color: var(--pdf-primary);
   box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
 }

@@ -62,7 +62,7 @@ permalink: /pdfcollator
         <!-- Upload Zone -->
         <div class="upload-zone" id="upload-zone">
           <div class="upload-content">
-            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="upload-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="17 8 12 3 7 8"></polyline>
               <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -114,12 +114,12 @@ permalink: /pdfcollator
           <div class="progress-bar">
             <div class="progress-fill" id="progress-fill"></div>
           </div>
-          <p class="progress-text" id="progress-text">Processing...</p>
+          <p class="progress-text" id="progress-text" aria-live="polite">Processing...</p>
         </div>
 
         <!-- Empty State -->
         <div class="empty-state" id="empty-state">
-          <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg class="empty-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
             <polyline points="14 2 14 8 20 8"></polyline>
           </svg>
@@ -151,7 +151,7 @@ permalink: /pdfcollator
         <!-- Export Button -->
         <div class="export-controls" id="export-controls" style="display: none;">
           <button class="btn btn-success btn-lg" id="export-pdf">
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="btn-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
               <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -163,12 +163,12 @@ permalink: /pdfcollator
     </div>
 
     <!-- Page Detail Modal -->
-    <div class="modal" id="page-modal" style="display: none;">
+    <div class="modal" id="page-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" style="display: none;">
       <div class="modal-overlay" id="modal-overlay"></div>
       <div class="modal-content">
-        <button class="modal-close" id="modal-close">×</button>
+        <button class="modal-close" id="modal-close" aria-label="Close">×</button>
         <div class="modal-body">
-          <canvas id="modal-canvas"></canvas>
+          <canvas id="modal-canvas" role="img" aria-label="PDF page preview"></canvas>
           <div class="modal-info">
             <h3 id="modal-title">Page Details</h3>
             <div class="modal-details" id="modal-details">

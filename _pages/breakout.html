@@ -3,7 +3,7 @@ layout: none
 permalink: /breakout
 ---
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,16 +58,16 @@ window.addEventListener('DOMContentLoaded', function() {
     setInterval(draw, timerinterval);
 
     document.addEventListener('keydown', function(evt) {
-        if (evt.keyCode == 39) game.moveright();
-        else if (evt.keyCode == 37) game.moveleft();
-        else if (evt.keyCode == 80) game.pause();
-        else if (evt.keyCode == 90) game.speed();
-        else if (evt.keyCode == 88) game.slow();
-        else if (evt.keyCode == 86) game.embiggen();
-        else if (evt.keyCode == 67) game.shrink();
-        else if (evt.keyCode == 68) game.invinsible();
-        else if (evt.keyCode == 70) game.paddlewidth(200);
-        else if (evt.keyCode == 73) game.toggleInstructions();
+        if (evt.key === 'ArrowRight') game.moveright();
+        else if (evt.key === 'ArrowLeft') game.moveleft();
+        else if (evt.key === 'p' || evt.key === 'P') game.pause();
+        else if (evt.key === 'z' || evt.key === 'Z') game.speed();
+        else if (evt.key === 'x' || evt.key === 'X') game.slow();
+        else if (evt.key === 'v' || evt.key === 'V') game.embiggen();
+        else if (evt.key === 'c' || evt.key === 'C') game.shrink();
+        else if (evt.key === 'd' || evt.key === 'D') game.invinsible();
+        else if (evt.key === 'f' || evt.key === 'F') game.paddlewidth(200);
+        else if (evt.key === 'i' || evt.key === 'I') game.toggleInstructions();
     });
 
     if (!d.detectAndroid()) {
@@ -103,7 +103,7 @@ window.addEventListener('DOMContentLoaded', function() {
 </script>
 </head>
 <body>	
-  <canvas id="canvas"></canvas>
+  <canvas id="canvas" role="application" aria-label="Breakout game. Use arrow keys to move the paddle. Press P to pause, I to toggle instructions."></canvas>
 </body>
 </html>
 <!--Created and Maintained by Richard Talbot-->
