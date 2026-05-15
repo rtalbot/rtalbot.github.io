@@ -90,7 +90,7 @@ Utils.domReady(() => {
 
         <main id="editor-panel">
             <div id="canvas-container">
-                <canvas id="editor-canvas"></canvas>
+                <canvas id="editor-canvas" role="application" aria-label="Sprite sheet editor. Use mouse to select frames."></canvas>
                 <div id="canvas-overlay"></div>
             </div>
             <div id="editor-controls">
@@ -106,7 +106,7 @@ Utils.domReady(() => {
 
         <aside id="preview-panel">
             <h3>Preview</h3>
-            <canvas id="preview-canvas"></canvas>
+            <canvas id="preview-canvas" role="img" aria-label="Animation preview"></canvas>
             <div id="preview-controls">
                 <select id="animation-select">
                     <option value="">-- Select Animation --</option>

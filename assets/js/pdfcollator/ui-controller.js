@@ -371,6 +371,8 @@ class UIController {
 
     // Show modal
     this.elements.modal.style.display = 'block';
+    this._modalTrigger = document.activeElement;
+    document.getElementById('modal-close').focus();
 
     // Update navigation buttons
     document.getElementById('modal-prev').disabled = (index === 0);
@@ -384,11 +386,13 @@ class UIController {
     // Close button
     document.getElementById('modal-close').addEventListener('click', () => {
       this.elements.modal.style.display = 'none';
+      if (this._modalTrigger) this._modalTrigger.focus();
     });
 
     // Overlay click
     document.getElementById('modal-overlay').addEventListener('click', () => {
       this.elements.modal.style.display = 'none';
+      if (this._modalTrigger) this._modalTrigger.focus();
     });
 
     // Navigation
@@ -410,6 +414,7 @@ class UIController {
 
       if (e.key === 'Escape') {
         this.elements.modal.style.display = 'none';
+        if (this._modalTrigger) this._modalTrigger.focus();
       } else if (e.key === 'ArrowLeft') {
         if (this.modalCurrentIndex > 0) {
           this.showPageModal(this.modalCurrentIndex - 1);

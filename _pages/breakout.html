@@ -3,12 +3,11 @@ layout: none
 permalink: /breakout
 ---
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>.::SUPER BREAKOUT::.</title>
-<script src="/assets/js/jquery.js"></script>
 <script src="/assets/js/detectdevice.js"></script>
 <script src="/assets/js/breakout.js"></script>
 <script src="/assets/js/sprites.js"></script>
@@ -23,7 +22,7 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: white;
+  background-color: #000;
 }
 
 #canvas {
@@ -37,14 +36,14 @@ html, body {
 </style>
 <script>
 window.addEventListener('DOMContentLoaded', function() {
-    var ctx = document.getElementById('canvas').getContext('2d');
-    var HEIGHT = ctx.canvas.height = window.innerHeight;
-    var WIDTH = ctx.canvas.width = window.innerWidth;
-    var d = new Device();
-    var game = new Game(WIDTH, HEIGHT);
-    var timer = new FrameTimer();
+    const ctx = document.getElementById('canvas').getContext('2d');
+    let HEIGHT = ctx.canvas.height = window.innerHeight;
+    let WIDTH = ctx.canvas.width = window.innerWidth;
+    const d = new Device();
+    const game = new Game(WIDTH, HEIGHT);
+    const timer = new FrameTimer();
     timer.tick();
-    var timerinterval = 1;
+    const timerinterval = 1;
 
     function clear() {
         ctx.clearRect(0, 0, WIDTH, HEIGHT);
@@ -59,16 +58,16 @@ window.addEventListener('DOMContentLoaded', function() {
     setInterval(draw, timerinterval);
 
     document.addEventListener('keydown', function(evt) {
-        if (evt.keyCode == 39) game.moveright();
-        else if (evt.keyCode == 37) game.moveleft();
-        else if (evt.keyCode == 80) game.pause();
-        else if (evt.keyCode == 90) game.speed();
-        else if (evt.keyCode == 88) game.slow();
-        else if (evt.keyCode == 86) game.embiggen();
-        else if (evt.keyCode == 67) game.shrink();
-        else if (evt.keyCode == 68) game.invinsible();
-        else if (evt.keyCode == 70) game.paddlewidth(200);
-        else if (evt.keyCode == 73) game.toggleInstructions();
+        if (evt.key === 'ArrowRight') game.moveright();
+        else if (evt.key === 'ArrowLeft') game.moveleft();
+        else if (evt.key === 'p' || evt.key === 'P') game.pause();
+        else if (evt.key === 'z' || evt.key === 'Z') game.speed();
+        else if (evt.key === 'x' || evt.key === 'X') game.slow();
+        else if (evt.key === 'v' || evt.key === 'V') game.embiggen();
+        else if (evt.key === 'c' || evt.key === 'C') game.shrink();
+        else if (evt.key === 'd' || evt.key === 'D') game.invinsible();
+        else if (evt.key === 'f' || evt.key === 'F') game.paddlewidth(200);
+        else if (evt.key === 'i' || evt.key === 'I') game.toggleInstructions();
     });
 
     if (!d.detectAndroid()) {
@@ -104,7 +103,7 @@ window.addEventListener('DOMContentLoaded', function() {
 </script>
 </head>
 <body>	
-  <canvas id="canvas"></canvas>
+  <canvas id="canvas" role="application" aria-label="Breakout game. Use arrow keys to move the paddle. Press P to pause, I to toggle instructions."></canvas>
 </body>
 </html>
 <!--Created and Maintained by Richard Talbot-->

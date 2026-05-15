@@ -14,9 +14,6 @@ Utils.domReady(async () => {
         // Get canvas element
         const canvas = document.getElementById('canvas');
         
-        // Set canvas background color
-        canvas.style.backgroundColor = '#82CAFA';
-        
         // Create sprite manager
         const spriteManager = new SpriteManager();
         
@@ -75,7 +72,7 @@ Utils.domReady(async () => {
 </style>
 </head>
 <body>	
-  <canvas id="canvas"></canvas>
+  <canvas id="canvas" role="application" aria-label="Sprite animation demo. Use arrow keys to move the character."></canvas>
  
 </body>
 <!--Created and Maintained by Richard Talbot-->

@@ -19,6 +19,7 @@
   --c-accent-green: #8BE367;
   --c-accent-pink: #ff597d;
   --c-accent-lime-green: #00FF00;
+  --c-accent-warning: #ffa500;
 
   --c-body-bg: #131418;
   
@@ -52,6 +53,7 @@ $c-accent__darkblue: var(--c-accent-darkblue);
 $c-accent__green: var(--c-accent-green);
 $c-accent__pink: var(--c-accent-pink);
 $c-accent__lime_green: var(--c-accent-lime-green);
+$c-accent__warning: var(--c-accent-warning);
 
 $c-base__dark_bg: var(--c-body-bg);
 $c-body_bg: var(--c-body-bg);

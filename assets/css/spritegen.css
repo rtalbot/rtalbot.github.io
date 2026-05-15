@@ -1,4 +1,15 @@
-/* Sprite Generator Tool Styles */
+/* Sprite Generator Tool Styles
+ *
+ * INTENTIONALLY ISOLATED PALETTE
+ * This stylesheet does not inherit the site design system (var(--c-*) tokens).
+ * The Sprite Sheet Generator is a full-screen editor tool with a VS Code-inspired
+ * dark UI palette. Its colour scheme is a deliberate product choice — it mimics a
+ * familiar code editor environment and is not intended to respond to the site's
+ * theme switcher. The colour scheme picker is hidden on this page.
+ *
+ * If this tool is ever opened to site theme switching, all hardcoded hex values
+ * below should be replaced with var(--c-*) tokens (see docs/designs/a3-design-system-audit.md).
+ */
 
 html, body {
     width: 100%;
@@ -100,7 +111,8 @@ html, body {
 
 .control-group input[type="text"]:focus,
 .control-group input[type="number"]:focus {
-    outline: none;
+    outline: 2px solid #82CAFA;
+    outline-offset: 1px;
     border-color: #82CAFA;
 }
 
