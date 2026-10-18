@@ -83,16 +83,68 @@ const PDFCollatorUtils = {
 
   /**
    * Download file
+   * The object URL is revoked after a delay: revoking it synchronously after
+   * click() cancels the download in Firefox and Safari.
    */
   downloadFile(blob, filename) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = filename;
+    a.style.display = 'none';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+  },
+
+  /**
+   * Local date stamp (YYYY-MM-DD). toISOString() uses UTC, which gives
+   * tomorrow's date on US evenings.
+   */
+  localDateStamp(date = new Date()) {
+    const pad = n => String(n).padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  },
+
+  /**
+   * Make a user-typed name safe to use as a download filename
+   */
+  sanitizeFilename(name, fallback = 'collated') {
+    let clean = String(name || '')
+      .replace(/\.pdf$/i, '')
+      .replace(/[\\/:*?"<>|\x00-\x1f]+/g, '-')
+      .replace(/^[\s.]+|[\s.]+$/g, '')
+      .trim();
+    if (!clean) clean = fallback;
+    return clean.substring(0, 150) + '.pdf';
+  },
+
+  /**
+   * Parse a page list like "1-3, 6, 9-" into zero-based indices.
+   * Out-of-range numbers are clamped away. Returns null if the text is invalid.
+   */
+  parsePageRange(text, pageCount) {
+    const result = new Set();
+    const parts = String(text || '').split(/[,;\s]+/).filter(Boolean);
+    if (parts.length === 0) return null;
+
+    for (const part of parts) {
+      const m = part.match(/^(\d*)\s*[-\u2013]\s*(\d*)$|^(\d+)$/);
+      if (!m) return null;
+      let start, end;
+      if (m[3]) {
+        start = end = parseInt(m[3], 10);
+      } else {
+        start = m[1] ? parseInt(m[1], 10) : 1;
+        end = m[2] ? parseInt(m[2], 10) : pageCount;
+      }
+      if (start > end) [start, end] = [end, start];
+      for (let n = Math.max(1, start); n <= Math.min(pageCount, end); n++) {
+        result.add(n - 1);
+      }
+    }
+    return Array.from(result).sort((a, b) => a - b);
   },
 
   /**

@@ -98,7 +98,7 @@ class PDFAnalyzer {
       text: text,
       dates: dates,
       primaryDate: dates.length > 0 ? dates[0].value : null,
-      thumbnail: null, // Will be set by renderer
+      rotation: 0, // Extra clockwise rotation chosen by the user (0/90/180/270)
       analyzed: true
     };
   }
@@ -162,49 +162,67 @@ class PDFAnalyzer {
 
   /**
    * Parse date string
+   * Always builds a local-time Date: new Date('2024-01-10') is UTC midnight,
+   * which displays as the previous day in US time zones.
    */
   parseDate(dateStr, patternType) {
     try {
-      // Try different parsing strategies based on pattern type
-      
       if (patternType === 'YYYY-MM-DD') {
-        return new Date(dateStr);
+        const [year, month, day] = dateStr.split(/[-\/]/).map(n => parseInt(n, 10));
+        return this.buildDate(year, month - 1, day);
       }
-      
-      if (patternType.includes('Month')) {
-        // Parse month name
-        const parts = dateStr.split(/[\s,]+/);
-        let month, day, year;
 
-        if (patternType === 'Month DD, YYYY') {
-          month = this.monthNames[parts[0].toLowerCase()];
-          day = parseInt(parts[1]);
-          year = parseInt(parts[2]);
-        } else { // DD Month YYYY
-          day = parseInt(parts[0]);
-          month = this.monthNames[parts[1].toLowerCase()];
-          year = parseInt(parts[2]);
-        }
+      if (patternType === 'Month DD, YYYY' || patternType === 'Mon DD, YYYY') {
+        const parts = dateStr.replace(/\./g, '').split(/[\s,]+/);
+        const month = this.lookupMonth(parts[0]);
+        return this.buildDate(parseInt(parts[2], 10), month, parseInt(parts[1], 10));
+      }
 
-        return new Date(year, month, day);
+      if (patternType === 'DD Month YYYY') {
+        const parts = dateStr.split(/\s+/);
+        const month = this.lookupMonth(parts[1]);
+        return this.buildDate(parseInt(parts[2], 10), month, parseInt(parts[0], 10));
       }
 
       // For MM/DD/YYYY or DD/MM/YYYY
       const parts = dateStr.split(/[-\/]/);
-      const num1 = parseInt(parts[0]);
-      const num2 = parseInt(parts[1]);
-      const year = parseInt(parts[2]);
+      const num1 = parseInt(parts[0], 10);
+      const num2 = parseInt(parts[1], 10);
+      const year = parseInt(parts[2], 10);
 
       // Heuristic: if first number > 12, it's DD/MM/YYYY
       if (num1 > 12) {
-        return new Date(year, num2 - 1, num1);
+        return this.buildDate(year, num2 - 1, num1);
       }
       // Otherwise, default to MM/DD/YYYY (US format)
-      return new Date(year, num1 - 1, num2);
+      return this.buildDate(year, num1 - 1, num2);
 
     } catch (error) {
       return null;
     }
+  }
+
+  /**
+   * Month name or abbreviation ("Sept", "Mar.") to a 0-based month
+   */
+  lookupMonth(name) {
+    const key = String(name || '').toLowerCase().replace(/\./g, '');
+    if (key in this.monthNames) return this.monthNames[key];
+    const short = key.substring(0, 3);
+    return short in this.monthNames ? this.monthNames[short] : undefined;
+  }
+
+  /**
+   * Build a local date, rejecting overflow such as 02/31 (which Date would
+   * silently roll into March)
+   */
+  buildDate(year, month, day) {
+    if (month === undefined || isNaN(year) || isNaN(month) || isNaN(day)) return null;
+    const date = new Date(year, month, day);
+    if (date.getFullYear() !== year || date.getMonth() !== month || date.getDate() !== day) {
+      return null;
+    }
+    return date;
   }
 
   /**
@@ -231,11 +249,11 @@ class PDFAnalyzer {
       confidence = 0.95;
     }
     // Full month names are reliable
-    else if (patternType.includes('Month') && !patternType.includes('Mon')) {
+    else if (patternType === 'Month DD, YYYY' || patternType === 'DD Month YYYY') {
       confidence = 0.90;
     }
     // Abbreviated month names
-    else if (patternType.includes('Mon')) {
+    else if (patternType === 'Mon DD, YYYY') {
       confidence = 0.85;
     }
 

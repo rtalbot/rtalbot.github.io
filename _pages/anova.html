@@ -20,8 +20,8 @@ body {
     --secondary-color: var(--c-accent-blue);
     --background: var(--c-body-bg);
     --card-bg: var(--c-base-02);
-    --text-primary: var(--c-base-3);
-    --text-secondary: var(--c-base-0);
+    --text-primary: var(--c-text-primary);
+    --text-secondary: var(--c-text-secondary);
     --border: var(--c-base-01);
     --success: var(--c-accent-green);
     --warning: var(--c-accent-warning);
@@ -110,9 +110,27 @@ body {
     border: 1px solid var(--border);
 }
 
-.group h4 {
-    color: var(--secondary-color);
+.group-name {
+    width: 100%;
     margin-bottom: 0.6rem;
+    padding: 0.3rem 0.4rem;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: var(--secondary-color);
+    font-family: inherit;
+    font-size: 1.7rem;
+    font-weight: 600;
+}
+
+.group-name:hover {
+    border-color: var(--border);
+}
+
+.group-name:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    background: var(--background);
 }
 
 .group textarea {
@@ -136,8 +154,11 @@ body {
 .group-stats {
     margin-top: 0.5rem;
     font-size: 1.4rem;
-    font-size: 0.85rem;
     color: var(--text-secondary);
+}
+
+.group-stats .ignored {
+    color: var(--warning);
 }
 
 .controls {
@@ -157,12 +178,24 @@ body {
     font-weight: 500;
 }
 
+.btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.btn:focus-visible,
+.group textarea:focus-visible,
+.paste-panel textarea:focus-visible {
+    outline: 3px solid var(--secondary-color);
+    outline-offset: 2px;
+}
+
 .btn-primary {
     background: var(--primary-color);
     color: white;
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
     background: var(--c-link-hover);
     transform: translateY(-2px);
 }
@@ -172,7 +205,7 @@ body {
     color: white;
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover:not(:disabled) {
     background: var(--c-accent-blue);
     opacity: 0.85;
     transform: translateY(-2px);
@@ -184,7 +217,7 @@ body {
     color: var(--text-primary);
 }
 
-.btn-outline:hover {
+.btn-outline:hover:not(:disabled) {
     border-color: var(--primary-color);
     background: var(--card-bg);
 }
@@ -249,6 +282,88 @@ body {
     background: rgba(255, 255, 255, 0.02);
 }
 
+.anova-table td {
+    font-variant-numeric: tabular-nums;
+}
+
+.anova-table .sig-row td {
+    background: rgba(139, 227, 103, 0.08);
+}
+
+.table-scroll {
+    overflow-x: auto;
+    margin-bottom: 2rem;
+}
+
+.table-scroll .anova-table {
+    margin-bottom: 0;
+}
+
+.report-line {
+    margin-top: 0.8rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.5rem;
+}
+
+.card-note {
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.paste-panel {
+    margin-bottom: 2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 1.2rem;
+}
+
+.paste-panel summary {
+    cursor: pointer;
+    padding: 1rem 0;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.paste-panel p {
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.paste-panel textarea {
+    width: 100%;
+    min-height: 120px;
+    background: var(--background);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.8rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.4rem;
+    resize: vertical;
+}
+
+.paste-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0 1.2rem;
+}
+
+.paste-status {
+    font-size: 1.5rem;
+}
+
+.paste-ok {
+    color: var(--success);
+}
+
+.paste-error {
+    color: var(--warning);
+}
+
 .chart-container {
     margin: 2rem 0;
     min-height: 400px;
@@ -309,10 +424,10 @@ body {
     color: var(--text-primary);
 }
 
-#visualization {
+.chart-box {
+    position: relative;
     width: 100%;
-    height: 300px;
-    max-height: 300px;
+    height: 360px;
 }
 
 .hidden {
@@ -391,8 +506,40 @@ body {
         grid-template-columns: 1fr;
     }
     
-    .controls {
+.controls {
         flex-direction: column;
+    }
+
+    .controls > .btn,
+    .sample-data-dropdown,
+    .sample-data-dropdown .btn {
+        width: 100%;
+    }
+
+    .card {
+        padding: 1.6rem;
+    }
+
+    .anova-header h1 {
+        font-size: 2.6rem;
+    }
+
+    .anova-header p {
+        font-size: 1.6rem;
+    }
+
+    .stat-box .value {
+        font-size: 2.1rem;
+    }
+
+    .chart-box {
+        height: 300px;
+    }
+
+    .anova-table th,
+    .anova-table td {
+        padding: 0.7rem 0.6rem;
+        font-size: 1.4rem;
     }
     
     .sample-menu {
@@ -427,10 +574,11 @@ body {
         </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="dataCard">
         <h2>Enter Your Data</h2>
-        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
-            Enter numeric values for each group (one value per line). You can add up to 6 groups.
+        <p id="data-intro" style="color: var(--text-secondary); margin-bottom: 1rem;">
+            Enter numeric values for each group (one per line, or separated by commas or spaces).
+            Click a group's name to rename it. You can have up to 10 groups.
         </p>
         
         <div class="controls">
@@ -443,30 +591,46 @@ body {
                     <button data-dataset="plants">🌱 Plant Growth by Fertilizer</button>
                     <button data-dataset="exercise">🏃 Exercise Program Results</button>
                     <button data-dataset="teaching">📚 Teaching Methods</button>
+                    <button data-dataset="plantgrowth">🧪 PlantGrowth (R textbook example)</button>
                 </div>
             </div>
             <button class="btn btn-outline" id="clear-all-btn">Clear All</button>
         </div>
 
+        <details class="paste-panel">
+            <summary>Paste from a spreadsheet</summary>
+            <p>
+                Copy cells from Excel, Google Sheets or a CSV file and paste them here. Use one column per group
+                (an optional first row of names becomes the group names), or two columns of <em>group, value</em> rows.
+            </p>
+            <textarea id="pasteInput" aria-label="Pasted spreadsheet cells" spellcheck="false" placeholder="Control&#9;Drug A&#9;Drug B&#10;4.2&#9;5.1&#9;6.0&#10;3.9&#9;5.4&#9;5.8"></textarea>
+            <div class="paste-actions">
+                <button class="btn btn-secondary" id="paste-apply-btn">Use pasted data</button>
+                <span id="pasteStatus" class="paste-status" role="status"></span>
+            </div>
+        </details>
+
         <div class="groups-container" id="groupsContainer">
             <div class="group" data-group="1">
-                <h4 id="group-label-1">Group 1</h4>
-                <textarea aria-labelledby="group-label-1" aria-describedby="stats-1" placeholder="Enter values (one per line)&#10;e.g.&#10;23&#10;25&#10;27"></textarea>
+                <input type="text" class="group-name" id="group-label-1" aria-label="Name of group 1" value="Group 1">
+                <textarea aria-labelledby="group-label-1" aria-describedby="stats-1" placeholder="Enter values (one per line)&#10;e.g.&#10;23&#10;25&#10;27" spellcheck="false"></textarea>
                 <div class="group-stats" id="stats-1" aria-live="polite"></div>
             </div>
             <div class="group" data-group="2">
-                <h4 id="group-label-2">Group 2</h4>
-                <textarea aria-labelledby="group-label-2" aria-describedby="stats-2" placeholder="Enter values (one per line)"></textarea>
+                <input type="text" class="group-name" id="group-label-2" aria-label="Name of group 2" value="Group 2">
+                <textarea aria-labelledby="group-label-2" aria-describedby="stats-2" placeholder="Enter values (one per line)" spellcheck="false"></textarea>
                 <div class="group-stats" id="stats-2" aria-live="polite"></div>
             </div>
             <div class="group" data-group="3">
-                <h4 id="group-label-3">Group 3</h4>
-                <textarea aria-labelledby="group-label-3" aria-describedby="stats-3" placeholder="Enter values (one per line)"></textarea>
+                <input type="text" class="group-name" id="group-label-3" aria-label="Name of group 3" value="Group 3">
+                <textarea aria-labelledby="group-label-3" aria-describedby="stats-3" placeholder="Enter values (one per line)" spellcheck="false"></textarea>
                 <div class="group-stats" id="stats-3" aria-live="polite"></div>
             </div>
         </div>
 
-        <button class="btn btn-primary" id="calculate-btn" style="width: 100%; font-size: 1.1rem;">
+        <div id="inputMessage" class="hidden" role="alert"></div>
+
+        <button class="btn btn-primary" id="calculate-btn" style="width: 100%; font-size: 1.8rem;">
             Calculate ANOVA
         </button>
     </div>
@@ -491,12 +655,17 @@ body {
                     <div class="value" id="dfValue">-</div>
                     <div class="interpretation">Between groups (df1) and within groups (df2)</div>
                 </div>
+                <div class="stat-box">
+                    <div class="label">Effect size (η²)</div>
+                    <div class="value" id="etaValue">-</div>
+                    <div class="interpretation" id="etaInterpretation">Share of total variation explained by group</div>
+                </div>
             </div>
 
             <div id="conclusionAlert"></div>
 
             <h3>ANOVA Table</h3>
-            <div style="overflow-x: auto;">
+            <div class="table-scroll">
                 <table class="anova-table">
                     <thead>
                         <tr>
@@ -512,17 +681,63 @@ body {
                     </tbody>
                 </table>
             </div>
+
+            <h3>Group Summary</h3>
+            <div class="table-scroll">
+                <table class="anova-table">
+                    <thead>
+                        <tr>
+                            <th>Group</th>
+                            <th>n</th>
+                            <th>Mean</th>
+                            <th>SD</th>
+                            <th>95% CI of mean</th>
+                            <th>Min</th>
+                            <th>Median</th>
+                            <th>Max</th>
+                        </tr>
+                    </thead>
+                    <tbody id="descriptivesBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card hidden" id="tukeyCard">
+            <h2>Which Groups Differ? (Tukey HSD)</h2>
+            <p class="card-note">
+                A significant F only says that <em>some</em> means differ. Tukey's honestly significant difference test
+                compares every pair while keeping the overall chance of a false positive at 5%
+                (Tukey–Kramer adjustment when group sizes differ).
+                <span id="tukeySummary"></span>
+            </p>
+            <div class="table-scroll">
+                <table class="anova-table">
+                    <thead>
+                        <tr>
+                            <th>Comparison</th>
+                            <th>Difference</th>
+                            <th>95% CI</th>
+                            <th>Adjusted p</th>
+                            <th>Significant?</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tukeyBody">
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div class="card">
             <h2>Visualization</h2>
             <div class="alert alert-info" style="font-size: 1.5rem; margin-bottom: 1.5rem;">
-                <strong>📊 Group Comparison Chart:</strong> This bar chart shows the mean (average) value for each group.
-                <strong>Taller bars</strong> indicate higher average values.
-                <strong>Hover over each bar</strong> to see detailed statistics including the mean, median, range, and quartiles (Q1, Q3).
-                The differences in bar heights help visualize whether groups are similar or different.
+                <strong>📊 Reading the chart:</strong> each dot is one value. The bar across each group marks its
+                <strong>mean</strong>, and the whisker shows the <strong>95% confidence interval</strong> of that mean.
+                Groups whose intervals barely overlap are likely to differ. Hover over a mean for details.
             </div>
-            <canvas id="visualization" role="img" aria-label="Bar chart comparing ANOVA group means. Results shown in the table above."></canvas>
+            <div class="chart-box">
+                <canvas id="visualization" role="img" aria-label="Chart of group values with means and confidence intervals. Results are also shown in the tables above."></canvas>
+            </div>
         </div>
 
         <div class="card">
@@ -575,6 +790,18 @@ body {
             </div>
 
             <div class="explanation-box">
+                <h4>Effect Size (η² and ω²)</h4>
+                <p>
+                    The p-value says whether a difference is likely to be real; eta squared says how big it is.
+                    η² is the share of all the variation in the data that is explained by which group a value belongs to.
+                    Rough guide (Cohen): 0.01 small, 0.06 medium, 0.14 large. Omega squared (ω²) is a less biased
+                    version that is a little smaller, especially for small samples.
+                </p>
+                <div class="formula">η² = SS_between / SS_total</div>
+                <div id="etaActual" class="formula" style="background: rgba(139, 227, 103, 0.1); display: none;"></div>
+            </div>
+
+            <div class="explanation-box">
                 <h4>p-value</h4>
                 <p>
                     The probability of observing an F-statistic as extreme as (or more extreme than) the one calculated, 
@@ -589,6 +816,5 @@ body {
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="{{ '/assets/js/color-scheme.js' | prepend: site.baseurl }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
 <script src="{{ '/assets/js/anova.js' | prepend: site.baseurl }}"></script>

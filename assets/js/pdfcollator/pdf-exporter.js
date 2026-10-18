@@ -9,79 +9,82 @@ class PDFExporter {
 
   /**
    * Create merged PDF from ordered pages
+   * progressCallback(fraction) is called as pages are copied.
    */
-  async createMergedPDF(orderedPages) {
+  async createMergedPDF(orderedPages, title = 'Collated PDF Document', progressCallback = null) {
     try {
-      const { PDFDocument } = window.PDFLib;
-      
+      const { PDFDocument, degrees } = window.PDFLib;
+
       // Create new PDF document
       const mergedPdf = await PDFDocument.create();
 
-      // Keep track of loaded PDFs (cache)
+      // pdf-lib documents, parsed once per source (cache)
       const loadedPdfs = new Map();
 
-      for (const pageInfo of orderedPages) {
+      for (let i = 0; i < orderedPages.length; i++) {
+        const pageInfo = orderedPages[i];
+
         // Get source document
         const document = this.fileManager.getDocument(pageInfo.documentId);
         if (!document) {
-          console.warn(`Document not found for page ${pageInfo.id}`);
-          continue;
+          throw new Error('a page belongs to a file that has been removed. Re-sort and try again.');
         }
 
-        // Load PDF with pdf-lib (cache to avoid reloading)
-        let srcPdf;
-        if (loadedPdfs.has(document.id)) {
-          srcPdf = loadedPdfs.get(document.id);
-        } else {
-          srcPdf = await PDFDocument.load(document.pdfBytes);
+        let srcPdf = loadedPdfs.get(document.id);
+        if (!srcPdf) {
+          srcPdf = document.libDoc || await PDFDocument.load(document.pdfBytes);
           loadedPdfs.set(document.id, srcPdf);
         }
 
         // Copy page (pdf-lib uses 0-based indexing)
         const [copiedPage] = await mergedPdf.copyPages(srcPdf, [pageInfo.pageIndex]);
+
+        // Apply the user's rotation on top of the page's own /Rotate
+        if (pageInfo.rotation) {
+          const current = copiedPage.getRotation().angle || 0;
+          copiedPage.setRotation(degrees((((current + pageInfo.rotation) % 360) + 360) % 360));
+        }
+
         mergedPdf.addPage(copiedPage);
+
+        if (progressCallback) progressCallback((i + 1) / orderedPages.length);
       }
 
       // Set metadata
-      mergedPdf.setTitle('Collated PDF Document');
-      mergedPdf.setCreator('PDF Collator Web App');
-      mergedPdf.setProducer('PDF Collator Web App');
+      mergedPdf.setTitle(title);
+      mergedPdf.setCreator('PDF Collator (rjtalbot.com)');
+      mergedPdf.setProducer('PDF Collator (pdf-lib)');
       mergedPdf.setCreationDate(new Date());
 
-      // Save PDF
-      const pdfBytes = await mergedPdf.save();
-      return pdfBytes;
+      return await mergedPdf.save();
 
     } catch (error) {
       console.error('Error creating merged PDF:', error);
-      throw new Error(`Failed to create PDF: ${error.message}`);
+      throw new Error(`Could not create the PDF: ${error.message}`);
     }
   }
 
   /**
    * Export PDF and trigger download
    */
-  async exportPDF(orderedPages, filename = null) {
+  async exportPDF(orderedPages, filename = null, progressCallback = null) {
     try {
-      // Generate filename if not provided
-      if (!filename) {
-        const timestamp = new Date().toISOString().split('T')[0];
-        filename = `collated-${timestamp}.pdf`;
+      if (orderedPages.length === 0) {
+        throw new Error('there are no pages to save.');
       }
 
-      // Ensure .pdf extension
-      if (!filename.toLowerCase().endsWith('.pdf')) {
-        filename += '.pdf';
-      }
+      filename = PDFCollatorUtils.sanitizeFilename(
+        filename, `collated-${PDFCollatorUtils.localDateStamp()}`
+      );
 
-      // Create merged PDF
-      const pdfBytes = await this.createMergedPDF(orderedPages);
+      const title = filename.replace(/\.pdf$/i, '');
+      const pdfBytes = await this.createMergedPDF(orderedPages, title, progressCallback);
 
       // Create blob and trigger download
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       PDFCollatorUtils.downloadFile(blob, filename);
 
-      return { success: true, filename };
+      return { success: true, filename, size: blob.size };
 
     } catch (error) {
       console.error('Error exporting PDF:', error);

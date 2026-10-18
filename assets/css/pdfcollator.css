@@ -11,36 +11,50 @@
    If the tool is ever connected to the site theme switcher, map --pdf-* variables
    to --c-* tokens and remove the prefers-color-scheme media query
    (see docs/designs/a3-design-system-audit.md).
+
+   Sizes are in px: the site sets html { font-size: 62.5% }, so rem values
+   written for a 16px root come out far too small here.
    ============================================ */
 
 :root {
   /* Light Mode Colors */
-  --pdf-bg-primary: #f8f9fa;
+  --pdf-bg-primary: #f1f3f5;
   --pdf-bg-secondary: #ffffff;
-  --pdf-bg-tertiary: #f1f3f5;
+  --pdf-bg-tertiary: #f8f9fa;
   --pdf-border: #dee2e6;
   --pdf-text-primary: #212529;
-  --pdf-text-secondary: #6c757d;
-  --pdf-text-muted: #adb5bd;
-  
+  --pdf-text-secondary: #5c636a;
+  --pdf-text-muted: #868e96;
+
   /* Accent Colors */
-  --pdf-primary: #2196f3;
-  --pdf-primary-hover: #1976d2;
-  --pdf-success: #4caf50;
-  --pdf-success-hover: #388e3c;
-  --pdf-danger: #f44336;
-  --pdf-danger-hover: #d32f2f;
-  --pdf-warning: #ff9800;
-  
+  --pdf-primary: #1971c2;
+  --pdf-primary-hover: #1864ab;
+  --pdf-primary-soft: rgba(25, 113, 194, 0.12);
+  --pdf-success: #2b8a3e;
+  --pdf-success-hover: #237032;
+  --pdf-danger: #c92a2a;
+  --pdf-danger-hover: #a51111;
+  --pdf-warning: #e67700;
+
   /* Date Highlighting */
-  --pdf-date-highlight: #fff59d;
-  --pdf-date-text: #f57c00;
-  
+  --pdf-date-highlight: #fff3bf;
+  --pdf-date-text: #a65c00;
+
+  /* Source file colours (chip / card stripe) */
+  --src-0: #1c7ed6;
+  --src-1: #e8590c;
+  --src-2: #2f9e44;
+  --src-3: #ae3ec9;
+  --src-4: #d6336c;
+  --src-5: #0c8599;
+  --src-6: #f59f00;
+  --src-7: #5f3dc4;
+
   /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
-  
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 10px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.25);
+
   /* Transitions */
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
@@ -49,89 +63,261 @@
 /* Dark Mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    --pdf-bg-primary: #1a1a1a;
-    --pdf-bg-secondary: #2d2d2d;
-    --pdf-bg-tertiary: #3a3a3a;
-    --pdf-border: #404040;
-    --pdf-text-primary: #e0e0e0;
-    --pdf-text-secondary: #b0b0b0;
-    --pdf-text-muted: #808080;
-    
-    --pdf-primary: #64b5f6;
-    --pdf-primary-hover: #42a5f5;
-    --pdf-success: #81c784;
-    --pdf-success-hover: #66bb6a;
-    --pdf-danger: #e57373;
-    --pdf-danger-hover: #ef5350;
-    
-    --pdf-date-highlight: #fdd835;
-    --pdf-date-text: #ffb300;
-    
+    --pdf-bg-primary: #161616;
+    --pdf-bg-secondary: #232323;
+    --pdf-bg-tertiary: #2c2c2c;
+    --pdf-border: #424242;
+    --pdf-text-primary: #e6e6e6;
+    --pdf-text-secondary: #b5b5b5;
+    --pdf-text-muted: #8f8f8f;
+
+    --pdf-primary: #4dabf7;
+    --pdf-primary-hover: #74c0fc;
+    --pdf-primary-soft: rgba(77, 171, 247, 0.16);
+    --pdf-success: #40c057;
+    --pdf-success-hover: #51cf66;
+    --pdf-danger: #ff6b6b;
+    --pdf-danger-hover: #ff8787;
+    --pdf-warning: #fcc419;
+
+    --pdf-date-highlight: #5c4a00;
+    --pdf-date-text: #ffd43b;
+
+    --src-0: #4dabf7;
+    --src-1: #ff922b;
+    --src-2: #51cf66;
+    --src-3: #da77f2;
+    --src-4: #f783ac;
+    --src-5: #3bc9db;
+    --src-6: #ffd43b;
+    --src-7: #9775fa;
+
     --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
-    --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
-    --shadow-lg: 0 10px 15px rgba(0,0,0,0.5);
+    --shadow-md: 0 4px 10px rgba(0,0,0,0.4);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.6);
   }
 }
+
+.src-color-0 { --src: var(--src-0); }
+.src-color-1 { --src: var(--src-1); }
+.src-color-2 { --src: var(--src-2); }
+.src-color-3 { --src: var(--src-3); }
+.src-color-4 { --src: var(--src-4); }
+.src-color-5 { --src: var(--src-5); }
+.src-color-6 { --src: var(--src-6); }
+.src-color-7 { --src: var(--src-7); }
 
 /* ============================================
    Layout
    ============================================ */
+
+body:has(#pdf-collator-app) {
+  background: var(--pdf-bg-primary);
+}
+
+body.pdfc-modal-open {
+  overflow: hidden;
+}
 
 #pdf-collator-app {
   min-height: 100vh;
   background: var(--pdf-bg-primary);
   color: var(--pdf-text-primary);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+#pdf-collator-app *,
+#pdf-collator-app *::before,
+#pdf-collator-app *::after {
+  box-sizing: border-box;
+}
+
+#pdf-collator-app h1,
+#pdf-collator-app h2,
+#pdf-collator-app h3 {
+  color: var(--pdf-text-primary);
+  font-family: inherit;
+  line-height: 1.2;
+}
+
+#pdf-collator-app :focus-visible {
+  outline: 3px solid var(--pdf-primary);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 .app-header {
+  position: relative;
   background: var(--pdf-bg-secondary);
   border-bottom: 1px solid var(--pdf-border);
-  padding: 1.5rem 2rem;
+  padding: 20px 24px 16px;
   text-align: center;
 }
 
+/* Plain link: opt out of the site's animated link underline */
+#pdf-collator-app .app-home-link {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  padding: 4px 10px;
+  border: 1px solid var(--pdf-border);
+  border-radius: 6px;
+  color: var(--pdf-text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  background: var(--pdf-bg-tertiary);
+}
+
+#pdf-collator-app .app-home-link::after {
+  content: none;
+}
+
+#pdf-collator-app .app-home-link:hover {
+  color: var(--pdf-primary);
+  border-color: var(--pdf-primary);
+}
+
 .app-header h1 {
-  margin: 0 0 0.5rem 0;
-  font-size: 2rem;
-  font-weight: 600;
+  margin: 0 0 6px 0;
+  font-size: 30px;
+  font-weight: 650;
 }
 
 .app-subtitle {
   margin: 0;
   color: var(--pdf-text-secondary);
-  font-size: 1rem;
+  font-size: 16px;
+}
+
+.privacy-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--pdf-primary-soft);
+  color: var(--pdf-text-primary);
+  font-size: 14px;
+  text-align: left;
+}
+
+.privacy-note svg {
+  flex-shrink: 0;
+  color: var(--pdf-primary);
 }
 
 .app-container {
   display: grid;
-  grid-template-columns: 350px 1fr;
-  gap: 0;
-  height: calc(100vh - 120px);
+  grid-template-columns: 320px minmax(0, 1fr);
+  align-items: start;
+  min-height: calc(100vh - 140px);
 }
 
 .source-panel,
 .preview-panel {
   background: var(--pdf-bg-secondary);
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .source-panel {
   border-right: 1px solid var(--pdf-border);
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.preview-panel {
+  min-height: calc(100vh - 140px);
 }
 
 .panel-header {
-  padding: 1.25rem 1.5rem;
+  padding: 14px 20px;
   border-bottom: 1px solid var(--pdf-border);
   background: var(--pdf-bg-tertiary);
 }
 
-.panel-header h2 {
+#pdf-collator-app .panel-header h2 {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 17px;
   font-weight: 600;
+}
+
+/* ============================================
+   Notices
+   ============================================ */
+
+.app-notices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.app-notices:not(:empty) {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px 10px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--pdf-border);
+  border-left-width: 4px;
+  background: var(--pdf-bg-secondary);
+  font-size: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.notice-info { border-left-color: var(--pdf-primary); }
+.notice-success { border-left-color: var(--pdf-success); }
+.notice-warning { border-left-color: var(--pdf-warning); }
+.notice-error { border-left-color: var(--pdf-danger); }
+
+.notice-text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.notice-text ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}
+
+.notice-close {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--pdf-text-secondary);
+  padding: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+}
+
+.notice-close:hover {
+  background: var(--pdf-bg-tertiary);
+  color: var(--pdf-text-primary);
 }
 
 /* ============================================
@@ -139,10 +325,10 @@
    ============================================ */
 
 .upload-zone {
-  margin: 1.5rem;
+  margin: 16px;
   border: 2px dashed var(--pdf-border);
   border-radius: 8px;
-  padding: 2rem 1rem;
+  padding: 24px 12px;
   text-align: center;
   cursor: pointer;
   transition: all var(--transition-normal);
@@ -152,32 +338,31 @@
 .upload-zone:hover,
 .upload-zone.drag-over {
   border-color: var(--pdf-primary);
-  background: var(--pdf-bg-primary);
+  background: var(--pdf-primary-soft);
 }
 
 .upload-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  gap: 8px;
 }
 
 .upload-icon {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   color: var(--pdf-text-muted);
 }
 
 .upload-text {
   margin: 0;
-  font-size: 1rem;
+  font-size: 15px;
   font-weight: 500;
-  color: var(--pdf-text-primary);
 }
 
 .upload-subtext {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: 13px;
   color: var(--pdf-text-secondary);
 }
 
@@ -186,61 +371,55 @@
    ============================================ */
 
 .file-list-container {
-  flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;
 }
 
 .file-list-header {
-  padding: 1rem 1.5rem;
+  padding: 10px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-top: 1px solid var(--pdf-border);
   border-bottom: 1px solid var(--pdf-border);
   background: var(--pdf-bg-tertiary);
 }
 
 #file-count {
-  font-size: 0.875rem;
+  font-size: 14px;
   font-weight: 500;
   color: var(--pdf-text-secondary);
 }
 
 .file-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 8px;
 }
 
 .file-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  margin-bottom: 0.5rem;
+  gap: 10px;
+  padding: 8px 6px 8px 10px;
+  margin-bottom: 6px;
   background: var(--pdf-bg-tertiary);
   border: 1px solid var(--pdf-border);
+  border-left: 5px solid var(--src, var(--pdf-primary));
   border-radius: 6px;
-  transition: all var(--transition-fast);
 }
 
-.file-item:hover {
-  background: var(--pdf-bg-primary);
-  box-shadow: var(--shadow-sm);
+.file-item .src-swatch {
+  display: none;
 }
 
-.file-icon {
-  width: 40px;
-  height: 40px;
-  background: var(--pdf-primary);
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 600;
-  font-size: 0.75rem;
+.src-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--src, var(--pdf-primary));
   flex-shrink: 0;
 }
 
@@ -251,65 +430,46 @@
 
 .file-name {
   font-weight: 500;
-  font-size: 0.875rem;
-  margin: 0 0 0.25rem 0;
+  font-size: 14px;
+  margin: 0 0 2px 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .file-meta {
-  font-size: 0.75rem;
+  font-size: 12px;
   color: var(--pdf-text-secondary);
   display: flex;
-  gap: 0.5rem;
+  gap: 8px;
   flex-wrap: wrap;
   align-items: center;
 }
 
 .doc-type-badge {
   display: inline-block;
-  padding: 0.125rem 0.375rem;
+  padding: 1px 6px;
   border-radius: 3px;
-  font-size: 0.625rem;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
+  line-height: 1.5;
 }
 
-.doc-type-invoice {
-  background: rgba(34, 139, 230, 0.15);
-  color: #228be6;
-}
+.doc-type-invoice { background: rgba(34, 139, 230, 0.15); color: #1c7ed6; }
+.doc-type-ledger { background: rgba(64, 192, 87, 0.15); color: #2b8a3e; }
+.doc-type-1500 { background: rgba(250, 173, 20, 0.18); color: #b35c00; }
+.doc-type-consent { background: rgba(114, 46, 209, 0.15); color: #7048e8; }
+.doc-type-soap { background: rgba(235, 47, 150, 0.15); color: #c2255c; }
+.doc-type-unknown { background: rgba(128, 128, 128, 0.15); color: var(--pdf-text-secondary); }
 
-.doc-type-ledger {
-  background: rgba(82, 196, 26, 0.15);
-  color: #52c41a;
-}
-
-.doc-type-1500 {
-  background: rgba(250, 173, 20, 0.15);
-  color: #faad14;
-}
-
-.doc-type-consent {
-  background: rgba(114, 46, 209, 0.15);
-  color: #722ed1;
-}
-
-.doc-type-soap {
-  background: rgba(235, 47, 150, 0.15);
-  color: #eb2f96;
-}
-
-.doc-type-unknown {
-  background: rgba(128, 128, 128, 0.15);
-  color: #808080;
-}
-
-.file-actions {
-  display: flex;
-  gap: 0.25rem;
+@media (prefers-color-scheme: dark) {
+  .doc-type-invoice { color: #74c0fc; }
+  .doc-type-ledger { color: #8ce99a; }
+  .doc-type-1500 { color: #ffd43b; }
+  .doc-type-consent { color: #b197fc; }
+  .doc-type-soap { color: #faa2c1; }
 }
 
 /* ============================================
@@ -317,47 +477,51 @@
    ============================================ */
 
 .collation-controls {
-  padding: 1.5rem;
+  padding: 14px 20px;
   background: var(--pdf-bg-tertiary);
   border-bottom: 1px solid var(--pdf-border);
   display: flex;
-  gap: 1rem;
+  gap: 12px;
   align-items: flex-end;
+  flex-wrap: wrap;
 }
 
 .control-group {
-  flex: 1;
+  flex: 1 1 260px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 6px;
 }
 
-.control-group label {
-  font-size: 0.875rem;
-  font-weight: 500;
+.control-group label,
+.filename-group label {
+  font-size: 13px;
+  font-weight: 600;
   color: var(--pdf-text-secondary);
 }
 
-.select-input {
-  padding: 0.5rem 0.75rem;
+.select-input,
+.text-input {
+  padding: 8px 10px;
   border: 1px solid var(--pdf-border);
-  border-radius: 4px;
+  border-radius: 6px;
   background: var(--pdf-bg-secondary);
   color: var(--pdf-text-primary);
-  font-size: 0.875rem;
+  font-size: 15px;
+  font-family: inherit;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.select-input {
   cursor: pointer;
-  transition: all var(--transition-fast);
+  width: 100%;
 }
 
-.select-input:hover {
+.select-input:hover,
+.text-input:hover {
   border-color: var(--pdf-primary);
-}
-
-.select-input:focus {
-  outline: 2px solid var(--pdf-primary);
-  outline-offset: 1px;
-  border-color: var(--pdf-primary);
-  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
 }
 
 /* ============================================
@@ -365,7 +529,7 @@
    ============================================ */
 
 .progress-container {
-  padding: 1.5rem;
+  padding: 12px 20px;
   background: var(--pdf-bg-tertiary);
   border-bottom: 1px solid var(--pdf-border);
 }
@@ -375,7 +539,7 @@
   background: var(--pdf-border);
   border-radius: 4px;
   overflow: hidden;
-  margin-bottom: 0.5rem;
+  margin-bottom: 6px;
 }
 
 .progress-fill {
@@ -387,7 +551,7 @@
 
 .progress-text {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: 13px;
   color: var(--pdf-text-secondary);
   text-align: center;
 }
@@ -402,20 +566,21 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem;
+  padding: 48px 20px;
   text-align: center;
 }
 
 .empty-icon {
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
   color: var(--pdf-text-muted);
-  margin-bottom: 1rem;
+  margin-bottom: 12px;
 }
 
-.empty-state h3 {
-  margin: 0 0 0.5rem 0;
+#pdf-collator-app .empty-state h3 {
+  margin: 0 0 6px 0;
   color: var(--pdf-text-secondary);
+  font-size: 18px;
   font-weight: 500;
 }
 
@@ -425,95 +590,288 @@
 }
 
 /* ============================================
+   Page Toolbar
+   ============================================ */
+
+.page-toolbar {
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--pdf-border);
+  background: var(--pdf-bg-secondary);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.toolbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.toolbar-spacer {
+  flex: 1;
+}
+
+.range-form,
+.move-to {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+.range-form label,
+.move-to label {
+  font-size: 13px;
+  color: var(--pdf-text-secondary);
+  white-space: nowrap;
+}
+
+.range-input {
+  width: 110px;
+  padding: 5px 8px;
+  font-size: 14px;
+}
+
+.move-to-input {
+  width: 64px;
+  padding: 5px 8px;
+  font-size: 14px;
+}
+
+.selection-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pdf-text-secondary);
+  margin-right: 4px;
+  min-width: 120px;
+}
+
+.shortcut-help {
+  font-size: 13px;
+  color: var(--pdf-text-secondary);
+}
+
+.shortcut-help summary {
+  cursor: pointer;
+  width: fit-content;
+}
+
+.shortcut-help ul {
+  margin: 6px 0 2px;
+  padding-left: 18px;
+}
+
+.shortcut-help li {
+  margin-bottom: 3px;
+}
+
+kbd,
+.shortcut-help code {
+  display: inline-block;
+  padding: 0 5px;
+  margin: 0 1px;
+  border: 1px solid var(--pdf-border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--pdf-bg-tertiary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  color: var(--pdf-text-primary);
+}
+
+/* ============================================
    Page Grid
    ============================================ */
 
 .page-grid {
-  flex: 1;
-  padding: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 16px 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 14px;
   align-content: start;
-  overflow-y: auto;
 }
 
 .page-card {
   background: var(--pdf-bg-tertiary);
-  border: 2px solid var(--pdf-border);
+  border: 1px solid var(--pdf-border);
+  border-top: 5px solid var(--src, var(--pdf-border));
   border-radius: 8px;
   overflow: hidden;
-  cursor: pointer;
-  transition: all var(--transition-fast);
   position: relative;
   display: flex;
   flex-direction: column;
-  min-height: 200px;
+  min-width: 0;
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
 }
 
 .page-card:hover {
   box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+}
+
+.page-card.is-selected {
   border-color: var(--pdf-primary);
+  border-top-color: var(--src, var(--pdf-primary));
+  box-shadow: 0 0 0 2px var(--pdf-primary);
+  background: var(--pdf-primary-soft);
 }
 
-.page-card.dragging {
-  opacity: 0.5;
-  cursor: grabbing;
+.page-card:focus-within {
+  box-shadow: 0 0 0 2px var(--pdf-primary);
 }
 
-.page-card.manual-mode {
-  cursor: grab;
+.page-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 4px 4px 4px 8px;
 }
 
-.page-thumbnail {
-  width: 100%;
-  height: auto;
-  min-height: 200px;
-  display: block;
-  background: white;
-  object-fit: contain;
+.page-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  min-width: 0;
 }
 
-.page-info {
-  padding: 0.75rem;
-  background: var(--pdf-bg-secondary);
+.page-checkbox {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--pdf-primary);
 }
 
 .page-number {
-  font-size: 0.875rem;
-  font-weight: 600;
-  margin: 0 0 0.25rem 0;
+  font-size: 14px;
+  font-weight: 700;
 }
 
-.page-date {
-  font-size: 0.75rem;
-  color: var(--pdf-date-text);
-  margin: 0 0 0.25rem 0;
+.page-actions {
+  display: flex;
+  gap: 2px;
+}
+
+.page-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--pdf-text-secondary);
+  cursor: pointer;
+}
+
+.page-action:hover {
+  background: var(--pdf-bg-secondary);
+  border-color: var(--pdf-border);
+  color: var(--pdf-text-primary);
+}
+
+.page-action-remove:hover {
+  color: var(--pdf-danger);
+}
+
+.page-thumb-btn {
+  display: block;
+  width: 100%;
+  padding: 0 8px;
+  border: none;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.page-thumb {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  justify-content: center;
+  aspect-ratio: 3 / 4;
+  width: 100%;
+  overflow: hidden;
 }
 
-.page-date::before {
-  content: '📅';
-  font-size: 0.875rem;
+.page-thumbnail {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+}
+
+.page-thumb-placeholder {
+  display: block;
+  width: 77%;
+  height: 100%;
+  background: linear-gradient(110deg, #ececec 30%, #f7f7f7 50%, #ececec 70%);
+  background-size: 200% 100%;
+  animation: pdfc-shimmer 1.2s linear infinite;
+  border-radius: 2px;
+}
+
+@keyframes pdfc-shimmer {
+  to { background-position: -200% 0; }
+}
+
+.page-info {
+  padding: 8px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
 }
 
 .page-source {
-  font-size: 0.75rem;
-  color: var(--pdf-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
   margin: 0;
-  white-space: nowrap;
+  font-size: 12px;
+  color: var(--pdf-text-secondary);
+  min-width: 0;
+}
+
+.page-source-name {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.page-source-num {
+  flex-shrink: 0;
+  color: var(--pdf-text-muted);
+}
+
+.page-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 12px;
+}
+
+.page-date {
+  color: var(--pdf-date-text);
+  font-weight: 600;
 }
 
 .page-no-date {
-  font-size: 0.75rem;
   color: var(--pdf-text-muted);
   font-style: italic;
-  margin: 0;
 }
 
 /* ============================================
@@ -521,29 +879,30 @@
    ============================================ */
 
 .collation-stats {
-  padding: 1rem 1.5rem;
+  padding: 10px 20px;
   background: var(--pdf-bg-tertiary);
   border-top: 1px solid var(--pdf-border);
   display: flex;
-  gap: 2rem;
+  gap: 8px 24px;
   flex-wrap: wrap;
 }
 
 .stat-item {
   display: flex;
-  gap: 0.5rem;
-  align-items: center;
+  gap: 6px;
+  align-items: baseline;
+  min-width: 0;
 }
 
 .stat-label {
-  font-size: 0.875rem;
+  font-size: 13px;
   color: var(--pdf-text-secondary);
 }
 
 .stat-value {
-  font-size: 0.875rem;
+  font-size: 13px;
   font-weight: 600;
-  color: var(--pdf-text-primary);
+  overflow-wrap: anywhere;
 }
 
 /* ============================================
@@ -551,33 +910,74 @@
    ============================================ */
 
 .export-controls {
-  padding: 1.5rem;
-  background: var(--pdf-bg-tertiary);
+  padding: 12px 20px;
+  background: var(--pdf-bg-secondary);
   border-top: 1px solid var(--pdf-border);
   display: flex;
-  justify-content: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 12px;
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
+}
+
+.filename-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 0 1 340px;
+  min-width: 0;
+}
+
+.filename-input-wrap {
+  display: flex;
+  align-items: stretch;
+}
+
+.filename-input-wrap .text-input {
+  flex: 1;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.filename-ext {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border: 1px solid var(--pdf-border);
+  border-left: none;
+  border-radius: 0 6px 6px 0;
+  background: var(--pdf-bg-tertiary);
+  color: var(--pdf-text-secondary);
+  font-size: 14px;
 }
 
 /* ============================================
    Buttons
    ============================================ */
 
-.btn {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  font-size: 0.875rem;
+#pdf-collator-app .btn {
+  padding: 8px 14px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 14px;
   font-weight: 500;
+  line-height: 1.2;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: background var(--transition-fast), border-color var(--transition-fast);
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 8px;
   font-family: inherit;
+  white-space: nowrap;
 }
 
-.btn:disabled {
-  opacity: 0.5;
+#pdf-collator-app .btn:disabled {
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
@@ -588,7 +988,6 @@
 
 .btn-primary:hover:not(:disabled) {
   background: var(--pdf-primary-hover);
-  box-shadow: var(--shadow-sm);
 }
 
 .btn-success {
@@ -598,46 +997,47 @@
 
 .btn-success:hover:not(:disabled) {
   background: var(--pdf-success-hover);
-  box-shadow: var(--shadow-sm);
 }
 
 .btn-danger {
-  background: var(--pdf-danger);
-  color: white;
+  background: transparent;
+  color: var(--pdf-danger);
+  border-color: var(--pdf-danger) !important;
 }
 
 .btn-danger:hover:not(:disabled) {
-  background: var(--pdf-danger-hover);
+  background: var(--pdf-danger);
+  color: white;
 }
 
 .btn-secondary {
   background: var(--pdf-bg-tertiary);
   color: var(--pdf-text-primary);
-  border: 1px solid var(--pdf-border);
+  border-color: var(--pdf-border) !important;
 }
 
 .btn-secondary:hover:not(:disabled) {
   background: var(--pdf-bg-primary);
+  border-color: var(--pdf-primary) !important;
 }
 
 .btn-text {
   background: transparent;
   color: var(--pdf-primary);
-  padding: 0.25rem 0.5rem;
 }
 
 .btn-text:hover:not(:disabled) {
-  background: var(--pdf-bg-primary);
+  background: var(--pdf-primary-soft);
 }
 
-.btn-sm {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
+#pdf-collator-app .btn-sm {
+  padding: 5px 10px;
+  font-size: 13px;
 }
 
-.btn-lg {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
+#pdf-collator-app .btn-lg {
+  padding: 10px 20px;
+  font-size: 16px;
 }
 
 .btn-icon {
@@ -645,9 +1045,17 @@
   height: 20px;
 }
 
-.btn-icon-only {
-  padding: 0.5rem;
-  aspect-ratio: 1;
+#pdf-collator-app .btn-icon-only {
+  padding: 6px;
+  flex-shrink: 0;
+}
+
+/* Dark mode: white text on the lighter accents is too faint */
+@media (prefers-color-scheme: dark) {
+  .btn-primary,
+  .btn-success {
+    color: #111;
+  }
 }
 
 /* ============================================
@@ -656,50 +1064,57 @@
 
 .modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   z-index: 1000;
 }
 
 .modal-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: rgba(0, 0, 0, 0.7);
   cursor: pointer;
 }
 
 .modal-content {
   position: relative;
-  max-width: 900px;
-  max-height: 90vh;
-  margin: 5vh auto;
+  width: min(1100px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  margin: 16px auto;
   background: var(--pdf-bg-secondary);
-  border-radius: 8px;
+  color: var(--pdf-text-primary);
+  border-radius: 10px;
   box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--pdf-border);
+}
+
+#pdf-collator-app .modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .modal-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border: none;
   background: var(--pdf-bg-tertiary);
   color: var(--pdf-text-primary);
-  font-size: 1.5rem;
+  font-size: 24px;
   line-height: 1;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  z-index: 10;
-  transition: all var(--transition-fast);
+  flex-shrink: 0;
 }
 
 .modal-close:hover {
@@ -709,14 +1124,23 @@
 
 .modal-body {
   flex: 1;
+  min-height: 0;
   overflow: auto;
-  padding: 2rem;
+  padding: 16px;
   display: flex;
-  gap: 2rem;
+  gap: 20px;
+}
+
+.modal-canvas-holder {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 #modal-canvas {
-  max-width: 500px;
+  max-width: 100%;
   height: auto;
   border: 1px solid var(--pdf-border);
   border-radius: 4px;
@@ -724,108 +1148,218 @@
 }
 
 .modal-info {
-  flex: 1;
-}
-
-.modal-info h3 {
-  margin: 0 0 1rem 0;
-  font-size: 1.25rem;
+  flex: 0 0 240px;
+  min-width: 0;
 }
 
 .modal-details {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 14px;
 }
 
 .detail-item {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 4px;
 }
 
 .detail-label {
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   text-transform: uppercase;
   color: var(--pdf-text-secondary);
   letter-spacing: 0.5px;
 }
 
 .detail-value {
-  font-size: 0.875rem;
-  color: var(--pdf-text-primary);
+  font-size: 14px;
+  overflow-wrap: anywhere;
 }
 
 .date-badge {
   display: inline-block;
-  padding: 0.25rem 0.5rem;
+  padding: 3px 8px;
   background: var(--pdf-date-highlight);
   color: var(--pdf-date-text);
   border-radius: 4px;
-  font-size: 0.75rem;
+  font-size: 13px;
   font-weight: 600;
-  margin-right: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin: 0 6px 6px 0;
 }
 
 .modal-nav {
-  padding: 1rem 2rem;
+  padding: 10px 16px;
   background: var(--pdf-bg-tertiary);
   border-top: 1px solid var(--pdf-border);
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.modal-edit {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 /* ============================================
    Responsive Design
    ============================================ */
 
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
   .app-container {
-    grid-template-columns: 1fr;
-    height: auto;
+    grid-template-columns: minmax(0, 1fr);
   }
-  
+
   .source-panel {
+    position: static;
+    max-height: none;
     border-right: none;
     border-bottom: 1px solid var(--pdf-border);
-    max-height: 400px;
   }
-  
+
   .preview-panel {
-    min-height: 600px;
+    min-height: 0;
+  }
+
+  .modal-body {
+    flex-direction: column;
+  }
+
+  .modal-info {
+    flex: none;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
+  #pdf-collator-app {
+    font-size: 14px;
+  }
+
+  .app-header {
+    padding: 52px 16px 14px;
+  }
+
+  #pdf-collator-app .app-home-link {
+    top: 12px;
+    left: 16px;
+  }
+
   .app-header h1 {
-    font-size: 1.5rem;
+    font-size: 24px;
   }
-  
+
+  .app-subtitle {
+    font-size: 14px;
+  }
+
+  .privacy-note {
+    font-size: 13px;
+    border-radius: 8px;
+  }
+
+  .app-notices,
+  .collation-controls,
+  .progress-container,
+  .page-toolbar,
+  .collation-stats,
+  .export-controls {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .panel-header {
+    padding: 12px 16px;
+  }
+
+  .upload-zone {
+    margin: 12px 16px;
+    padding: 16px 12px;
+  }
+
+  .collation-controls #apply-collation {
+    width: 100%;
+  }
+
+  .page-toolbar {
+    position: static;
+  }
+
+  .toolbar-spacer {
+    display: none;
+  }
+
+  .selection-count {
+    flex-basis: 100%;
+  }
+
+  .range-input {
+    width: 96px;
+  }
+
   .page-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 0.75rem;
-    padding: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 12px 16px;
   }
-  
-  .collation-controls {
-    flex-direction: column;
-    align-items: stretch;
+
+  .page-action {
+    width: 28px;
+    height: 28px;
   }
-  
+
+  .export-controls {
+    flex-wrap: nowrap;
+    gap: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .filename-group {
+    flex: 1 1 auto;
+  }
+
+  .filename-group label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .filename-ext {
+    padding: 0 6px;
+  }
+
+  #pdf-collator-app .export-controls #export-pdf {
+    flex-shrink: 0;
+    padding: 9px 12px;
+    font-size: 15px;
+  }
+
+  .modal-content {
+    width: 100vw;
+    max-height: 100vh;
+    height: 100vh;
+    margin: 0;
+    border-radius: 0;
+  }
+
   .modal-body {
-    flex-direction: column;
-    padding: 1rem;
+    padding: 10px;
   }
-  
-  #modal-canvas {
-    max-width: 100%;
+
+  .modal-nav {
+    padding: 8px 10px;
   }
-  
-  .collation-stats {
-    flex-direction: column;
-    gap: 0.5rem;
+
+  .modal-edit {
+    order: 3;
+    flex-basis: 100%;
   }
 }
 
@@ -837,16 +1371,17 @@
   display: none !important;
 }
 
-.loading {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
 /* Sortable.js styling */
 .sortable-ghost {
-  opacity: 0.4;
+  opacity: 0.35;
 }
 
 .sortable-chosen {
   cursor: grabbing !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-thumb-placeholder {
+    animation: none;
+  }
 }
