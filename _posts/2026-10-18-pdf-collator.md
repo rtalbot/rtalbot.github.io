@@ -18,7 +18,7 @@ The [PDF Collator](/pdfcollator) does it in the browser. Nothing is uploaded. Th
 
 Drop in your PDFs and the pages are sorted straight away using one of five strategies:
 
-- **Final Billing** (the default) orders a billing packet as invoice, ledger, 1500 claim form, consent, then SOAP notes. Each page is classified by the text on it, and pages of the same type are kept in date order.
+- **Final Billing** (the default) orders a billing packet as invoice, ledger, 1500 claim form, consent, then SOAP notes. Each file is classified by the text in it, and files keep their own page order within their section.
 - **Date-based** puts every page in chronological order, using dates found in the page text.
 - **Filename** sorts alphabetically by source file.
 - **Interleaved** takes one page from each file in turn.
