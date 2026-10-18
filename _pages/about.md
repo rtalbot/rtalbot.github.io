@@ -5,7 +5,7 @@ permalink: /about/
 ---
 Hi, my name is Richard J Talbot and this is my internet home. Thanks for visiting my site.
 
-I program, explore data, work with ML models and try to write about it.
+I program, explore data and work with ML models.
 
 ----
 

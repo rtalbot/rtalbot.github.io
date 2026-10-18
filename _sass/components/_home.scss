@@ -19,15 +19,10 @@
     }
 }
 
-.c-hero__text,
-.c-lede {
+.c-hero__text {
     max-width: 60rem;
     @include fs--heading-4;
     color: var(--c-text-secondary);
-}
-
-.c-lede {
-    margin-bottom: 4rem;
 }
 
 .c-section {
@@ -140,75 +135,4 @@
     @include ff--code;
     font-size: 1.2rem;
     line-height: 1.6;
-}
-
-.c-card__more {
-    margin-left: auto;
-}
-
-// Post lists
-
-.c-posts {
-    list-style: none;
-}
-
-.c-posts__item {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 0.4rem 2rem;
-    padding: 1.8rem 0;
-    border-top: 1px solid var(--c-base-01);
-
-    &:last-child {
-        border-bottom: 1px solid var(--c-base-01);
-    }
-}
-
-.c-posts__title {
-    justify-self: start;
-    @include fs--body;
-}
-
-.c-posts__date {
-    @include fs--caption;
-    line-height: 1.5;
-    color: var(--c-text-secondary);
-    white-space: nowrap;
-}
-
-.c-posts__desc {
-    grid-column: 1 / -1;
-    @include fs--caption;
-    line-height: 1.5;
-    color: var(--c-text-secondary);
-}
-
-.c-archive-year {
-    margin-bottom: 5rem;
-}
-
-.c-archive-year__title {
-    margin-bottom: 1.5rem;
-    @include fs--heading-2;
-}
-
-// Button
-
-.c-button {
-    display: inline-block;
-    margin-top: 1rem;
-    padding: 0.8rem 1.6rem;
-    border: 2px solid var(--c-link);
-    border-radius: 8px;
-    color: var(--c-link);
-    @include fs--caption;
-    line-height: 1.5;
-    font-weight: 700;
-    transition: background-color 0.2s ease, color 0.2s ease;
-
-    &:hover,
-    &:focus-visible {
-        background: var(--c-link);
-        color: var(--c-body-bg);
-    }
 }

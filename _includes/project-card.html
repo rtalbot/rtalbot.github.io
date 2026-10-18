@@ -12,7 +12,6 @@
     <p class="c-card__text">{{ project.description }}</p>
     <p class="c-card__meta">
       {% for tag in project.tags %}<span class="c-card__tag">{{ tag }}</span>{% endfor %}
-      {% if project.post %}<a class="c-card__more" href="{{ project.post | prepend: site.baseurl }}">Read about it</a>{% endif %}
     </p>
   </div>
 </li>

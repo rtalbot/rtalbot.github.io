@@ -1,7 +1,6 @@
 <footer class="c-page__footer">
   <p>&copy; {{ site.author }} {{ 'now' | date: '%Y' }}</p>
   <p>
-    {% if site.github_username %}<a href="https://github.com/{{ site.github_username }}">GitHub</a><span class="u-separate"></span>{% endif %}
-    <a href="{{ "/feed.xml" | prepend: site.baseurl }}">RSS</a>
+    {% if site.github_username %}<a href="https://github.com/{{ site.github_username }}">GitHub</a>{% endif %}
   </p>
 </footer>

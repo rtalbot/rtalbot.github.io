@@ -4,26 +4,17 @@ title: Home
 ---
 <section class="c-hero">
   <h1 class="c-hero__title">Hi, I'm Rich.</h1>
-  <p class="c-hero__text">I program, explore data, work with ML models and try to write about it. This is where I put the things I build: small games, browser tools and experiments.</p>
+  <p class="c-hero__text">I program, explore data and work with ML models. This is where I put the things I build: small games, browser tools and experiments.</p>
 </section>
 
 <section class="c-section">
   <header class="c-section__header">
     <h2 class="c-section__title">Projects</h2>
-    <a href="{{ "/projects/" | prepend: site.baseurl }}">All projects</a>
   </header>
   <ul class="c-cards">
-    {% for project in site.data.projects limit: 4 %}
+    {% for project in site.data.projects %}
     {% include project-card.html project=project %}
     {% endfor %}
   </ul>
 </section>
 
-<section class="c-section">
-  <header class="c-section__header">
-    <h2 class="c-section__title">Writing</h2>
-    <a href="{{ "/writing/" | prepend: site.baseurl }}">All writing</a>
-  </header>
-  {% assign recent = site.posts | slice: 0, 5 %}
-  {% include post-list.html posts=recent %}
-</section>
