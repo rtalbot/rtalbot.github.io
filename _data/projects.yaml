@@ -1,45 +1,38 @@
 # Projects shown on the home page (first four) and the Projects page.
 # image: 16:10 screenshot under /assets/img/projects/
-# post: URL of the article about the project, if there is one
 
 - name: Sprite Dash
   link: /spritetest
   image: /assets/img/projects/sprite-dash.png
   description: An endless runner built from SMB3 sprite sheets. Jump, duck and stomp while the speed keeps climbing.
   tags: [game, canvas]
-  post: /2026/10/18/sprite-dash.html
 
 - name: Breakout
   link: /breakout
   image: /assets/img/projects/breakout.png
   description: A from-scratch Breakout clone with five JSON-defined levels and Web Audio sound effects.
   tags: [game, canvas]
-  post: /2026/10/18/super-breakout.html
 
 - name: Sprite Sheet Generator
   link: /spritegen
   image: /assets/img/projects/spritegen.png
   description: Slice a sprite sheet into frames, build and preview animations, and export a packed atlas with JSON.
   tags: [tool, gamedev]
-  post: /2026/10/18/sprite-sheet-generator.html
 
 - name: PDF Collator
   link: /pdfcollator
   image: /assets/img/projects/pdfcollator.png
   description: Merge, reorder, rotate and trim PDF pages in the browser, with date-aware and billing-packet ordering.
   tags: [tool, pdf]
-  post: /2026/10/18/pdf-collator.html
 
 - name: ANOVA Calculator
   link: /anova
   image: /assets/img/projects/anova.png
   description: One-way analysis of variance with the full table, effect size and charts of your groups.
   tags: [tool, statistics]
-  post: /2026/10/18/anova-calculator.html
 
 - name: Pixel Noise
   link: /flashy
   image: /assets/img/projects/pixel-noise.png
   description: Full-screen generative pixel noise with controls for cell size, speed, fade and colour.
   tags: [generative, canvas]
-  post: /2026/10/18/pixel-noise.html

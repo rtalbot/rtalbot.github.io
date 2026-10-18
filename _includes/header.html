@@ -4,7 +4,6 @@
     {% for item in site.data.navigation %}
     {% assign is_current = false %}
     {% if page.url == item.link %}{% assign is_current = true %}{% endif %}
-    {% if item.link == '/writing/' and page.layout == 'post' %}{% assign is_current = true %}{% endif %}
     <a href="{{ item.link | prepend: site.baseurl }}"{% if is_current %} aria-current="page"{% endif %}>{{ item.name }}</a>
     {% endfor %}
   </nav>

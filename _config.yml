@@ -1,7 +1,7 @@
 title: rjtalbot
 email: contact@rjtalbot.com
 description: >
-  Blog, Portfolio and Internet Home of Richard J Talbot.
+  Portfolio and internet home of Richard J Talbot.
 author: Richard J Talbot
 baseurl: ''
 url: 'https://rjtalbot.com'
@@ -22,7 +22,6 @@ include: ['_pages']
 
 # Plugins
 plugins:
-  - jekyll-feed
   - jekyll-seo-tag
   - jekyll-sitemap
 

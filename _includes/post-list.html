@@ -1,9 +1,0 @@
-<ul class="c-posts">
-  {% for post in include.posts %}
-  <li class="c-posts__item">
-    <a class="c-posts__title" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-    <time class="c-posts__date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
-    {% if post.description %}<p class="c-posts__desc">{{ post.description }}</p>{% endif %}
-  </li>
-  {% endfor %}
-</ul>

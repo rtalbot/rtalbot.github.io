@@ -6,7 +6,7 @@ Personal website and portfolio of Richard J Talbot.
 
 ## About
 
-This is a Jekyll-based static site hosted on GitHub Pages, featuring blog posts, projects, and portfolio work.
+This is a Jekyll-based static site hosted on GitHub Pages, featuring browser games, tools and experiments.
 
 ## Technology Stack
 
