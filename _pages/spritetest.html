@@ -1,50 +1,12 @@
 ---
 layout: static
-title: Sprite Test
+title: Sprite Dash
+description: An endless runner built from SMB3 sprite sheets. Jump, duck and stomp your way as the speed keeps climbing.
 permalink: /spritetest
 ---
-<head>
-<script src="assets/js/sprites.js"></script>
-<script src="assets/js/game-scene.js"></script>
-<script src="assets/js/input-handler.js"></script>
-<script>
-// Initialize the sprite system when DOM is ready
-Utils.domReady(async () => {
-    try {
-        // Get canvas element
-        const canvas = document.getElementById('canvas');
-        
-        // Create sprite manager
-        const spriteManager = new SpriteManager();
-        
-        // Load sprite and animation data
-        await spriteManager.loadSpriteSheetData('assets/data/spritesheets.json');
-        await spriteManager.loadAnimationData('assets/data/animations.json');
-        
-        // Create game scene
-        const scene = new GameScene(canvas, spriteManager);
-        await scene.loadScene('assets/data/scenes/spritetest.json');
-        
-        // Setup input handling
-        const input = new InputHandler(document);
-        
-        // Get controllable entity (mario) and bind controls
-        const controllableEntity = scene.getControllableEntity();
-        if (controllableEntity) {
-            input.bindScene(scene, controllableEntity);
-        }
-        
-        // Start the game loop
-        scene.start();
-        
-        console.log('Sprite system initialized successfully!');
-    } catch (error) {
-        console.error('Failed to initialize sprite system:', error);
-    }
-});
-</script>
-<meta charset=utf-8 />
-<title>sprites</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
   html, body {
     width: 100%;
@@ -52,27 +14,38 @@ Utils.domReady(async () => {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    overscroll-behavior: none;
   }
-  
-  #canvas {
+
+  main.u-container {
+    padding: 0;
+  }
+
+  #dash-canvas {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     display: block;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    background: #5fb4ff;
+    cursor: pointer;
   }
-  
-  /* Hide color scheme picker and header on this page */
-  .color-scheme-picker,
-  header,
-  .static-home-link {
+
+  .color-scheme-picker {
     display: none !important;
   }
+
+  .static-home-link {
+    opacity: 0.75;
+  }
+
+  .static-home-link:hover,
+  .static-home-link:focus-within {
+    opacity: 1;
+  }
 </style>
-</head>
-<body>	
-  <canvas id="canvas" role="application" aria-label="Sprite animation demo. Use arrow keys to move the character."></canvas>
- 
-</body>
-<!--Created and Maintained by Richard Talbot-->
+
+<canvas id="dash-canvas" role="application" aria-label="Sprite Dash, an endless runner. Press space or up to jump, down to duck. On touch screens tap the right side to jump and hold the left side to duck."></canvas>
+
+<script src="{{ "/assets/js/sprite-dash.js" | prepend: site.baseurl }}"></script>

@@ -1,0 +1,14 @@
+---
+layout: content
+title: Writing
+permalink: /writing/
+---
+<p class="c-lede">Notes on the projects on this site and whatever else I'm working on.</p>
+
+{% assign years = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+{% for year in years %}
+<section class="c-archive-year">
+  <h2 class="c-archive-year__title" id="{{ year.name }}">{{ year.name }}</h2>
+  {% include post-list.html posts=year.items %}
+</section>
+{% endfor %}

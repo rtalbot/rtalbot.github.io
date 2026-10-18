@@ -1,30 +1,255 @@
 ---
 layout: static
-title: FLASHY
+title: Pixel Noise
+description: A full-screen pixel noise generator. Tune the cell size, speed and colour channels, then save a frame as a PNG.
 permalink: /flashy
 ---
-<head>
-<title>FLASHY!</title>
-<script src="/assets/js/pixelnoise.js"></script>
+<style>
+	html, body {
+		height: 100%;
+		overflow: hidden;
+	}
+
+	main.u-container {
+		padding: 0;
+	}
+
+	#noise {
+		position: fixed;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		display: block;
+		background: #000;
+	}
+
+	.color-scheme-picker {
+		display: none !important;
+	}
+
+	.noise-panel {
+		position: fixed;
+		right: 16px;
+		bottom: 16px;
+		z-index: 10;
+		width: min(300px, calc(100vw - 32px));
+		padding: 14px 16px;
+		background: rgba(19, 20, 24, 0.86);
+		backdrop-filter: blur(6px);
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		border-radius: 10px;
+		color: #f4f1ea;
+		font: 13px/1.4 'Roboto Mono', monospace;
+		box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+	}
+
+	.noise-panel summary {
+		cursor: pointer;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		list-style: none;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.noise-panel summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.noise-panel summary::after {
+		content: '\25BE';
+		transition: transform 0.2s;
+	}
+
+	.noise-panel:not([open]) summary::after {
+		transform: rotate(180deg);
+	}
+
+	.noise-panel .row {
+		display: grid;
+		grid-template-columns: 70px 1fr 38px;
+		align-items: center;
+		gap: 8px;
+		margin-top: 10px;
+	}
+
+	.noise-panel input[type=range] {
+		width: 100%;
+		accent-color: #ff597d;
+	}
+
+	.noise-panel output {
+		text-align: right;
+		color: #c4ced1;
+	}
+
+	.noise-panel .presets,
+	.noise-panel .actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		margin-top: 12px;
+	}
+
+	.noise-panel button {
+		flex: 1 1 auto;
+		padding: 6px 8px;
+		border-radius: 6px;
+		border: 1px solid rgba(255, 255, 255, 0.25);
+		background: rgba(255, 255, 255, 0.06);
+		color: inherit;
+		font: inherit;
+		cursor: pointer;
+	}
+
+	.noise-panel button:hover,
+	.noise-panel button:focus-visible {
+		border-color: #ff597d;
+		color: #ff597d;
+	}
+
+	.noise-panel .hint {
+		margin-top: 10px;
+		color: #9aa4a7;
+		font-size: 11px;
+	}
+</style>
+
+<canvas id="noise" role="img" aria-label="Animated pixel noise"></canvas>
+
+<details class="noise-panel" open>
+	<summary>Pixel Noise</summary>
+
+	<div class="presets" aria-label="Presets">
+		<button type="button" data-preset="static">Static</button>
+		<button type="button" data-preset="ember">Ember</button>
+		<button type="button" data-preset="deep">Deep</button>
+		<button type="button" data-preset="matrix">Matrix</button>
+		<button type="button" data-preset="crimson">Crimson</button>
+	</div>
+
+	<label class="row">Cell <input type="range" id="size" min="2" max="60" value="10"><output for="size"></output></label>
+	<label class="row">Speed <input type="range" id="rate" min="0" max="6000" step="50" value="1200"><output for="rate"></output></label>
+	<label class="row">Fade <input type="range" id="fade" min="0" max="1" step="0.05" value="0"><output for="fade"></output></label>
+	<label class="row">Red <input type="range" id="r" min="0" max="255" value="255"><output for="r"></output></label>
+	<label class="row">Green <input type="range" id="g" min="0" max="255" value="255"><output for="g"></output></label>
+	<label class="row">Blue <input type="range" id="b" min="0" max="255" value="255"><output for="b"></output></label>
+
+	<div class="actions">
+		<button type="button" id="pause">Pause</button>
+		<button type="button" id="shuffle">Shuffle</button>
+		<button type="button" id="save">Save PNG</button>
+	</div>
+	<p class="hint">Space pauses, S saves, R shuffles, H hides this panel.</p>
+</details>
+
+<script src="{{ "/assets/js/pixelnoise.js" | prepend: site.baseurl }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-	pixelNoise(document.getElementById('canvas'), { size: 10, updatecells: 10 });
-	pixelNoise(document.getElementById('canvas2'), { size: 20, updatecells: 1, r: 0, g: 0 });
-	pixelNoise(document.getElementById('canvas3'), { size: 30, updatecells: 1, b: 0, g: 0 });
-	pixelNoise(document.getElementById('canvas4'), { size: 5, updatecells: 100, b: 0, r: 127 });
+	const PRESETS = {
+		static: { size: 10, rate: 1200, fade: 0, r: 255, g: 255, b: 255 },
+		ember: { size: 20, rate: 300, fade: 0.15, r: 255, g: 90, b: 0 },
+		deep: { size: 30, rate: 200, fade: 0, r: 40, g: 0, b: 255 },
+		matrix: { size: 5, rate: 5000, fade: 0.35, r: 0, g: 255, b: 60 },
+		crimson: { size: 4, rate: 6000, fade: 0, r: 255, g: 0, b: 0 }
+	};
+	const fields = ['size', 'rate', 'fade', 'r', 'g', 'b'];
+	const inputs = {};
+	fields.forEach(function(name) {
+		inputs[name] = document.getElementById(name);
+	});
+
+	const values = function() {
+		const v = {};
+		fields.forEach(function(name) {
+			v[name] = parseFloat(inputs[name].value);
+		});
+		return v;
+	};
+
+	const showValues = function() {
+		fields.forEach(function(name) {
+			inputs[name].nextElementSibling.textContent = inputs[name].value;
+		});
+	};
+
+	const noise = pixelNoise(document.getElementById('noise'), Object.assign({ fullscreen: true }, values()));
+	const pauseButton = document.getElementById('pause');
+
+	const apply = function(preset) {
+		Object.keys(preset).forEach(function(name) {
+			inputs[name].value = preset[name];
+		});
+		showValues();
+		noise.set(values());
+	};
+
+	fields.forEach(function(name) {
+		inputs[name].addEventListener('input', function() {
+			showValues();
+			noise.set(values());
+		});
+	});
+
+	document.querySelectorAll('[data-preset]').forEach(function(button) {
+		button.addEventListener('click', function() {
+			apply(PRESETS[button.dataset.preset]);
+		});
+	});
+
+	const updatePause = function() {
+		pauseButton.textContent = noise.running() ? 'Pause' : 'Play';
+	};
+
+	const shuffle = function() {
+		const rand = function(min, max) {
+			return Math.round(min + Math.random() * (max - min));
+		};
+		apply({
+			size: rand(2, 40),
+			rate: rand(2, 60) * 50,
+			fade: rand(0, 8) / 20,
+			r: rand(0, 255),
+			g: rand(0, 255),
+			b: rand(0, 255)
+		});
+	};
+
+	const save = function() {
+		const link = document.createElement('a');
+		link.download = 'pixel-noise.png';
+		link.href = document.getElementById('noise').toDataURL('image/png');
+		link.click();
+	};
+
+	pauseButton.addEventListener('click', function() {
+		noise.toggle();
+		updatePause();
+	});
+	document.getElementById('shuffle').addEventListener('click', shuffle);
+	document.getElementById('save').addEventListener('click', save);
+
+	document.addEventListener('keydown', function(e) {
+		if (e.target.tagName === 'INPUT' && e.code !== 'Space') return;
+		if (e.code === 'Space') {
+			e.preventDefault();
+			noise.toggle();
+			updatePause();
+		} else if (e.code === 'KeyS') {
+			save();
+		} else if (e.code === 'KeyR') {
+			shuffle();
+		} else if (e.code === 'KeyH') {
+			const panel = document.querySelector('.noise-panel');
+			panel.style.display = panel.style.display === 'none' ? '' : 'none';
+		}
+	});
+
+	// Start with the panel folded on phones so the noise gets the screen
+	if (window.innerWidth < 600) document.querySelector('.noise-panel').removeAttribute('open');
+
+	showValues();
+	updatePause();
 });
 </script>
-<style>
-.canvas{
-	margin: 0px;
-	padding: 0px;
-	position: relative;
-}
-</style>
-</head>
-<body>
-<canvas id="canvas" class="canvas" height="600" width="800" role="img" aria-label="Pixel noise animation, multi-color"></canvas>
-<canvas id="canvas2" class="canvas" height="600" width="400" role="img" aria-label="Pixel noise animation, no blue"></canvas>
-<canvas id="canvas3" class="canvas" height="300" width="300" role="img" aria-label="Pixel noise animation, red only"></canvas>
-<canvas id="canvas4" class="canvas" height="300" width="900" role="img" aria-label="Pixel noise animation, green only"></canvas>
-</body>

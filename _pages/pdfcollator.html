@@ -4,33 +4,22 @@ title: PDF Collator
 permalink: /pdfcollator
 ---
 <style>
-  /* Hide color scheme picker and header on this page */
+  /* Hide color scheme picker and the layout's floating home link on this
+     page; the app header has its own link back home. */
   .color-scheme-picker,
   .static-home-link {
     display: none !important;
   }
-  
-  /* Ensure upload zone is clickable */
-  #upload-zone {
-    cursor: pointer;
-    position: relative;
-  }
-  
-  /* The content inside doesn't need pointer events except the button */
-  .upload-content {
-    pointer-events: none;
-  }
-  
-  #browse-files {
-    pointer-events: auto !important;
-    cursor: pointer;
-    position: relative;
-    z-index: 10;
+
+  /* Let the app use the full window instead of the narrow text column */
+  main.u-container {
+    max-width: none;
+    padding: 0;
   }
 </style>
 <link rel="stylesheet" href="{{ "/assets/css/pdfcollator.css" | prepend: site.baseurl }}">
 
-<!-- Libraries loaded synchronously -->
+<!-- Libraries loaded synchronously (versions pinned) -->
 <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script src="https://unpkg.com/sortablejs@1.15.2/Sortable.min.js"></script>
 <!-- Using PDF.js 3.11.174 (legacy build) which exposes pdfjsLib globally -->
@@ -44,19 +33,29 @@ permalink: /pdfcollator
 <script src="{{ "/assets/js/pdfcollator/pdf-exporter.js" | prepend: site.baseurl }}"></script>
 <script src="{{ "/assets/js/pdfcollator/ui-controller.js" | prepend: site.baseurl }}"></script>
 <script src="{{ "/assets/js/pdfcollator/app.js" | prepend: site.baseurl }}"></script>
-  <div id="pdf-collator-app">
+  <div id="pdf-collator-app" aria-busy="false">
     <!-- Header -->
     <header class="app-header">
+      <a class="app-home-link" href="{{ "/" | prepend: site.baseurl }}">&larr; rjtalbot</a>
       <h1>PDF Collator</h1>
-      <p class="app-subtitle">Intelligently merge and reorder PDF documents</p>
+      <p class="app-subtitle">Merge PDFs, sort the pages, tidy them up and save one file</p>
+      <p class="privacy-note">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="11" width="18" height="11" rx="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        <span><strong>Your files never leave your browser.</strong> Everything happens on this device; nothing is uploaded.</span>
+      </p>
     </header>
+
+    <div class="app-notices" id="app-notices"></div>
 
     <!-- Main Content -->
     <div class="app-container">
       <!-- Left Panel: Source Files -->
-      <aside class="source-panel">
+      <aside class="source-panel" aria-labelledby="source-heading">
         <div class="panel-header">
-          <h2>📁 Source Files</h2>
+          <h2 id="source-heading">Source files</h2>
         </div>
 
         <!-- Upload Zone -->
@@ -67,10 +66,10 @@ permalink: /pdfcollator
               <polyline points="17 8 12 3 7 8"></polyline>
               <line x1="12" y1="3" x2="12" y2="15"></line>
             </svg>
-            <p class="upload-text">Drag & Drop PDF files here</p>
+            <p class="upload-text">Drag &amp; drop PDF files here</p>
             <p class="upload-subtext">or</p>
-            <button class="btn btn-primary" id="browse-files">Browse Files</button>
-            <input type="file" id="file-input" accept=".pdf,application/pdf" multiple style="display:none">
+            <button type="button" class="btn btn-primary" id="browse-files">Choose files</button>
+            <input type="file" id="file-input" accept=".pdf,application/pdf" multiple hidden>
           </div>
         </div>
 
@@ -78,24 +77,24 @@ permalink: /pdfcollator
         <div class="file-list-container">
           <div class="file-list-header">
             <span id="file-count">No files loaded</span>
-            <button class="btn btn-text btn-sm" id="clear-all" disabled>Clear All</button>
+            <button type="button" class="btn btn-text btn-sm" id="clear-all" disabled>Clear all</button>
           </div>
-          <div class="file-list" id="file-list">
+          <ul class="file-list" id="file-list" aria-label="Loaded files">
             <!-- Files will be added here dynamically -->
-          </div>
+          </ul>
         </div>
       </aside>
 
       <!-- Right Panel: Collated Preview -->
-      <main class="preview-panel">
+      <section class="preview-panel" aria-labelledby="preview-heading">
         <div class="panel-header">
-          <h2>📄 Collated Preview</h2>
+          <h2 id="preview-heading">Collated preview</h2>
         </div>
 
         <!-- Collation Controls -->
         <div class="collation-controls">
           <div class="control-group">
-            <label for="strategy-select">Collation Strategy:</label>
+            <label for="strategy-select">Collation strategy</label>
             <select id="strategy-select" class="select-input">
               <option value="date">Date-based (Chronological)</option>
               <option value="filename">Filename-based (Alphabetical)</option>
@@ -104,17 +103,17 @@ permalink: /pdfcollator
               <option value="final-billing" selected>Final Billing (Invoice→Ledger→1500→Consent→SOAP)</option>
             </select>
           </div>
-          <button class="btn btn-primary" id="apply-collation" disabled>
-            Apply Collation
+          <button type="button" class="btn btn-primary" id="apply-collation" disabled>
+            Re-sort
           </button>
         </div>
 
         <!-- Progress Bar -->
         <div class="progress-container" id="progress-container" style="display: none;">
-          <div class="progress-bar">
+          <div class="progress-bar" aria-hidden="true">
             <div class="progress-fill" id="progress-fill"></div>
           </div>
-          <p class="progress-text" id="progress-text" aria-live="polite">Processing...</p>
+          <p class="progress-text" id="progress-text" role="status">Processing…</p>
         </div>
 
         <!-- Empty State -->
@@ -124,22 +123,64 @@ permalink: /pdfcollator
             <polyline points="14 2 14 8 20 8"></polyline>
           </svg>
           <h3>No PDFs loaded yet</h3>
-          <p>Upload PDF files to get started</p>
+          <p>Add PDF files and they'll be sorted with the strategy above.</p>
+        </div>
+
+        <!-- Page tools: selection, bulk edits, undo -->
+        <div class="page-toolbar" id="page-toolbar" style="display: none;" role="toolbar" aria-label="Page tools">
+          <div class="toolbar-row">
+            <form class="range-form" id="range-form">
+              <label for="range-input">Select pages</label>
+              <input type="text" id="range-input" class="text-input range-input" placeholder="e.g. 1-3, 7" inputmode="text" autocomplete="off">
+              <button type="submit" class="btn btn-secondary btn-sm">Select</button>
+            </form>
+            <button type="button" class="btn btn-secondary btn-sm" id="select-all">All</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="select-none">None</button>
+            <span class="toolbar-spacer"></span>
+            <button type="button" class="btn btn-secondary btn-sm" id="undo-btn" disabled title="Undo (Ctrl+Z)">Undo</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="restore-removed" disabled>Restore removed</button>
+          </div>
+          <div class="toolbar-row toolbar-selection">
+            <span class="selection-count" id="selection-count" aria-live="polite">No pages selected</span>
+            <button type="button" class="btn btn-secondary btn-sm" id="sel-rotate-left" data-needs-selection disabled>Rotate left</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="sel-rotate-right" data-needs-selection disabled>Rotate right</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="sel-move-start" data-needs-selection disabled>Move to start</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="sel-move-end" data-needs-selection disabled>Move to end</button>
+            <span class="move-to">
+              <label for="move-to-input">Move to position</label>
+              <input type="number" id="move-to-input" class="text-input move-to-input" min="1" step="1" inputmode="numeric">
+              <button type="button" class="btn btn-secondary btn-sm" id="sel-move-to" data-needs-selection disabled>Move</button>
+            </span>
+            <button type="button" class="btn btn-danger btn-sm" id="sel-remove" data-needs-selection disabled>Remove</button>
+          </div>
+          <details class="shortcut-help">
+            <summary>Tips &amp; keyboard shortcuts</summary>
+            <ul id="shortcut-help">
+              <li>Drag pages to reorder them (on touch screens, press and hold first). Click a page to preview it.</li>
+              <li>Tick pages (Shift+click for a run) or type a list like <code>1-3, 7</code> to select, then use the buttons above.</li>
+              <li>On a focused page: <kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd> move focus, <kbd>Alt</kbd>+arrows move the page, <kbd>Alt</kbd>+<kbd>Home</kbd>/<kbd>End</kbd> move it to the start/end.</li>
+              <li><kbd>R</kbd> rotates right, <kbd>Shift</kbd>+<kbd>R</kbd> left, <kbd>Delete</kbd> removes, <kbd>X</kbd> selects, <kbd>Enter</kbd> previews, <kbd>Ctrl</kbd>+<kbd>Z</kbd> undoes.</li>
+            </ul>
+          </details>
         </div>
 
         <!-- Page Grid -->
-        <div class="page-grid" id="page-grid" style="display: none;">
+        <ol class="page-grid" id="page-grid" style="display: none;" aria-label="Pages in output order">
           <!-- Pages will be added here dynamically -->
-        </div>
+        </ol>
 
         <!-- Collation Stats -->
         <div class="collation-stats" id="collation-stats" style="display: none;">
           <div class="stat-item">
-            <span class="stat-label">Total Pages:</span>
+            <span class="stat-label">Pages:</span>
             <span class="stat-value" id="stat-total-pages">0</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">Pages with Dates:</span>
+            <span class="stat-label">Removed:</span>
+            <span class="stat-value" id="stat-removed">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">With dates:</span>
             <span class="stat-value" id="stat-pages-with-dates">0</span>
           </div>
           <div class="stat-item">
@@ -148,208 +189,197 @@ permalink: /pdfcollator
           </div>
         </div>
 
-        <!-- Export Button -->
-        <div class="export-controls" id="export-controls" style="display: none;">
-          <button class="btn btn-success btn-lg" id="export-pdf">
+        <!-- Export -->
+        <form class="export-controls" id="export-controls" style="display: none;">
+          <div class="filename-group">
+            <label for="output-filename">File name</label>
+            <div class="filename-input-wrap">
+              <input type="text" id="output-filename" class="text-input" autocomplete="off" spellcheck="false">
+              <span class="filename-ext" aria-hidden="true">.pdf</span>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-success btn-lg" id="export-pdf">
             <svg class="btn-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
               <line x1="12" y1="15" x2="12" y2="3"></line>
             </svg>
-            Save Collated PDF
+            Save PDF
           </button>
-        </div>
-      </main>
+        </form>
+      </section>
     </div>
 
-    <!-- Page Detail Modal -->
+    <!-- Page Preview Modal -->
     <div class="modal" id="page-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" style="display: none;">
       <div class="modal-overlay" id="modal-overlay"></div>
       <div class="modal-content">
-        <button class="modal-close" id="modal-close" aria-label="Close">×</button>
+        <div class="modal-header">
+          <h3 id="modal-title">Page</h3>
+          <button type="button" class="modal-close" id="modal-close" aria-label="Close preview">×</button>
+        </div>
         <div class="modal-body">
-          <canvas id="modal-canvas" role="img" aria-label="PDF page preview"></canvas>
+          <div class="modal-canvas-holder" id="modal-canvas-holder">
+            <canvas id="modal-canvas" role="img" aria-label="PDF page preview"></canvas>
+          </div>
           <div class="modal-info">
-            <h3 id="modal-title">Page Details</h3>
             <div class="modal-details" id="modal-details">
               <!-- Page details will be added here -->
             </div>
           </div>
         </div>
         <div class="modal-nav">
-          <button class="btn btn-secondary" id="modal-prev">← Previous</button>
-          <button class="btn btn-secondary" id="modal-next">Next →</button>
+          <button type="button" class="btn btn-secondary" id="modal-prev" aria-label="Previous page">← Prev</button>
+          <div class="modal-edit">
+            <button type="button" class="btn btn-secondary" id="modal-rotate-left">Rotate left</button>
+            <button type="button" class="btn btn-secondary" id="modal-rotate-right">Rotate right</button>
+            <button type="button" class="btn btn-danger" id="modal-remove">Remove</button>
+          </div>
+          <button type="button" class="btn btn-secondary" id="modal-next" aria-label="Next page">Next →</button>
         </div>
       </div>
     </div>
+
+    <div class="visually-hidden" id="sr-status" aria-live="polite"></div>
   </div>
 
   <script>
     (function() {
       'use strict';
-      
+
       // ==========================================
       // GLOBAL DRAG-DROP PREVENTION
-      // Must prevent browser from handling drops
+      // Stops the browser opening a PDF dropped outside the upload zone
       // ==========================================
-      
-      // Prevent drag/drop on document BODY to stop browser opening files
-      // Use bubbling phase (false) so upload zone handlers fire first
+
       document.body.addEventListener('dragenter', function(e) {
         e.preventDefault();
       }, false);
-      
+
       document.body.addEventListener('dragover', function(e) {
         e.preventDefault();
       }, false);
-      
+
       document.body.addEventListener('drop', function(e) {
-        // Only prevent if not handled by upload zone
         e.preventDefault();
       }, false);
-      
+
+      function isPdf(file) {
+        return file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+      }
+
       // ==========================================
-      // DIRECT FILE INPUT SETUP
-      // Set up handlers directly, not through app
+      // FILE INPUT AND DROP ZONE
       // ==========================================
-      
-      function setupDirectFileHandlers() {
+
+      function setupFileHandlers() {
         var uploadZone = document.getElementById('upload-zone');
         var fileInput = document.getElementById('file-input');
         var browseBtn = document.getElementById('browse-files');
-        
-        if (!uploadZone || !fileInput || !browseBtn) {
-          console.error('PDF Collator: Required elements not found, retrying...');
-          setTimeout(setupDirectFileHandlers, 100);
-          return;
-        }
-        
-        console.log('PDF Collator: Setting up file handlers directly');
-        
-        // ---- BROWSE BUTTON ----
-        browseBtn.addEventListener('click', function() {
+
+        browseBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
           fileInput.click();
         });
-        
-        // ---- UPLOAD ZONE CLICK ----
-        // Don't add onclick to upload zone - conflicts with button
-        
-        // ---- FILE INPUT CHANGE ----
-        fileInput.onchange = function(e) {
-          console.log('File input changed:', e.target.files.length, 'files');
-          if (e.target.files.length > 0 && window.pdfCollatorApp) {
-            var files = Array.from(e.target.files);
-            window.pdfCollatorApp.handleFiles(files).then(function() {
-              // Reset after handling completes
-              e.target.value = '';
-            }).catch(function(err) {
-              console.error('Error handling files:', err);
+
+        // The input sits inside the zone; don't let its click bubble back up
+        fileInput.addEventListener('click', function(e) {
+          e.stopPropagation();
+        });
+
+        // Clicking anywhere on the zone also opens the picker
+        uploadZone.addEventListener('click', function() {
+          fileInput.click();
+        });
+
+        fileInput.addEventListener('change', function(e) {
+          var files = Array.from(e.target.files || []);
+          if (files.length > 0 && window.pdfCollatorApp) {
+            window.pdfCollatorApp.handleFiles(files).finally(function() {
+              // Reset so choosing the same file again still fires change
               e.target.value = '';
             });
           }
-        };
-        
-        // ---- DRAG AND DROP ON UPLOAD ZONE ----
-        uploadZone.ondragenter = function(e) {
+        });
+
+        uploadZone.addEventListener('dragenter', function(e) {
           e.preventDefault();
           e.stopPropagation();
           uploadZone.classList.add('drag-over');
-        };
-        
-        uploadZone.ondragover = function(e) {
+        });
+
+        uploadZone.addEventListener('dragover', function(e) {
           e.preventDefault();
           e.stopPropagation();
+          if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
           uploadZone.classList.add('drag-over');
-        };
-        
-        uploadZone.ondragleave = function(e) {
+        });
+
+        uploadZone.addEventListener('dragleave', function(e) {
           e.preventDefault();
           e.stopPropagation();
-          uploadZone.classList.remove('drag-over');
-        };
-        
-        uploadZone.ondrop = function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          uploadZone.classList.remove('drag-over');
-          
-          console.log('Files dropped on upload zone:', e.dataTransfer ? e.dataTransfer.files.length : 0);
-          
-          var files = [];
-          if (e.dataTransfer && e.dataTransfer.files) {
-            for (var i = 0; i < e.dataTransfer.files.length; i++) {
-              var file = e.dataTransfer.files[i];
-              console.log('File:', file.name, file.type);
-              if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
-                files.push(file);
-              }
-            }
+          if (!uploadZone.contains(e.relatedTarget)) {
+            uploadZone.classList.remove('drag-over');
           }
-          
-          console.log('PDF files found:', files.length);
-          
+        });
+
+        uploadZone.addEventListener('drop', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          uploadZone.classList.remove('drag-over');
+
+          var dropped = e.dataTransfer ? Array.from(e.dataTransfer.files) : [];
+          var files = dropped.filter(isPdf);
+
           if (files.length > 0 && window.pdfCollatorApp) {
             window.pdfCollatorApp.handleFiles(files);
-          } else if (files.length === 0 && e.dataTransfer && e.dataTransfer.files.length > 0) {
-            alert('Please drop PDF files only.');
           }
-        };
-        
-        console.log('PDF Collator: File handlers ready');
+          if (files.length < dropped.length && window.pdfCollatorApp) {
+            var skipped = dropped.length - files.length;
+            window.pdfCollatorApp.uiController.notify(
+              skipped + ' file' + (skipped !== 1 ? 's were' : ' was') + ' not a PDF and ' + (skipped !== 1 ? 'were' : 'was') + ' ignored.',
+              'warning', 6000
+            );
+          }
+        });
       }
-      
+
       // ==========================================
       // APP INITIALIZATION
       // ==========================================
-      
+
+      var attempts = 0;
+
       function initializeApp() {
-        // Check if all dependencies are loaded
-        if (typeof PDFCollatorApp === 'undefined') {
-          console.log('Waiting for PDFCollatorApp...');
-          setTimeout(initializeApp, 100);
+        var pdfjs = window.pdfjsLib || window['pdfjs-dist/build/pdf'];
+        var ready = typeof PDFCollatorApp !== 'undefined' && pdfjs &&
+          typeof PDFLib !== 'undefined' && typeof Sortable !== 'undefined';
+
+        if (!ready) {
+          // Scripts are synchronous, so this only waits if one failed to load
+          if (++attempts < 50) {
+            setTimeout(initializeApp, 100);
+          } else {
+            var notices = document.getElementById('app-notices');
+            notices.innerHTML = '<div class="notice notice-error" role="alert"><div class="notice-text">The PDF libraries could not be loaded, so the collator cannot run. Check your connection (or any content blocker) and reload.</div></div>';
+          }
           return;
         }
-        
-        // PDF.js might expose itself under different names depending on version
-        var pdfjs = window.pdfjsLib || window['pdfjs-dist/build/pdf'] || window.pdfjsDistBuildPdf;
-        if (!pdfjs) {
-          console.log('Waiting for PDF.js... (checked: pdfjsLib, pdfjs-dist/build/pdf)');
-          console.log('Available globals with pdf:', Object.keys(window).filter(function(k) { return k.toLowerCase().indexOf('pdf') >= 0; }));
-          setTimeout(initializeApp, 100);
-          return;
-        }
-        // Make sure pdfjsLib is available globally
         window.pdfjsLib = pdfjs;
-        
-        if (typeof PDFLib === 'undefined') {
-          console.log('Waiting for PDFLib...');
-          setTimeout(initializeApp, 100);
-          return;
-        }
-        if (typeof Sortable === 'undefined') {
-          console.log('Waiting for Sortable...');
-          setTimeout(initializeApp, 100);
-          return;
-        }
-        
-        // Set PDF.js worker
+
+        // Set PDF.js worker (same pinned version)
         pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-        // Initialize app
-        console.log('PDF Collator: All dependencies loaded, initializing...');
         window.pdfCollatorApp = new PDFCollatorApp();
         window.pdfCollatorApp.initialize();
-        
-        // Set up direct file handlers (in addition to app's handlers)
-        setupDirectFileHandlers();
+        setupFileHandlers();
       }
 
-      // Start when DOM is ready
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initializeApp);
       } else {
         initializeApp();
       }
-      
+
     })();
   </script>

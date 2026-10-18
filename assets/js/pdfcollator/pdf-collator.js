@@ -19,6 +19,9 @@ class PDFCollator {
   collate(pages, documents, strategy = 'date') {
     let orderedPages = [];
 
+    // Label every document (shown as badges), whichever strategy is used
+    this.detectDocumentTypes(documents);
+
     switch (strategy) {
       case 'date':
         orderedPages = this.collateByDate(pages);
@@ -304,9 +307,6 @@ class PDFCollator {
     
     return score;
   }
-
-  /**
-   * 
 
   /**
    * Calculate statistics about the collation

@@ -1,0 +1,18 @@
+{% assign project = include.project %}
+<li class="c-card">
+  <a class="c-card__media no-hov" href="{{ project.link | prepend: site.baseurl }}" tabindex="-1" aria-hidden="true">
+    {% if project.image %}
+    <img src="{{ project.image | prepend: site.baseurl }}" alt="" loading="lazy" width="640" height="400">
+    {% else %}
+    <span class="c-card__placeholder">{{ project.name | slice: 0 }}</span>
+    {% endif %}
+  </a>
+  <div class="c-card__body">
+    <h3 class="c-card__title"><a href="{{ project.link | prepend: site.baseurl }}">{{ project.name }}</a></h3>
+    <p class="c-card__text">{{ project.description }}</p>
+    <p class="c-card__meta">
+      {% for tag in project.tags %}<span class="c-card__tag">{{ tag }}</span>{% endfor %}
+      {% if project.post %}<a class="c-card__more" href="{{ project.post | prepend: site.baseurl }}">Read about it</a>{% endif %}
+    </p>
+  </div>
+</li>

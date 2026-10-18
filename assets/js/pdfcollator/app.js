@@ -14,37 +14,38 @@ class PDFCollatorApp {
 
     // State
     this.currentCollationResult = null;
+    this.orderEdited = false; // pages moved by hand since the last sort
+    this.busy = false;
   }
 
   /**
    * Initialize the application
    */
   initialize() {
-    console.log('🚀 Initializing PDF Collator...');
-
-    // Check dependencies (no alert, just log)
     if (!this.checkDependencies()) {
-      console.error('❌ Required libraries not loaded. Please check console for details.');
+      this.uiController.notify('A required library did not load, so the collator cannot run. Check your connection and reload the page.', 'error');
       return;
     }
 
-    // Set up event listeners
-    this.setupFileUpload();
     this.setupCollationControls();
     this.setupExportControls();
     this.uiController.initializeModalHandlers();
+    this.uiController.initializePageHandlers();
 
-    // Set up file manager listeners
-    this.fileManager.on('filesAdded', (documents) => {
+    this.uiController.onEdit = (kind) => {
+      if (kind === 'move') this.orderEdited = true;
+      this.refreshStrategyLabel();
+    };
+
+    this.fileManager.on('filesAdded', () => {
       this.uiController.updateFileList();
-      console.log(`✅ Added ${documents.length} document(s)`);
     });
 
     this.fileManager.on('fileRemoved', (documentId) => {
-      this.uiController.updateFileList();
       this.renderer.clearDocumentCache(documentId);
-      
-      // Clear preview if no files remain
+      this.uiController.removeDocumentPages(documentId);
+      this.uiController.updateFileList();
+
       if (this.fileManager.getAllDocuments().length === 0) {
         this.clearPreview();
       }
@@ -56,7 +57,7 @@ class PDFCollatorApp {
       this.clearPreview();
     });
 
-    console.log('✅ PDF Collator initialized');
+    this.resetFilename();
   }
 
   /**
@@ -81,46 +82,76 @@ class PDFCollatorApp {
   }
 
   /**
-   * Set up file upload handlers
-   * Note: Primary handlers are set up directly in HTML for reliability
-   * This is a backup/secondary setup
+   * Handle uploaded files: load, then sort straight away
    */
-  setupFileUpload() {
-    console.log('App: setupFileUpload called (backup handlers)');
-    // Primary handlers are set up directly in the HTML page
-    // This method now just logs that setup was called
+  async handleFiles(files) {
+    if (this.busy) {
+      this.uiController.notify('Still working on the previous files. Add these again in a moment.', 'warning', 5000);
+      return;
+    }
+
+    this.setBusy(true);
+    this.uiController.updateProgress(0, 'Loading PDFs');
+
+    let added = [];
+    try {
+      const results = await this.fileManager.loadFiles(files, (progress, label) => {
+        this.uiController.updateProgress(progress * 0.4, label);
+      });
+
+      const errors = results.filter(r => !r.success);
+      if (errors.length > 0) {
+        this.uiController.notify([
+          errors.length === 1 ? '1 file was skipped' : `${errors.length} files were skipped`,
+          ...errors.map(e => `${e.filename}: ${e.error}`)
+        ], 'error');
+      }
+
+      added = results.filter(r => r.success).map(r => r.document);
+    } catch (error) {
+      console.error('Error handling files:', error);
+      this.uiController.notify(`Something went wrong while reading the files: ${error.message}`, 'error');
+    }
+
+    if (added.length > 0) {
+      await this.organizePages(added);
+    }
+
+    this.setBusy(false);
+    this.uiController.hideProgress();
   }
 
   /**
-   * Handle uploaded files
+   * After files are added: sort everything with the chosen strategy, unless
+   * the user has already arranged pages by hand, in which case the new pages
+   * go on the end so that work isn't thrown away.
    */
-  async handleFiles(files) {
-    this.uiController.showLoading();
-    this.uiController.updateProgress(0, 'Loading PDFs');
+  async organizePages(newDocuments) {
+    const strategy = document.getElementById('strategy-select').value;
+    const hasLayout = this.uiController.getCurrentPages().length > 0;
 
-    try {
-      const results = await this.fileManager.loadFiles(files);
-
-      // Show errors if any
-      const errors = results.filter(r => !r.success);
-      if (errors.length > 0) {
-        const errorMsg = errors.map(e => `${e.filename}: ${e.error}`).join('\n');
-        alert(`Some files could not be loaded:\n\n${errorMsg}`);
-      }
-
-      // Show success message
-      const successful = results.filter(r => r.success);
-      if (successful.length > 0) {
-        console.log(`✅ Loaded ${successful.length} PDF(s) successfully`);
-      }
-
-    } catch (error) {
-      console.error('Error handling files:', error);
-      alert(`Error: ${error.message}`);
-    } finally {
-      this.uiController.hideProgress();
-      this.uiController.hideLoading();
+    if (hasLayout && (this.orderEdited || strategy === 'manual')) {
+      const newPages = await this.analyzeAll(newDocuments, 0.4, 0.9);
+      this.uiController.setPages([...this.uiController.getCurrentPages(), ...newPages]);
+      this.uiController.updateFileList();
+      this.uiController.notify(
+        `Added ${newPages.length} page${newPages.length !== 1 ? 's' : ''} at the end so your manual order is kept. Use "Re-sort" to apply the strategy to everything.`,
+        'info', 8000
+      );
+      await this.waitForThumbnails(0.9);
+      return;
     }
+
+    await this.applyCollation({ progressStart: 0.4, keepBusy: true });
+  }
+
+  /**
+   * Analyze documents (text + dates), returning their pages
+   */
+  async analyzeAll(documents, from = 0, to = 0.5) {
+    return this.analyzer.getAllPages(documents, (progress) => {
+      this.uiController.updateProgress(from + progress * (to - from), 'Reading page text');
+    });
   }
 
   /**
@@ -131,20 +162,17 @@ class PDFCollatorApp {
     const strategySelect = document.getElementById('strategy-select');
     const clearBtn = document.getElementById('clear-all');
 
-    // Apply collation
     applyBtn.addEventListener('click', async () => {
       await this.applyCollation();
     });
 
-    // Strategy change
+    // Strategy change re-sorts whatever is loaded
     strategySelect.addEventListener('change', () => {
-      // If pages are already displayed, reapply collation
-      if (this.currentCollationResult) {
+      if (this.fileManager.getAllDocuments().length > 0 && !this.busy) {
         this.applyCollation();
       }
     });
 
-    // Clear all
     clearBtn.addEventListener('click', () => {
       if (confirm('Remove all files and start over?')) {
         this.fileManager.clearAll();
@@ -156,128 +184,145 @@ class PDFCollatorApp {
    * Set up export controls
    */
   setupExportControls() {
-    const exportBtn = document.getElementById('export-pdf');
-
-    exportBtn.addEventListener('click', async () => {
+    document.getElementById('export-controls').addEventListener('submit', async (e) => {
+      e.preventDefault();
       await this.exportPDF();
     });
   }
 
   /**
-   * Apply collation
+   * Apply collation to all loaded pages (except ones the user removed)
    */
-  async applyCollation() {
+  async applyCollation({ progressStart = 0, keepBusy = false } = {}) {
     const documents = this.fileManager.getAllDocuments();
-    
+
     if (documents.length === 0) {
-      alert('Please upload PDF files first.');
+      this.uiController.notify('Add some PDF files first.', 'warning', 5000);
       return;
     }
 
-    this.uiController.showLoading();
-    this.uiController.updateProgress(0, 'Analyzing PDFs');
+    if (!keepBusy) this.setBusy(true);
 
     try {
-      // Analyze all documents
-      const allPages = await this.analyzer.getAllPages(documents, (progress) => {
-        this.uiController.updateProgress(progress * 0.5, 'Analyzing PDFs');
-      });
+      const span = 1 - progressStart;
+      const allPages = await this.analyzeAll(documents, progressStart, progressStart + span * 0.5);
 
-      // Get selected strategy
       const strategy = document.getElementById('strategy-select').value;
+      this.uiController.updateProgress(progressStart + span * 0.55, 'Sorting pages');
 
-      // Apply collation
-      this.uiController.updateProgress(0.6, 'Collating pages');
-      this.currentCollationResult = this.collator.collate(allPages, documents, strategy);
+      const removedIds = this.uiController.getRemovedIds();
+      const current = this.uiController.getCurrentPages();
+      let basePages = allPages.filter(p => !removedIds.has(p.id));
 
-      // Display results
-      this.uiController.updateProgress(0.8, 'Rendering previews');
-      await this.uiController.displayPages(
-        this.currentCollationResult.orderedPages, 
-        documents
-      );
+      // Manual keeps the existing arrangement and appends anything new
+      if (strategy === 'manual' && current.length > 0) {
+        const shown = new Set(current.map(p => p.id));
+        basePages = [...current, ...basePages.filter(p => !shown.has(p.id))];
+      }
 
-      // Update statistics
+      this.currentCollationResult = this.collator.collate(basePages, documents, strategy);
+
+      const ordered = this.currentCollationResult.orderedPages.filter(p => !removedIds.has(p.id));
+      this.uiController.setPages(ordered);
+      this.orderEdited = false;
+
+      this.uiController.updateFileList(); // shows detected type badges
       this.uiController.updateStatistics(
         this.currentCollationResult.statistics,
-        strategy
+        this.collator.getStrategyName(strategy)
       );
-
-      // Show export button
       this.uiController.showExportControls();
 
-      this.uiController.updateProgress(1.0, 'Complete');
-
-      console.log(`✅ Collated ${this.currentCollationResult.orderedPages.length} pages using ${strategy} strategy`);
+      await this.waitForThumbnails(progressStart + span * 0.6);
+      this.uiController.announce(`Sorted ${ordered.length} pages using ${this.collator.getStrategyName(strategy)}`);
 
     } catch (error) {
       console.error('Error during collation:', error);
-      alert(`Error: ${error.message}`);
+      this.uiController.notify(`Could not sort the pages: ${error.message}`, 'error');
     } finally {
-      setTimeout(() => {
+      if (!keepBusy) {
+        this.setBusy(false);
         this.uiController.hideProgress();
-        this.uiController.hideLoading();
-      }, 500);
+      }
     }
+  }
+
+  /**
+   * Show progress while the first thumbnails draw
+   */
+  async waitForThumbnails(from) {
+    const total = this.uiController.getCurrentPages().length;
+    if (total === 0) return;
+    for (let i = 0; i < 600; i++) {
+      const pending = this.uiController.pendingThumbnails();
+      this.uiController.updateProgress(from + (1 - from) * (1 - pending / total), 'Drawing previews');
+      if (pending === 0) return;
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+  }
+
+  refreshStrategyLabel() {
+    const strategy = document.getElementById('strategy-select').value;
+    let label = this.collator.getStrategyName(strategy);
+    if (this.orderEdited && strategy !== 'manual') label += ' + manual changes';
+    const el = document.getElementById('stat-strategy');
+    if (el) el.textContent = label;
   }
 
   /**
    * Export collated PDF
    */
   async exportPDF() {
-    if (!this.currentCollationResult) {
-      alert('Please collate pages first.');
+    const orderedPages = this.uiController.getCurrentPages().slice();
+    if (orderedPages.length === 0) {
+      this.uiController.notify('There are no pages to save. Add files, or restore removed pages.', 'warning', 6000);
       return;
     }
 
-    // Get current page order (may have been manually reordered)
-    const orderedPages = this.uiController.getCurrentPages();
-
-    this.uiController.showLoading();
-    this.uiController.updateProgress(0, 'Creating PDF');
+    this.setBusy(true);
+    this.uiController.updateProgress(0, 'Building PDF');
 
     try {
-      // Generate filename
-      const timestamp = new Date().toISOString().split('T')[0];
-      const filename = `collated-${timestamp}.pdf`;
+      const filename = document.getElementById('output-filename').value;
+      const result = await this.exporter.exportPDF(orderedPages, filename, (progress) => {
+        this.uiController.updateProgress(progress * 0.95, 'Building PDF');
+      });
 
-      // Export
-      this.uiController.updateProgress(0.5, 'Merging pages');
-      const result = await this.exporter.exportPDF(orderedPages, filename);
+      if (!result.success) throw new Error(result.error);
 
-      if (result.success) {
-        this.uiController.updateProgress(1.0, 'Download started');
-        console.log(`✅ Exported ${orderedPages.length} pages to ${result.filename}`);
-        
-        // Show success briefly
-        setTimeout(() => {
-          this.uiController.hideProgress();
-          alert(`PDF exported successfully!\n\n${orderedPages.length} pages saved to ${result.filename}`);
-        }, 500);
-      } else {
-        throw new Error(result.error);
-      }
-
+      this.uiController.updateProgress(1, 'Saved');
+      this.uiController.notify(
+        `Saved ${orderedPages.length} page${orderedPages.length !== 1 ? 's' : ''} as ${result.filename} (${PDFCollatorUtils.formatFileSize(result.size)}). Check your downloads.`,
+        'success', 10000
+      );
     } catch (error) {
-      console.error('Error exporting PDF:', error);
-      alert(`Failed to export PDF: ${error.message}`);
+      this.uiController.notify(error.message, 'error');
     } finally {
-      setTimeout(() => {
-        this.uiController.hideLoading();
-      }, 1000);
+      this.setBusy(false);
+      setTimeout(() => this.uiController.hideProgress(), 600);
     }
+  }
+
+  setBusy(busy) {
+    this.busy = busy;
+    document.getElementById('pdf-collator-app').setAttribute('aria-busy', busy ? 'true' : 'false');
+    if (busy) this.uiController.showLoading(); else this.uiController.hideLoading();
+  }
+
+  resetFilename() {
+    const input = document.getElementById('output-filename');
+    if (input) input.value = `collated-${PDFCollatorUtils.localDateStamp()}`;
   }
 
   /**
    * Clear preview
    */
   clearPreview() {
-    document.getElementById('page-grid').style.display = 'none';
-    document.getElementById('page-grid').innerHTML = '';
-    document.getElementById('empty-state').style.display = 'flex';
+    this.uiController.reset();
     document.getElementById('collation-stats').style.display = 'none';
     document.getElementById('export-controls').style.display = 'none';
     this.currentCollationResult = null;
+    this.orderEdited = false;
   }
 }
 
