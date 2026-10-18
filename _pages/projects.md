@@ -3,21 +3,10 @@ layout: content
 title: Projects
 permalink: /projects/
 ---
-<section class="c-archives">
-  <link rel="shortcut icon" href="">
-  {% for project in site.data.projects  %}
-  {% if forloop.first %}
-  <ul class="c-archives__list">
-    {% endif %}
-    <li class="c-archives__item">
-      <h3>
-        <a href="{{ project.link | prepend: site.baseurl }}">{{project.name}}</a>
-        <br>
-        <small>{{project.description}}</small>
-      </h3>
-    </li>
-    {% if forloop.last %}
-  </ul>  
-  {% endif %}
+Games, tools and experiments that run in the browser. Everything here works client-side, so nothing you load into a tool leaves your machine.
+
+<ul class="c-cards">
+  {% for project in site.data.projects %}
+  {% include project-card.html project=project %}
   {% endfor %}
-</section>
+</ul>

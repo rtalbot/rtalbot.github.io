@@ -1,13 +1,11 @@
 <header class="c-page__header">
-  <h1><code>{{ site.title}}</code></h1>
-  {% if page.title == 'Home' %}
-  <h1>{{ site.description }}</h1>
-  {% endif %}
-  <p>
-    <a href="{{ "/" | prepend: site.baseurl }}">Home</a>
+  <a class="c-page__brand no-hov" href="{{ "/" | prepend: site.baseurl }}"><code>{{ site.title }}</code></a>
+  <nav class="c-page__nav" aria-label="Main">
     {% for item in site.data.navigation %}
-    <span class="u-separate"></span>
-    <a href="{{ item.link | prepend: site.baseurl }}">{{ item.name }}</a>
+    {% assign is_current = false %}
+    {% if page.url == item.link %}{% assign is_current = true %}{% endif %}
+    {% if item.link == '/writing/' and page.layout == 'post' %}{% assign is_current = true %}{% endif %}
+    <a href="{{ item.link | prepend: site.baseurl }}"{% if is_current %} aria-current="page"{% endif %}>{{ item.name }}</a>
     {% endfor %}
-  </p>
+  </nav>
 </header>

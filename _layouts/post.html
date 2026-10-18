@@ -3,33 +3,34 @@ layout: page
 ---
 <article class="c-article">
   <header class="c-article__header">
+    <p class="c-article__kicker"><a href="{{ "/writing/" | prepend: site.baseurl }}">&larr; Writing</a></p>
     <h1 class="c-article__title">{{ page.title }}</h1>
-    <p class="c-article__time"><time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time></p>
+    {% if page.description %}<p class="c-article__lede">{{ page.description }}</p>{% endif %}
+    <p class="c-article__time">
+      <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>
+      {% if page.tags.size > 0 %}
+      <span class="c-article__tags">{% for tag in page.tags %}<span class="c-card__tag">{{ tag | remove: ',' }}</span>{% endfor %}</span>
+      {% endif %}
+    </p>
+    {% if page.project_link %}
+    <p><a class="c-button no-hov" href="{{ page.project_link | prepend: site.baseurl }}">Try {{ page.project_name | default: "it" }} &rarr;</a></p>
+    {% endif %}
   </header>
-  <!-- Post Tags -->
-  <ul class="c-tags">
-    {% for tag in page.tags %}
-    <li class="c-tag">{{ tag }}</li>
-    {% endfor %}
-  </ul>
   <div class="c-article__main">
     {{ content }}
   </div>
-  <!-- Previous / Next Buttons -->
-  <div class="pagenav">
+  <nav class="c-pagenav" aria-label="More posts">
     {% if page.previous.url %}
-    <div class="wrapper" id="left">
-      <small><b>Previous</b> {{page.previous.date | date: "%b %-d, %Y"}}</small>
-      <br>
-      <a class="no-hov" href="{{ page.previous.url | prepend: site.baseurl }}">&laquo; {{page.previous.title}}</a>
-    </div>
-    {% endif %}
+    <a class="c-pagenav__link no-hov" href="{{ page.previous.url | prepend: site.baseurl }}">
+      <small>&larr; Older</small>
+      <span>{{ page.previous.title }}</span>
+    </a>
+    {% else %}<span></span>{% endif %}
     {% if page.next.url %}
-    <div class="wrapper" id="right">
-      <small>{{page.next.date | date: "%b %-d, %Y"}} <b>Next</b></small>
-      <br>
-      <a class="no-hov" href="{{ page.next.url | prepend: site.baseurl }}">{{page.next.title}} &raquo;</a>
-    </div>
+    <a class="c-pagenav__link c-pagenav__link--next no-hov" href="{{ page.next.url | prepend: site.baseurl }}">
+      <small>Newer &rarr;</small>
+      <span>{{ page.next.title }}</span>
+    </a>
     {% endif %}
-  </div>
+  </nav>
 </article>
