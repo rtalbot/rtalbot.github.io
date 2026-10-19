@@ -1,7 +1,7 @@
 # Projects shown on the home page (first four) and the Projects page.
 # image: 16:10 screenshot under /assets/img/projects/
 
-- name: Tetris Roguelike
+- name: Tetris Rhythm Roguelike
   link: /tetris/
   image: /assets/img/projects/tetris.png
   description: Tetris played along to a song. Every line you clear records a loop into the band, and between songs a shop sells relics and curses.
