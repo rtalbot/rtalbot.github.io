@@ -7,12 +7,6 @@
   description: A narrative pawnshop game set in a foggy New England harbor town. Haggle, lend, spot fakes and stolen goods, pay the bills every Friday, and find out where your aunt went.
   tags: [game, narrative]
 
-- name: Pawn Champ Story Editor
-  link: /pawn-champ/editor/
-  image: /assets/img/projects/pawn-champ-editor.png
-  description: The tool used to write Pawn Champ's stories. Read every quest as a script or as prose, edit lines and choices, and check them against the game. Changes stay in your browser.
-  tags: [tool, gamedev]
-
 - name: Sprite Dash
   link: /spritetest
   image: /assets/img/projects/sprite-dash.png
