@@ -1,0 +1,531 @@
+// Pawn Champ - The Widow's Walk: a widow on Cliff Road who stopped when her husband's boat did, in
+// 1979, and a ship's clock that stopped with them. Major quest M13, batch G (docs/quests/MAJOR.md#m13-the-widows-walk-uncanny).
+//
+// Honora Clegg pawns her husband's things one at a time to pay the tax on the house. You visit her
+// parlor, the Gilded Hand wants the house, Agathe can start the clock, and on a gale night you stand
+// on the widow's walk with her when a boat that sank forty-seven years ago comes round the point.
+// Crossing: with the Fog Week (M3) in the run, Ward Clegg comes to the counter with the drowned.
+// The widow's walk in a gale is drawn in js/quests/widow.js.
+//
+// Written as data: docs/STORY_DATA.md. Strict JSON inside the call. Code half: js/quests/widow.js.
+defineStory({
+  "id": "widow",
+  "kind": "major",
+  "colour": "#5a8a9a",
+  "family": "uncanny",
+  "title": "The Widow's Walk",
+  "crosses": ["fog"],
+  "rumour": "A widow on Cliff Road has walked her widow's walk every night since 1979, and hasn't aged a day.",
+  "endings": { "home": "Home from the Sea", "letgo": "Ten Past Four", "hand": "Sold to the Hand" },
+  "outcome": [
+    { "if": "flag.widowEnd == 'home'", "ending": "home" },
+    { "if": "flag.widowEnd == 'letgo'", "ending": "letgo" },
+    { "if": "flag.widowEnd == 'hand' || flag.widowHand", "ending": "hand" }
+  ],
+  "about": [
+    "A ghost story told from the living side. Honora Clegg of Cliff Road has walked her widow's walk every night since her husband Ward's boat, the Merrow, was lost in 1979, and she hasn't aged a day. She pawns the Merrow's clock, stopped at ten past four, to pay her taxes, and invites you up to the house (§{honoraClock}, §{widowParlor}). There you can buy Ward's sea chest, take the clock to be mended, and promise to stand on the walk with her when the gale comes.",
+    "Two forces pull at her. Merrit Gaunt of Gilded Hand Finance holds the lien on the house and pays you to tell her to sign, or buys the clock off you, which seals it (§{widowMerrit}). Agathe Moss, the clockmaker, can start the clock again for fifteen dollars, warning that it will start for everyone it stopped for (§{widowAgathe}). If The Fog Week is in the run, Ward himself comes in with the drowned and asks you to send her down to the landing (§{wardClegg}).",
+    "On the walk in the gale (§{widowGale}), the Merrow's running lights round Gull Point as they have every gale for forty-seven years. Give her the clock, running, and she lets him go: she grows old in a week, happily (Ten Past Four). Go down to the landing with her, and Ward comes home and takes her with him (Home from the Sea). Or tell her the Hand's offer is sensible, and she signs and is never seen again (Sold to the Hand, which is also the ending if you took Merrit's money)."
+  ],
+  "cast": {
+    "honora": {
+      "name": "Honora Clegg",
+      "look": { "skin": "#f0d0b8", "hair": "#3a2418", "hs": 3, "coat": "#2a4a3a", "trim": "#e8e0c8", "style": "dress", "long": true, "pants": "#2a2a2a" }
+    },
+    "wardClegg": {
+      "name": "Ward Clegg (deceased)",
+      "look": { "skin": "#bcd8e8", "hair": "#dfefff", "hs": 1, "coat": "#d8b020", "trim": "#dfefff", "style": "jacket", "hat": "wide", "hatc": "#c8a018", "beard": "#dfefff", "pants": "#3a5070", "eye": "#8af0ff", "ghost": true }
+    }
+  },
+  "uniques": {
+    "cleggClock": {
+      "name": "Ship's clock, stopped at 4:10",
+      "icon": "watch",
+      "cat": "curio",
+      "guide": 60,
+      "questKey": true,
+      "condLabel": "Stopped",
+      "tells": [
+        "A brass bulkhead clock off a fishing boat. Engraved on the bezel: MERROW, 1971.",
+        "Nothing is broken inside. The hands are at ten past four, and they will not move for you."
+      ]
+    },
+    "cleggChest": {
+      "name": "Ward Clegg's sea chest",
+      "icon": "crate",
+      "cat": "curio",
+      "guide": 90,
+      "condLabel": "Salt-stained",
+      "tells": [
+        "Pine, rope beckets, W.C. painted on the lid. Inside: oilskins folded square, and a logbook.",
+        "The last entry, 14 Oct 1979: \"Weather making up. Home by ten past four. Tell H. to put the kettle on.\""
+      ]
+    },
+    "honoraSpyglass": {
+      "name": "Honora's spyglass",
+      "icon": "spyglass",
+      "cat": "curio",
+      "guide": 70,
+      "condLabel": "Well used",
+      "tells": [
+        "A brass three-draw telescope. The leather is worn through where one hand has held it every night for years."
+      ]
+    }
+  },
+  "scenes": {
+    "honoraClock": {
+      "title": "Honora Clegg pawns the Merrow's clock",
+      "customer": "honora",
+      "steps": [
+        {
+          "say": "honora",
+          "text": [
+            "Honora Clegg. Cliff Road, the gray house with the walk on the roof. The town sends me a tax bill every October, and every October I bring something in.",
+            "This was on the wheelhouse bulkhead of my husband's boat, the Merrow. It stopped at ten past four on the fourteenth of October, 1979. So did a good many things."
+          ]
+        },
+        { "narrate": "She has a young woman's face and an old woman's way of saying 1979, as if it were last week." },
+        { "offer": { "unique": "cleggClock" }, "persona": "proud", "asking": 45, "min": 40 },
+        {
+          "if": "offer == 'deal'",
+          "then": [
+            { "set": { "widowClock": true } },
+            { "say": "honora", "text": "Don't try to wind it. People try. It doesn't like it." }
+          ],
+          "else": [{ "say": "honora", "text": "Then it comes home with me again. It's used to that." }]
+        },
+        { "say": "honora", "text": "There's more at the house. His sea chest, his charts. Come and price them. I'd rather it was someone local than the man from the Gilded Hand." },
+        {
+          "choose": [
+            {
+              "label": "\"I'll come up to Cliff Road.\"",
+              "then": [
+                { "set": { "widowInvite": true } },
+                { "say": "honora", "text": "{placed:widow-parlor} evening, then. The door sticks. Push it like you mean it." },
+                { "toast": "Calendar: Honora Clegg's parlor on Cliff Road, {placed:widow-parlor} night", "look": "honora" }
+              ]
+            },
+            {
+              "label": "\"I only buy over the counter, Mrs. Clegg.\"",
+              "then": [
+                { "say": "honora", "text": "Of course. I keep forgetting nobody does house calls now." }
+              ]
+            }
+          ]
+        },
+        { "leave": "honora" }
+      ]
+    },
+    "widowParlor": {
+      "title": "Honora Clegg's parlor on Cliff Road",
+      "music": "eerie",
+      "steps": [
+        {
+          "stage": "cliffroad",
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [210, 160] },
+            { "id": "honora", "cast": "honora", "at": [250, 158], "facingLeft": true }
+          ]
+        },
+        { "narrate": "The Clegg house, Cliff Road. A fire, a long table laid for two, and every clock in the room at ten past four. Above you, through the ceiling, you can hear the wind trying the roof." },
+        { "say": "honora", "text": "Sit. Not that chair, that's his." },
+        { "narrate": "On the mantel there's a photograph: a young couple on the deck of a dragger, squinting into the sun. On the back, in pencil, \"W. and H., the Merrow, Aug. 1979\". She hasn't changed by a single line." },
+        {
+          "choose": [
+            {
+              "label": "Ask about the photograph",
+              "then": [
+                {
+                  "say": "honora",
+                  "text": [
+                    "Everyone asks, in the end. I stopped, the way the clock did. I go up on the walk at dark and I come down at dawn, and the years don't get in. I don't eat much. I don't need to.",
+                    "He said ten past four. Ward always came home when he said."
+                  ]
+                }
+              ]
+            },
+            { "label": "Ask about the sea chest" },
+            {
+              "label": "Ask about the letter on the table",
+              "then": [
+                { "say": "honora", "text": "Gilded Hand Finance. They bought the tax lien from the town. They'd like the house. A Mr. Gaunt writes very nicely." }
+              ]
+            }
+          ]
+        },
+        { "say": "honora", "text": "His sea chest is by the door. I've kept it packed in case he needs a change of clothes. I suppose he doesn't." },
+        { "find": "clock", "in": "stock", "match": { "uniqueId": "cleggClock" } },
+        {
+          "choose": [
+            {
+              "label": "Buy the sea chest for $70",
+              "hint": "(guide $90)",
+              "disabled": "coin < 70 || !shelf.free",
+              "then": [
+                { "add": { "unique": "cleggChest", "paid": 70 } },
+                { "hook": "bought" },
+                { "coin": -70, "why": "Bought Ward Clegg's sea chest" },
+                { "refresh": "panel" },
+                { "say": "honora", "text": "Read the log if you like. The last page is the only one I read." }
+              ]
+            },
+            {
+              "label": "Offer to take the ship's clock to a clock repairer",
+              "if": "!clock",
+              "disabled": "!shelf.free",
+              "then": [
+                { "add": { "unique": "cleggClock" } },
+                { "set": { "widowClock": true } },
+                { "refresh": "panel" },
+                { "say": "honora", "text": "Agathe Moss? Her father tried, in 1980. Take it. It won't mind the trip." }
+              ]
+            },
+            { "label": "Leave the chest where it is" }
+          ]
+        },
+        { "say": "honora", "text": "There's a gale coming at the end of the month. The radio says so. There's always a gale in the end. Will you come up on the walk with me, when it comes? I'd like someone to see what I see. Or to tell me I don't." },
+        {
+          "choose": [
+            {
+              "label": "\"I'll come up.\"",
+              "then": [
+                { "set": { "widowGale": true } },
+                { "say": "honora", "text": "Bring a coat. Not that one." },
+                { "toast": "Calendar: the widow's walk, {placed:widow-gale} night", "look": "honora" }
+              ]
+            },
+            {
+              "label": "\"I'd better not, Mrs. Clegg.\"",
+              "then": [
+                { "say": "honora", "text": "No. You're right. Mind the step, it's been loose since the Carter administration." }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "widowMerrit": {
+      "title": "Merrit Gaunt wants the house on Cliff Road",
+      "customer": "merrit",
+      "steps": [
+        {
+          "say": "merrit",
+          "text": [
+            "Merrit Gaunt, Gilded Hand Finance. We hold the lien on a house on Cliff Road. A widow. Sentimental. You've been up there, I hear.",
+            "A hundred dollars says you tell her the sensible thing: sign, take our check, move somewhere with fewer stairs."
+          ]
+        },
+        { "find": "clock", "in": "stock", "match": { "uniqueId": "cleggClock" } },
+        {
+          "choose": [
+            {
+              "label": "Take his hundred",
+              "hint": "(+$100)",
+              "then": [
+                { "set": { "widowHand": true } },
+                { "coin": 100, "why": "Merrit Gaunt paid you to talk to Honora Clegg" },
+                { "say": "merrit", "text": "Splendid. She trusts you. People do, it's your face." }
+              ]
+            },
+            {
+              "label": "Sell him the ship's clock instead",
+              "hint": "(+$140, and she signs)",
+              "if": "clock",
+              "then": [
+                { "take": "clock" },
+                { "set": { "widowHand": true, "widowEnd": "hand" } },
+                { "hook": "stamp", "with": "widowSold" },
+                { "coin": 140, "why": "Sold the Merrow's clock to Merrit Gaunt" },
+                { "rep": -3 },
+                { "say": "merrit", "text": "A stopped clock is a promise nobody kept. Whoever holds it holds her. She'll sign by the weekend." }
+              ]
+            },
+            {
+              "label": "\"No.\"",
+              "then": [
+                { "say": "merrit", "text": "As you like. We're a patient company. Liens are patient things." }
+              ]
+            }
+          ]
+        },
+        { "leave": "merrit" }
+      ]
+    },
+    "widowAgathe": {
+      "title": "Agathe Moss can start the Merrow's clock",
+      "customer": "agathe",
+      "steps": [
+        { "find": "clock", "in": "stock", "match": { "uniqueId": "cleggClock" } },
+        {
+          "say": "agathe",
+          "text": [
+            "That bulkhead clock in your back room. The Merrow's. My father had it on his bench in 1980 for a month and couldn't make it go.",
+            "I looked at it while you were serving. There is nothing wrong with it. It isn't broken. It's waiting.",
+            "I can start it. Fifteen dollars and a steady hand. But once it goes, it goes for everyone it stopped for."
+          ]
+        },
+        {
+          "choose": [
+            {
+              "label": "Have Agathe start it",
+              "hint": "(-$15)",
+              "disabled": "coin < 15 || !clock",
+              "then": [
+                { "coin": -15, "why": "Agathe Moss started the Merrow's clock" },
+                { "set": { "widowWound": true } },
+                {
+                  "edit": "clock",
+                  "set": {
+                    "name": "Ship's clock, running",
+                    "condLabel": "Ticking",
+                    "tells": [
+                      "A brass bulkhead clock off a fishing boat. Engraved on the bezel: MERROW, 1971.",
+                      "It's running now. It says ten past four, and then, very slowly, it doesn't."
+                    ]
+                  }
+                },
+                {
+                  "edit": "clock",
+                  "if": "clock.inspected",
+                  "note": "what you'd already looked at, told again",
+                  "set": {
+                    "clues": [
+                      { "text": "A brass bulkhead clock off a fishing boat. Engraved on the bezel: MERROW, 1971." },
+                      { "text": "It's running now. It says ten past four, and then, very slowly, it doesn't." }
+                    ]
+                  }
+                },
+                { "refresh": "panel" },
+                { "narrate": "Agathe takes off the bezel, breathes on the escapement, and touches it once with a hair spring tool. The second hand shivers and moves. Somewhere up on Cliff Road, you could swear, a kettle starts to sing." },
+                { "say": "agathe", "text": "Keep it still until you give it back to her. A clock knows when it's been carried." }
+              ]
+            },
+            {
+              "label": "Leave it at ten past four",
+              "then": [{ "say": "agathe", "text": "Probably wise. Some clocks are doing a job." }]
+            }
+          ]
+        },
+        { "leave": "agathe" }
+      ]
+    },
+    "wardClegg": {
+      "title": "Ward Clegg comes in with the drowned (with the Fog Week)",
+      "music": "eerie",
+      "customer": "ward",
+      "steps": [
+        {
+          "say": "ward",
+          "text": [
+            "Ward Clegg. The Merrow, out of Hollow Neck, lost off the Neck in 1979 with all hands. All hand. It was only me.",
+            "I tried the house first. I can't get up the walk; the fog doesn't go that high. She's up there every night, isn't she. Looking the wrong way.",
+            "Tell her I'm coming in on the gale. Tell her I'm sorry about ten past four. Tell her to come down to the landing."
+          ]
+        },
+        { "set": { "widowWard": true } },
+        { "leave": "ward" }
+      ]
+    },
+    "widowGale": {
+      "title": "The widow's walk in a gale",
+      "music": "eerie",
+      "steps": [
+        {
+          "stage": "widowsWalk",
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [196, 162] },
+            { "id": "honora", "cast": "honora", "at": [250, 160] }
+          ]
+        },
+        { "narrate": "The widow's walk, after midnight. The gale comes in sideways off the Neck, and the whole house hums under your feet like a hull. Honora stands at the rail with a brass spyglass and doesn't hold on to anything." },
+        { "say": "you", "text": "He came into the shop in the fog, Mrs. Clegg. He said he's coming in on the gale. He said to come down to the landing.", "if": "flag.widowWard" },
+        { "say": "honora", "text": "There. Round the point. Do you see it?" },
+        { "narrate": "Out past Gull Point, where nothing should be, a red light and a green one, low on the water, and a white one above them: a boat's running lights, heading in. Every few seconds the lighthouse beam crosses where the boat ought to be, and there is no boat." },
+        { "say": "honora", "text": "Forty-seven years he's been rounding that point. Every gale. He never gets any closer." },
+        { "find": "clock", "in": "stock", "match": { "uniqueId": "cleggClock" } },
+        {
+          "choose": [
+            {
+              "label": "Give her the ship's clock, running",
+              "disabled": "!(clock && flag.widowWound)",
+              "hint": { "if": "clock && flag.widowWound", "then": "", "else": "(the clock would have to be running)" },
+              "then": [
+                { "take": "clock" },
+                {
+                  "narrate": [
+                    "She holds the clock against her coat, the way you'd hold a cat. The second hand goes round. Ten past four. Eleven minutes past.",
+                    "Out on the water the running lights go out, one, two, three, quite gently, like someone turning off the lamps in a house before bed."
+                  ]
+                },
+                {
+                  "say": "honora",
+                  "text": [
+                    "Oh. Oh, he's home. He's been home all along, hasn't he. It was only me out here.",
+                    "I'm hungry. I haven't been hungry since 1979. Is anything open?"
+                  ]
+                },
+                { "set": { "widowEnd": "letgo" } },
+                { "hook": "stamp", "with": "widowLetGo" },
+                { "rep": 4 },
+                {
+                  "if": "shelf.free",
+                  "then": [
+                    { "add": { "unique": "honoraSpyglass" } },
+                    { "refresh": "panel" },
+                    { "narrate": "On the stairs she hands you the spyglass. \"I won't be needing to look that far.\"" }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Go down to the ferry landing with her",
+              "then": [
+                {
+                  "stage": "ferryLandingNight",
+                  "view": { "fog": true },
+                  "if": "hook.fogInRun",
+                  "actors": [
+                    { "id": "you", "cast": "keeper", "name": "You", "at": [110, 164] },
+                    { "id": "honora", "cast": "honora", "at": [140, 162] }
+                  ]
+                },
+                {
+                  "stage": "ferryLandingNight",
+                  "view": { "fog": false },
+                  "if": "!hook.fogInRun",
+                  "actors": [
+                    { "id": "you", "cast": "keeper", "name": "You", "at": [110, 164] },
+                    { "id": "honora", "cast": "honora", "at": [140, 162] }
+                  ]
+                },
+                { "narrate": "The ferry landing. Rain coming across the float in sheets, and the running lights, nearer now than they have ever been, nearer than the breakwater." },
+                {
+                  "enter": {
+                    "id": "ward",
+                    "cast": "wardClegg",
+                    "at": [300, 160],
+                    "facingLeft": true,
+                    "alpha": "ghost"
+                  }
+                },
+                { "walk": "ward", "to": [200, 160] },
+                { "face": "ward", "left": true },
+                { "say": "ward", "text": "Sorry I'm late, Nora." },
+                { "say": "honora", "text": "You said ten past four." },
+                { "say": "ward", "text": "I did. I meant it, too. Is the kettle on?" },
+                {
+                  "narrate": { "if": "hook.fogInRun", "then": "The fog closes in round the landing like a curtain coming down. When it lifts, there are two sets of footprints at the end of the float, and no boat, and a smell of tea.", "else": "The rain comes across the landing in one white sheet. When it passes there are two sets of footprints at the end of the float, and no boat, and a smell of tea." }
+                },
+                { "remove": "ward" },
+                { "remove": "honora" },
+                { "set": { "widowEnd": "home" } },
+                { "hook": "stamp", "with": "widowHome" },
+                { "rep": 3 },
+                {
+                  "if": "shelf.free",
+                  "then": [
+                    { "add": { "unique": "honoraSpyglass" } },
+                    { "refresh": "panel" },
+                    { "narrate": "Her spyglass is on the bollard, wet, folded shut, left for you." }
+                  ]
+                },
+                {
+                  "edit": "clock",
+                  "set": { "questKey": false, "nosale": false },
+                  "if": "clock",
+                  "note": "yours to sell now"
+                },
+                { "refresh": "panel", "if": "clock" }
+              ]
+            },
+            {
+              "label": "Tell her Mr. Gaunt's offer is the sensible thing",
+              "if": "flag.widowHand",
+              "then": [
+                { "say": "you", "text": "Mrs. Clegg. The Hand's offer is fair. You could have a flat in town, near the bakery. You could stop waiting." },
+                { "say": "honora", "text": "Could I. Yes. I suppose that's what stopping is." },
+                { "narrate": "She signs Merrit Gaunt's papers on the parlor table at a quarter to five, in a good firm hand. She goes back up the stairs for her coat. Nobody sees her come down again." },
+                { "set": { "widowEnd": "hand" } },
+                { "hook": "stamp", "with": "widowSold" },
+                { "rep": -2 },
+                {
+                  "edit": "clock",
+                  "set": { "questKey": false, "nosale": false },
+                  "if": "clock",
+                  "note": "yours to sell now"
+                },
+                { "refresh": "panel", "if": "clock" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "beats": [
+    { "drift": "widow-honora", "from": "1-3", "to": "2-1", "cast": "honora", "scene": "honoraClock" },
+    { "drift": "widow-merrit", "from": "2-3", "to": "3-1", "cast": "merrit", "scene": "widowMerrit", "if": "(flag.widowInvite || flag.widowClock) && !flag.widowEnd" },
+    { "drift": "widow-agathe", "from": "2-4", "to": "3-3", "cast": "agathe", "scene": "widowAgathe", "if": "hook.clockHere && !flag.widowEnd" },
+    { "at": "3-2", "cast": "wardClegg", "scene": "wardClegg", "alpha": "ghost", "if": "hook.fogInRun && flag.widowGale && !flag.widowEnd" }
+  ],
+  "nights": [
+    {
+      "id": "widow-parlor",
+      "window": ["2-1", "2-4"],
+      "if": "flag.widowInvite",
+      "scene": "widowParlor",
+      "test": [
+        { "set": { "widowInvite": true } },
+        { "hook": "testCoin", "with": 120 },
+        { "add": { "unique": "cleggClock" }, "if": "random < 0.5" }
+      ]
+    },
+    {
+      "id": "widow-gale",
+      "window": ["3-3", "4-3"],
+      "if": "flag.widowGale && !flag.widowEnd",
+      "scene": "widowGale",
+      "test": [
+        { "set": { "widowGale": true } },
+        {
+          "if": "random < 0.5",
+          "then": [{ "set": { "widowHand": true } }],
+          "else": [{ "set": { "widowHand": false } }]
+        },
+        {
+          "if": "random < 0.5",
+          "then": [{ "set": { "widowWard": true } }],
+          "else": [{ "set": { "widowWard": false } }]
+        },
+        {
+          "if": "random < 0.6",
+          "then": [
+            { "add": { "unique": "cleggClock" } },
+            {
+              "if": "random < 0.7",
+              "then": [{ "set": { "widowWound": true } }],
+              "else": [{ "set": { "widowWound": false } }]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "calendar": [
+    { "id": "widow-parlor", "night": "widow-parlor", "story": "widow", "where": "Cliff Road", "title": "Honora Clegg's parlor", "known": "flag.widowInvite", "scene": "widowParlor" },
+    { "id": "widow-gale", "night": "widow-gale", "story": "widow", "where": "The widow's walk, Cliff Road", "title": "The gale", "known": "flag.widowGale && !flag.widowEnd", "scene": "widowGale" }
+  ],
+  "mornings": [
+    { "toast": "Honora Clegg was at Lowe's Bakery at six this morning, buying everything. Her hair has a gray streak in it.", "look": "honora", "if": "flag.widowLetGo && hook.sinceLetGo == 1" },
+    { "toast": "Honora Clegg is planting bulbs in the front garden on Cliff Road. She has a cardigan on, and reading glasses.", "look": "honora", "if": "flag.widowLetGo && hook.sinceLetGo == 2" },
+    { "toast": "Honora Clegg walked down Front Street with a cane. She was laughing at something.", "look": "honora", "if": "flag.widowLetGo && hook.sinceLetGo == 3" },
+    { "toast": "The light on the Clegg widow's walk didn't come on last night. Nobody can remember that ever happening.", "look": "honora", "if": "flag.widowLetGo && hook.sinceLetGo == 4" },
+    { "toast": "A Gilded Hand Finance sign has gone up outside the gray house on Cliff Road. Nobody has seen Honora Clegg.", "look": "merrit", "if": "flag.widowSold && hook.sinceSold == 1" },
+    { "toast": "The Clegg house on Cliff Road is dark. Two cups are on the kitchen table, still warm, and the kettle is on.", "look": "honora", "if": "flag.widowHome && hook.sinceHome == 1" }
+  ],
+  "epilogue": [
+    { "line": "Honora Clegg turned seventy-three in a week, and says it was the best week of her life. She does the crossword at the bakery now, in pen.", "if": "flag.widowEnd == 'letgo'" },
+    { "line": "The light on the Clegg widow's walk never came on again. On gale nights, people on Cliff Road say they smell tea.", "if": "flag.widowEnd == 'home'" },
+    { "line": "Gilded Hand Finance is turning the Clegg house into holiday flats. The builders won't go up on the walk after dark.", "if": "flag.widowEnd == 'hand'" }
+  ]
+});

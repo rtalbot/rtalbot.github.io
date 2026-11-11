@@ -41,3 +41,8 @@ exclude:
   - QUICK_REFERENCE.md
   - PROJECT_REVIEW_SUMMARY.md
   - UPDATE_CHECKLIST.md
+  # Pawn Champ's story editor is kept in the repo but not published yet
+  - pawn-champ/editor
+  - pawn-champ/api
+  - pawn-champ/tools
+  - pawn-champ/docs

@@ -1,0 +1,220 @@
+// Pawn Champ - The Burl Bowl. Minor quest m45, batch J (docs/quests/MINOR.md).
+// Heard from Hester. Lew Garrick turned a bowl from a burl off the boundary cedar the storm uncovered
+// on Hob's Marsh. In the dark it glows faintly green, and small things near it go missing. A quest
+// night at the cedar stump at dusk (cedarStump), where everything that went missing has ended up.
+//
+// Written as data: docs/STORY_DATA.md. Strict JSON inside the call. Code half: js/quests/burl.js.
+defineStory({
+  "id": "burl",
+  "kind": "minor",
+  "title": "The Burl Bowl",
+  "location": "marsh",
+  "rumour": "The storm uncovered a cedar on Hob's Marsh that was old when the town was founded.",
+  "endings": { "returned": "Back to the Stump", "kept": "Night Light", "sold": "Gone to Boston" },
+  "about": [
+    "A small uncanny story. Hester tells you the storm uncovered a cedar stump on Hob's Marsh, the boundary mark in the town's 1640 deed, and Lew Garrick has been taking burls off it for his lathe (§{hesterCedar}). Lew sells you the best bowl he's made, which glows green in the dark; since he made it, his things go missing every night (§{lewBowl}).",
+    "With the bowl on your shelf, small things start vanishing from beside it too, and Lew asks you out to the stump at dusk (§{burlStump}). In its hollow, lit green, is everything that went missing, yours included. Put the bowl back in the hollow and everything comes home (Back to the Stump), keep the bowl and its habits (Night Light), or let Lew sell it to a Boston gallery (Gone to Boston)."
+  ],
+  "cast": {
+    "lew": {
+      "name": "Lew Garrick",
+      "look": { "skin": "#d8b090", "hair": "#c8c0b0", "hs": 2, "coat": "#6a5a3a", "style": "vest", "vest": "#3a4a3a", "pants": "#4a4a52", "apron": "#a8885a", "beard": "#c8c0b0" }
+    }
+  },
+  "icons": {
+    "burlbowl": [
+      "............",
+      "............",
+      "............",
+      ".kkkkkkkkkk.",
+      "kWwWWnWWwWWk",
+      "kwWnWWWwWnWk",
+      ".kWWwnWWWwk.",
+      ".kwWWWWnWWk.",
+      "..kWwWWWWk..",
+      "...kkWWkk...",
+      "....kkkk....",
+      "............"
+    ]
+  },
+  "uniques": {
+    "burlBowl": {
+      "name": "Glowing burl bowl",
+      "icon": "burlbowl",
+      "cat": "art",
+      "guide": 140,
+      "questKey": true,
+      "condLabel": "Glows a little",
+      "tells": [
+        "Turned from a cedar burl, the grain swirling like smoke, oiled to a deep honey color.",
+        "With the lights off, a faint green shines up out of the grain. It's brightest at the bottom, where nothing is."
+      ]
+    }
+  },
+  "overheard": [
+    { "line": "\"I put my reading glasses down for one minute in that shop. One minute.\"", "if": "hook.bowlHere" }
+  ],
+  "scenes": {
+    "hesterCedar": {
+      "title": "Hester on the old cedar stump",
+      "customer": "hester",
+      "steps": [
+        {
+          "say": "hester",
+          "text": [
+            "The storm tore the bank out on Hob's Marsh and uncovered a stump. A cedar. It's in the 1640 deed as the boundary mark: \"from the great cedar to the sea\".",
+            "It was old then. And Lew Garrick has been out there with a chainsaw, taking burls off it for his lathe. I wrote to the Selectmen. In capitals."
+          ]
+        },
+        { "set": { "burlHeard": true } },
+        { "leave": "hester" }
+      ]
+    },
+    "lewBowl": {
+      "title": "Lew Garrick sells the burl bowl",
+      "customer": "lew",
+      "steps": [
+        { "say": "lew", "text": "Lew Garrick. I turn bowls. This is the best I've ever made, and I'd like it out of my workshop." },
+        { "view": { "counterIcon": "burlbowl" } },
+        { "say": "lew", "text": "Cedar burl, off the old stump on the marsh. Look at that grain. Now. Turn your lamp off." },
+        { "narrate": "He cups his hands round it. In the dark of his hands, the bottom of the bowl shines a soft, sick green." },
+        { "say": "lew", "text": "And since I made it, I can't find anything. Chisels, my glasses, my truck keys. Gone, every night." },
+        { "offer": { "unique": "burlBowl" }, "persona": "honest", "asking": 90, "min": 60 },
+        {
+          "if": "offer == 'deal'",
+          "then": [
+            { "set": { "burlBought": true } },
+            { "say": "lew", "text": "If things start walking off on you too, come out to the stump at dusk. I'm out there most evenings, looking for my keys." }
+          ]
+        },
+        { "leave": "lew" }
+      ]
+    },
+    "burlStump": {
+      "title": "The cedar stump at dusk",
+      "music": "eerie",
+      "steps": [
+        {
+          "stage": "cedarStump",
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [108, 168] },
+            { "id": "lew", "cast": "lew", "at": [230, 168], "facingLeft": true }
+          ]
+        },
+        { "narrate": "Hob's Marsh at dusk. Where the storm tore the bank away there's a stump as wide as a kitchen, grey and split, its roots running out through the mud like fingers." },
+        { "say": "lew", "text": "Look in the hollow. Go on. I did, the first night, and I sat down in the mud." },
+        {
+          "narrate": { "if": "flag.burlTaken.count", "then": "The hollow is full of things, lit green from inside: a pair of reading glasses, truck keys, a child's mitten, two chisels, Hal Mayhew's spare padlock, and from your shelf, {hook:takenNames}.", "else": "The hollow is full of things, lit green from inside: a pair of reading glasses, truck keys, a child's mitten, two chisels, Hal Mayhew's spare padlock." }
+        },
+        { "say": "lew", "text": "Four hundred years old, Hester says. I took a piece out of it, and it's been taking a piece of everybody back." },
+        { "find": "bowl", "in": "stock", "match": { "uniqueId": "burlBowl" } },
+        {
+          "choose": [
+            {
+              "label": "Set the bowl in the hollow, and give everything back",
+              "hint": "(rep +3)",
+              "if": "bowl",
+              "then": [
+                { "take": "bowl" },
+                { "hook": "giveBack" },
+                { "rep": 3, "why": "Gave the cedar back its burl" },
+                { "narrate": "You set the bowl down in the hollow, and the green goes out like a lamp. Lew walks the reading glasses round to the Athenaeum and the mitten to the school, and Hal gets his padlock back and says he never doubted it." },
+                { "set": { "burlEnd": "returned" } }
+              ]
+            },
+            {
+              "label": "Take your things, and keep the bowl",
+              "hint": "(it's yours to sell; it keeps taking)",
+              "if": "bowl",
+              "then": [
+                { "hook": "giveBack" },
+                { "edit": "bowl", "set": { "questKey": false, "nosale": false } },
+                { "refresh": "panel" },
+                { "narrate": "You put your things in your pockets and the bowl under your arm. On the walk back to town, something in the reeds walks alongside you for a while, and then stops." },
+                { "set": { "burlEnd": "kept" } }
+              ]
+            },
+            {
+              "label": "Let Lew sell it to the gallery in Boston",
+              "hint": "(+$200)",
+              "if": "bowl",
+              "then": [
+                { "take": "bowl" },
+                { "coin": 200, "why": "Lew Garrick sold the burl bowl to a gallery in Boston" },
+                { "say": "lew", "text": "Two hundred, and they'll collect. I hope they lock their doors." },
+                { "set": { "burlEnd": "sold" } }
+              ]
+            },
+            {
+              "label": "Take your things back and go home",
+              "if": "!bowl",
+              "then": [
+                { "hook": "giveBack" },
+                { "narrate": "You fill your pockets and go home in the dark, glad of the lights on Water Street." }
+              ]
+            }
+          ]
+        },
+        { "refresh": "panel" }
+      ]
+    }
+  },
+  "beats": [
+    { "drift": "burl-hester", "from": "1-2", "to": "1-4", "cast": "hester", "scene": "hesterCedar" },
+    { "drift": "burl-lew", "from": "1-5", "to": "2-2", "cast": "lew", "scene": "lewBowl", "if": "flag.burlHeard" }
+  ],
+  "nights": [
+    {
+      "id": "burl-stump",
+      "window": ["2-3", "3-4"],
+      "if": "flag.burlInvited && !flag.burlEnd",
+      "scene": "burlStump",
+      "test": [{ "set": { "burlInvited": true } }, { "add": { "unique": "burlBowl" } }]
+    }
+  ],
+  "calendar": [
+    { "id": "burl-stump", "night": "burl-stump", "story": "burl", "where": "Hob's Marsh", "title": "The cedar stump at dusk", "known": "flag.burlInvited", "scene": "burlStump" }
+  ],
+  "mornings": [
+    { "find": "bowl", "in": "stock", "match": { "uniqueId": "burlBowl" } },
+    {
+      "if": "bowl && (!flag.burlEnd || flag.burlEnd == 'kept')",
+      "note": "small things go missing near it, every other night",
+      "then": [
+        { "hook": "nightCount", "sets": ["odd"] },
+        {
+          "if": "!odd",
+          "then": [
+            { "hook": "takeSmall", "sets": ["gone"] },
+            {
+              "toast": { "if": "gone", "then": "The {gone.name|lower} was on the shelf by the burl bowl last night. It isn't now.", "else": "Your pen was beside the burl bowl last night. It isn't now." },
+              "icon": "burlbowl"
+            },
+            {
+              "if": "!flag.burlInvited && !flag.burlEnd",
+              "then": [
+                { "set": { "burlInvited": true } },
+                { "toast": "Calendar: the cedar stump on Hob's Marsh, {placed:burl-stump} at dusk", "look": "lew", "icon": "burlbowl" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "epilogue": [
+    { "line": "The old cedar stump has a bowl in its hollow, and things in Hollow Neck stay where they're put. Hester got the stump listed. In capitals.", "if": "flag.burlEnd == 'returned'" },
+    { "line": "The burl bowl glows on your shelf at night. You've stopped keeping anything small near it, and you buy pens in boxes of fifty.", "if": "flag.burlEnd == 'kept'" },
+    { "line": "The burl bowl sits in a gallery window on Newbury Street. The gallery has reported nine thefts since, and no break-ins.", "if": "flag.burlEnd == 'sold'" }
+  ],
+  "talk": {
+    "by": "hester",
+    "rumour": [
+      "The storm uncovered the boundary cedar on Hob's Marsh. It's in the 1640 deed: \"from the great cedar to the sea\".",
+      "And Lew Garrick has been out there with a chainsaw. I've written to the Selectmen. In capitals."
+    ],
+    "react": { "returned": "My reading glasses came back, by way of a woodturner. The cedar is to be listed. Capitals work.", "kept": "You kept that bowl. I've stopped bringing a pen in here. I bring a pencil I don't care about.", "sold": "A piece of the 1640 boundary is in a Boston gallery. Boston has always wanted our boundary." },
+    "sway": { "returned": { "hester": 2 }, "kept": { "hester": -2 }, "sold": { "hester": -2 } }
+  },
+  "outcome": "flag.burlEnd"
+});

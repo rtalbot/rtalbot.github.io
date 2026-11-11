@@ -1,0 +1,822 @@
+// Pawn Champ - The Grey Psalter: a cursed book you sold, a wolf cult in felt ears, and a
+// full-moon sacrifice. Major quest M4 (docs/quests/MAJOR.md).
+// You sell a cursed book. The mild schoolmaster who buys it becomes the leader of a (felt-eared)
+// wolf cult. His followers shop with you for ritual supplies. Then comes the full moon, and a
+// sacrifice. How you can break the curse depends on what you kept, sold and collected.
+// Grown in batch E: the Pack's open house in the bakery's back room, Professor Pye in the Athenaeum
+// basement (a fourth cure, in Mr. Pennick's diary), Desmond's classroom at St. Brine's, and a new
+// way out at the Howling if Desmond hands the book back. The bakery's back room and the classroom
+// are drawn in js/places/bakery.js and classroom.js.
+//
+// Written as data: docs/STORY_DATA.md. Strict JSON inside the call. Code half: js/quests/psalter.js
+// (the Pack's looks, the book, and the Pack's shopping, which the Wolf Moon uses too).
+defineStory({
+  "id": "psalter",
+  "kind": "major",
+  "colour": "#b08ad0",
+  "family": "uncanny",
+  "title": "The Grey Psalter",
+  "crosses": ["grey", "twins"],
+  "rumour": "Somebody's mother has started howling at breakfast.",
+  "endings": { "amber": "Amber", "silver": "True Silver", "ink": "True Ink", "returned": "Returned", "partial": "Lost to the Marsh", "watch": "Evidence Locker", "none": "Merrit, Eaten" },
+  "outcome": [
+    { "if": "flag.cultSaved == 'late' || flag.cultSaved == 'watch'", "ending": "watch" },
+    { "if": "flag.cultSaved == 'amber'", "ending": "amber" },
+    { "if": "flag.cultSaved == 'silver'", "ending": "silver" },
+    { "if": "flag.cultSaved == 'ink'", "ending": "ink" },
+    { "if": "flag.cultSaved == 'returned'", "ending": "returned" },
+    { "if": "flag.cultSaved == 'partial'", "ending": "partial" },
+    { "if": "flag.cultSaved == 'none'", "ending": "none" }
+  ],
+  "about": [
+    "A wolf cult played as small-town comedy until the last night, when it stops being funny. In week 1 Mrs. Pennick sells you a box of her late husband's books for six dollars, and one of them, bound in warm grey fur, growls (§{pennickBooks}). Two days later a mild third-grade teacher, Desmond Wick, comes in having dreamed of it (§{desmondAsks}). Sell it, refuse it or keep it: either way it ends up with him (a kept book escapes out of the window), and the Pack of the Grey Psalter is born.",
+    "Through weeks 2 and 3 the town joins in felt wolf ears. Bettany and Brisket shop for the Moon Table's silver, blade and cup (§{cultBaker}, §{cultButcher}); every sale feeds the cult's power. At the Pack's open house you're asked whether a christening cup is solid silver, and you choose to join, to spy for Captain Barrow, or to eat a donut and leave (§{packOpenHouse}). The twins say their mom howls at breakfast (§{twinsWorried}), and the Grey Shepherd, Desmond with a second voice, asks for amber with a creature in it (§{shepherdVisit}).",
+    "The cures come from Professor Pye of the Department of Regrettable Books (§{professorPye}, §{pyeBasement}): the twins' amber, true silver on the binding (if the Pack hasn't been fed too much), or the Ink That Writes True from The Gentleman in Grey. Mr. Pennick's diary, bought from his widow (§{pennickDiary}), adds a fourth: the curse is only lent, so Desmond can hand the book back to the shop that sold it, if you've won his trust in his classroom after dark (§{desmondClassroom}).",
+    "The Howling (§{howling}) is the full moon in week 4: Merrit Gaunt of Gilded Hand Finance tied to a post on the marsh, then carried into Hob's Wood for the real rite. Your choice there is the ending. The amber, true silver, the Ink or the book handed back free everyone (Amber, True Silver, True Ink, Returned), and Merrit grudgingly cuts your final installment. Silver on a well-fed cult, or cutting Merrit loose and running, only half works: Desmond runs howling into the woods (Lost to the Marsh). Fetching Barrow puts the book in an evidence locker (Evidence Locker), and walking away gets Merrit eaten (Merrit, Eaten).",
+    "Lost to the Marsh, Evidence Locker and Merrit, Eaten leave the book loose, and lead to The Wolf Moon in January. A cured Pack can leave Bettany with a habit (Out of Habit)."
+  ],
+  "cast": {
+    "pennick": {
+      "name": "Mrs. Pennick",
+      "look": { "skin": "#e0b090", "hair": "#e8e8e8", "hs": 3, "coat": "#6a5a7a", "trim": "#8a7a8a", "style": "dress", "hat": "bonnet", "hatc": "#4a3a5a", "bag": "#2a2a2e" }
+    },
+    "desmond": {
+      "name": "Desmond Wick",
+      "look": { "skin": "#f0c8a8", "hair": "#6a5a4a", "hs": 0, "coat": "#8a6a3a", "trim": "#c8b890", "style": "jacket", "pants": "#3a3a3a", "glasses": "#2a2a2e", "bag": "#5a3a24" }
+    },
+    "shepherd": {
+      "name": "The Grey Shepherd",
+      "look": { "skin": "#e0d0c8", "hair": "#8a8a90", "hs": 1, "coat": "#5a5a62", "trim": "#a01818", "style": "robe", "pants": "#2a2a30", "ears": true, "eye": "#d01818" }
+    },
+    "bettanyPack": {
+      "name": "Bettany Lowe",
+      "look": { "skin": "#f0c8a8", "hair": "#d8c070", "hs": 3, "coat": "#e8dcc0", "trim": "#c8b890", "style": "tee", "apron": "#f4eee0", "ears": true, "stout": true }
+    },
+    "brisket": {
+      "name": "Brisket the butcher",
+      "look": { "skin": "#c89070", "hair": "#3a2a1e", "hs": 2, "coat": "#e8e4dc", "style": "tee", "apron": "#c8a0a0", "ears": true, "stout": true, "beard": "#3a2a1e" }
+    },
+    "pye": {
+      "name": "Professor Pye",
+      "look": { "skin": "#e8d0b8", "hair": "#d0d0d0", "hs": 4, "coat": "#6a5a3a", "trim": "#8a2a2a", "style": "jacket", "long": true, "pants": "#2a2a3a", "beard": "#d0d0d0", "glasses": "#2a2a2e", "bag": "#5a3a24" }
+    }
+  },
+  "uniques": {
+    "pennickDiary": {
+      "name": "Mr. Pennick's diary",
+      "icon": "tome",
+      "cat": "curio",
+      "guide": 15,
+      "questKey": true,
+      "tells": [
+        "Forty years of notes in tiny handwriting. 1983: \"The Psalter is only ever LENT. It goes home to the shop that sold it.\""
+      ]
+    }
+  },
+  "scenes": {
+    "pennickBooks": {
+      "title": "Mrs. Pennick sells a box of books, and one of them growls",
+      "customer": "pennick",
+      "steps": [
+        {
+          "say": "pennick",
+          "text": [
+            "Clearing out my late husband's attic. He collected books. Odd ones. I never liked them.",
+            "Six bucks for the box. All of it. Please. One of them growls."
+          ]
+        },
+        { "view": { "counterIcon": "psalter" } },
+        {
+          "choose": [
+            {
+              "label": "Buy the box ($6)",
+              "disabled": "coin < 6",
+              "then": [
+                { "coin": -6, "why": "Bought a box of books from Mrs. Pennick" },
+                { "hook": "addPsalter" },
+                { "set": { "psalter": "shop" } },
+                { "refresh": "panel" },
+                { "narrate": "Mostly mildewed paperbacks and old Reader's Digests. And one book bound in grey fur, which is warm to the touch. You put it on the high shelf, away from the cat. The cat hisses at it anyway." }
+              ]
+            },
+            {
+              "label": "No thank you",
+              "then": [
+                { "say": "pennick", "text": "I'll leave it on the church steps, then. Somebody will take it." }
+              ]
+            }
+          ]
+        },
+        { "view": { "counterIcon": null } },
+        { "leave": "pennick" }
+      ]
+    },
+    "desmondAsks": {
+      "title": "Desmond Wick dreamed of the book",
+      "customer": "desmond",
+      "steps": [
+        {
+          "say": "desmond",
+          "text": [
+            "Desmond Wick. I teach third grade at St. Brine's Elementary. Math, mostly.",
+            "This will sound silly. I dreamed of a book bound in grey fur, and the dream said it was here. It said \"the Crooked Scale\" quite clearly."
+          ]
+        },
+        {
+          "if": "flag.psalter != 'shop'",
+          "then": [
+            { "hook": "keeper", "sets": ["you"] },
+            { "say": "you", "text": "No books like that here, Mr. Wick." },
+            { "say": "desmond", "text": "Oh. The dream said there would be steps. Church steps. I'll try there." },
+            { "set": { "psalter": "desmond", "cultBegun": true } },
+            { "leave": "desmond" },
+            { "end": true }
+          ]
+        },
+        { "view": { "counterIcon": "psalter" } },
+        { "find": "book", "in": "stock", "match": { "psalter": true } },
+        {
+          "choose": [
+            {
+              "label": "Sell it to him for 30",
+              "then": [
+                { "take": "book" },
+                { "coin": 30, "why": "Sold the Grey Psalter to Desmond Wick" },
+                { "set": { "soldPsalter": true, "psalter": "desmond", "cultBegun": true } },
+                { "say": "desmond", "text": "Thank you! It's so... warm." }
+              ]
+            },
+            {
+              "label": "He wants it badly. Ask 90.",
+              "then": [
+                { "take": "book" },
+                { "coin": 90, "why": "Sold the Grey Psalter to Desmond Wick" },
+                { "set": { "soldPsalter": true, "psalter": "desmond", "cultBegun": true } },
+                { "say": "desmond", "text": "Ninety. Of course. The dream said it would cost me." }
+              ]
+            },
+            {
+              "label": "Something is wrong with that book. Refuse.",
+              "then": [
+                { "set": { "keptPsalter": true } },
+                { "say": "desmond", "text": "I see. Well. It wants to come with me, you know. It will." }
+              ]
+            }
+          ]
+        },
+        { "view": { "counterIcon": null } },
+        { "leave": "desmond" }
+      ]
+    },
+    "cultBaker": {
+      "title": "Bettany, in felt ears, shops for the Pack",
+      "customer": "bettany",
+      "steps": [
+        {
+          "say": "bettany",
+          "text": [
+            "Morning! Don't mind the ears. I've joined the Pack of the Grey Psalter. We meet Thursdays at the VFW hall. There are cookies.",
+            "Brother Desmond needs silver for the Moon Table. That's the big flat stone out on Hob's Marsh. Or anything shiny that looks like it means something."
+          ]
+        },
+        { "hook": "cultSale", "with": { "cats": ["silver", "jewelry"], "mult": 1.6 }, "sets": ["sold"] },
+        {
+          "say": "bettany",
+          "text": { "if": "sold", "then": "Perfect! He'll be thrilled. Well. He doesn't really do \"thrilled\" any more. He does \"staring\".", "else": "Never mind. AWOOOO. Sorry. We're practising." }
+        },
+        {
+          "if": "!flag.packOpenKnown",
+          "then": [
+            { "set": { "packOpenKnown": true } },
+            { "say": "bettany", "text": "Oh! And we're having an open house. {placed:pack-open-house} night, the back room of my bakery. Folding chairs, cider. You're invited. Brother Desmond says you're \"a friend of the Pack\"." },
+            { "toast": "Calendar: the Pack's open house, {placed:pack-open-house} night", "look": "bettany" }
+          ]
+        },
+        { "leave": "bettany" }
+      ]
+    },
+    "cultButcher": {
+      "title": "Brisket the butcher wants a blade, or a cup",
+      "customer": "brisket",
+      "steps": [
+        {
+          "say": "brisket",
+          "text": [
+            "Brisket. The Pack sent me. I'll need your sharpest blade. Or a fancy cup. For catching things. Ceremonially.",
+            "Don't ask what things. I don't know yet. Brother Desmond says the Book will tell us at the full moon."
+          ]
+        },
+        { "hook": "cultSale", "with": { "cats": ["weapon", "silver"], "mult": 1.6 }, "sets": ["sold"] },
+        {
+          "say": "brisket",
+          "text": { "if": "sold", "then": "Lovely. Brother Desmond says you're \"a friend of the Pack\". He also said your name in his sleep. Twice.", "else": "Suit yourself. The Book remembers, mind." }
+        },
+        { "leave": "brisket" }
+      ]
+    },
+    "twinsWorried": {
+      "title": "The twins: Mom has joined the wolf club",
+      "customer": "lark",
+      "steps": [
+        { "hook": "linnetToo", "sets": ["linnet"] },
+        { "say": "linnet", "text": "Um... our mom's joined the wolf club. She howls at breakfast." },
+        { "say": "lark", "text": "She says Mr. Wick is \"the Grey Shepherd\" now, and he talks with two voices, and on the full moon the Pack will \"give the Book what it hungers for\"." },
+        { "say": "linnet", "text": "Out on Hob's Marsh. Next Thursday. We're not allowed to go." },
+        { "set": { "howlingKnown": true } },
+        { "toast": "Calendar: the full moon on Hob's Marsh, Thursday of week 4", "look": "linnet" },
+        { "find": "amber", "in": "stock", "match": { "key": "amber" } },
+        {
+          "if": "amber",
+          "then": [
+            { "say": "linnet", "text": "Is our amber magic? It went cold when Mom's friends walked past. Keep it safe, okay?" },
+            { "set": { "amberHint": true } }
+          ]
+        },
+        { "say": "lark", "text": "Can you help? Grown-ups don't listen to us." },
+        {
+          "choose": [
+            {
+              "label": "I'll find a way. I promise.",
+              "then": [{ "set": { "promisedTwins": true } }, { "say": "lark", "text": "Thank you!" }]
+            },
+            {
+              "label": "I'm sure it's just a phase, kids.",
+              "then": [{ "say": "linnet", "text": "...Okay." }]
+            }
+          ]
+        },
+        { "hook": "leaveTogether", "note": "the twins go out of the door together, Linnet a step behind" }
+      ]
+    },
+    "shepherdVisit": {
+      "title": "The Grey Shepherd wants a heart of the sea",
+      "music": "cult",
+      "customer": "shepherd",
+      "steps": [
+        {
+          "say": "shepherd",
+          "text": [
+            "We have met before, when I was smaller. Now I am the Grey Shepherd. Or he is. We share.",
+            "THE BOOK REQUIRES A HEART OF THE SEA. Golden. With a little creature sleeping inside."
+          ]
+        },
+        { "find": "amber", "in": "stock", "match": { "key": "amber", "held": false } },
+        {
+          "if": "amber",
+          "then": [
+            {
+              "choose": [
+                {
+                  "label": "Sell him the amber ($150)",
+                  "then": [
+                    { "take": "amber" },
+                    { "coin": 150, "why": "Sold the amber to the Grey Shepherd" },
+                    { "hook": "power", "with": 2 },
+                    { "set": { "amberSold": true } },
+                    { "say": "shepherd", "text": "GOOD. The little creature will wake at last." }
+                  ]
+                },
+                {
+                  "label": "It's not for sale",
+                  "then": [
+                    { "say": "shepherd", "text": "Then keep it close. It will not keep YOU safe. Probably." },
+                    { "set": { "shepherdRefused": true } }
+                  ]
+                }
+              ]
+            }
+          ],
+          "else": [
+            { "hook": "keeper", "sets": ["you"] },
+            { "say": "you", "text": "Nothing like that here." },
+            { "say": "shepherd", "text": "Pity. Then the Book must eat something bigger." }
+          ]
+        },
+        { "narrate": "He sniffs your counter loudly on his way out. The queue pretends not to notice." },
+        { "leave": "shepherd" }
+      ]
+    },
+    "professorPye": {
+      "title": "Professor Pye, of Regrettable Books, on how to break it",
+      "customer": "pye",
+      "steps": [
+        {
+          "say": "pye",
+          "text": [
+            "Professor Hesketh Pye, Hollow Neck State, Department of Regrettable Books. Is there a dog in here? I don't like dogs.",
+            { "if": "week >= 4", "then": "I'm told a copy of the Grey Psalter surfaced in this town. Nasty thing. A wolf-demon bound in its own fur. It wants a sacrifice at the full moon, which is Thursday. On your marsh, I gather, at some sort of stone table.", "else": "I'm told a copy of the Grey Psalter surfaced in this town. Nasty thing. A wolf-demon bound in its own fur. It wants a sacrifice at the full moon, which is a week on Thursday. On your marsh, I gather, at some sort of stone table." },
+            "There are only a few ways to break it, if anyone were foolish enough to try.",
+            "Amber traps spirits. An old piece with a creature inside will drink a demon like a sponge.",
+            "Or true silver laid on the binding will burn it out. But the more the cult has been fed, the deeper it sinks its claws in.",
+            "And legend says a demon can be unmade by writing its true name in ink that cannot lie. Nobody has ink like that, of course."
+          ]
+        },
+        {
+          "choose": [
+            {
+              "label": "What happens if nobody stops it?",
+              "then": [
+                { "say": "pye", "text": "Then the Pack keeps the demon, the town gets a lot more howling, and somebody gets eaten. Usually somebody nobody likes." }
+              ]
+            },
+            { "label": "Thank you, Professor" }
+          ]
+        },
+        { "set": { "pyeLore": true, "howlingKnown": true } },
+        { "toast": "Lore: amber, true silver or truthful ink can break the Psalter's curse", "look": "pye" },
+        { "leave": "pye" }
+      ]
+    },
+    "howling": {
+      "title": "The Howling at the Moon Table, and the rite in Hob's Wood",
+      "music": "moon",
+      "steps": [
+        {
+          "stage": "marsh",
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [30, 166] },
+            { "id": "shepherd", "cast": "shepherd", "at": [200, 150], "facingLeft": true },
+            { "id": "merrit", "cast": "merrit", "at": [236, 146], "facingLeft": true },
+            {
+              "id": "pack",
+              "look": "random",
+              "outfit": { "hat": null, "ears": true },
+              "name": "The Pack",
+              "at": [[78, 156], [100, 164], [124, 156]]
+            },
+            {
+              "id": "pack4",
+              "look": "random",
+              "outfit": { "hat": null, "ears": true },
+              "name": "The Pack",
+              "at": [150, 164],
+              "facingLeft": true
+            },
+            {
+              "id": "pack5",
+              "look": "random",
+              "outfit": { "hat": null, "ears": true },
+              "name": "The Pack",
+              "at": [172, 156],
+              "facingLeft": true
+            }
+          ]
+        },
+        {
+          "narrate": [
+            "Full moon over Hob's Marsh. Half the town is out on the old causeway in felt wolf ears, standing round the Moon Table and howling slightly out of time. There is a folding table with cookies. Someone is filming it.",
+            "Beside the table, cable-tied to the last post of the old jetty: Merrit Gaunt of Gilded Hand Finance."
+          ]
+        },
+        { "say": "merrit", "text": "Ah! Splendid! Do be a dear and untie me. I shall knock a full five percent off your next installment." },
+        { "say": "shepherd", "text": "THE BOOK WAS GOING TO ACCEPT A GOAT. BUT THE BOOK HAS MET THIS MAN." },
+        { "say": "pack2", "text": "Fair enough, honestly." },
+        { "narrate": "Then Desmond shuts the book, and the howling stops all at once.\n\nThe cookie people fold their table and go home. The rest pull grey hoods up over their ears, cut Merrit loose from the post, and carry him off the end of the causeway into the pines. Nobody is filming now.", "note": "the marsh is the show for the neighbors; the rite itself happens in Hob's Wood" },
+        { "hook": "intoTheWood", "note": "fades to Hob's Wood: the same people, hooded now, round the fire" },
+        { "narrate": "A clearing past the place where the paths give out. Old stones stand in a ring with a deer skull on each. The fire is taller than a man, and the moon has gone the color of rust.\n\nThey have tied Merrit to a stake. Out in the trees, more eyes than there are people catch the firelight." },
+        { "say": "merrit", "text": "This is... considerably less festive than the marsh." },
+        { "say": "shepherd", "text": "The marsh is for the neighbors. This is for the book." },
+        { "hook": "demon", "with": 1 },
+        { "narrate": "Desmond lays the Psalter open on the flat rock. The smoke over the fire stops rising and starts to gather. It grows ears. Then it opens its eyes." },
+        { "find": "amber", "in": "stock", "match": { "key": "amber" } },
+        {
+          "find": "silver",
+          "in": "bag",
+          "match": { "cat": "silver", "fake": false },
+          "note": "packed, if you brought a bag (docs/ITEMS_IN_USE.md)"
+        },
+        { "find": "ink", "in": "stock", "match": { "name": "Ink That Writes True" } },
+        {
+          "choose": [
+            {
+              "label": "Raise the amber and let it drink the demon",
+              "disabled": "!amber",
+              "off": { "hint": "(you need the twins' amber)" },
+              "then": [
+                { "take": "amber" },
+                { "narrate": "You hold the amber up to the fire. The little beetle inside seems to open its mouth.\n\nA grey shape tears out of Desmond, out of the Psalter, out of every pair of felt ears, and pours howling into the stone. Then it is quiet." },
+                { "hook": "demon", "with": 0 },
+                {
+                  "hook": "addPsalter",
+                  "with": {
+                    "name": "Demon in Amber",
+                    "icon": "amber",
+                    "psalter": false,
+                    "guide": 300,
+                    "condLabel": "Occupied",
+                    "clues": [{ "text": "Something very small and very angry is trapped inside." }],
+                    "nosale": false,
+                    "curio": false
+                  }
+                },
+                { "set": { "cultSaved": "amber" } },
+                { "rep": 10 },
+                { "say": "shepherd", "text": "...Where am I? Why am I wearing ears? Why is Mr. Gaunt tied to a post?" }
+              ]
+            },
+            {
+              "label": "Press true silver to the Psalter's binding (your {silver.name|lower})",
+              "hint": { "if": "flag.cultPower >= 3", "then": "(the Pack has been well fed...)" },
+              "disabled": "!silver",
+              "off": { "label": "Press true silver to the Psalter's binding", "hint": "(you need genuine silver {bagWord})" },
+              "then": [
+                { "take": "silver" },
+                {
+                  "if": "flag.cultPower >= 3",
+                  "then": [
+                    { "narrate": "The silver hisses against the fur. The Pack collapses, freed. But the demon has fed too well. It clings on to the one who fed it most, and Desmond runs howling into the dark." },
+                    { "set": { "cultSaved": "partial" } },
+                    { "rep": 4 }
+                  ],
+                  "else": [
+                    { "narrate": "The silver hisses against the fur and the Psalter bursts into grey flame. Every pair of felt ears in the circle slowly droops." },
+                    { "set": { "cultSaved": "silver" } },
+                    { "rep": 8 },
+                    { "hook": "demon", "with": 0 },
+                    { "say": "shepherd", "text": "I think... I think I need to lie down for about a year." }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Write the demon's true name with the Ink That Writes True",
+              "disabled": "!ink",
+              "off": { "hint": "(you'd need truthful ink)" },
+              "then": [
+                { "take": "ink" },
+                { "narrate": "You write a name you have never heard, in a hand that isn't quite yours. The demon reads it, looks embarrassed, and simply stops existing." },
+                { "hook": "demon", "with": 0 },
+                { "set": { "cultSaved": "ink" } },
+                { "rep": 10 },
+                { "say": "shepherd", "text": "Oh, thank goodness. He wanted me to teach the third grade long division in Old Lupine." }
+              ]
+            },
+            {
+              "label": "Run for Captain Barrow",
+              "hint": { "if": "heat >= 50", "then": "(she doesn't trust you)" },
+              "then": [
+                {
+                  "if": "heat < 50",
+                  "then": [
+                    { "hook": "demon", "with": 0 },
+                    { "narrate": "Barrow arrives with three vans and a dog unit. The Pack is arrested and Merrit is freed. The demon slips back into its book, which is now police evidence. Somebody will read it eventually." },
+                    { "set": { "cultSaved": "watch" } },
+                    { "heat": -10 },
+                    { "rep": 3 }
+                  ],
+                  "else": [
+                    { "narrate": "Barrow doesn't believe a word of it. By the time you've convinced her, the clearing is empty except for a ring of trampled grey hoods and one very ruffled Merrit Gaunt, who blames you for the delay." },
+                    { "set": { "cultSaved": "late" } },
+                    { "hook": "installment", "with": 1.15 }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Back away quietly. Not your circus.",
+              "then": [
+                { "narrate": "You back away. Behind you the howling rises to a crescendo, then stops very suddenly.\n\nGilded Hand Finance sends a new collector on Friday. She is much, much worse." },
+                { "set": { "cultSaved": "none", "merritEaten": true } },
+                { "rep": -8 },
+                { "hook": "installment", "with": 1.15 }
+              ]
+            },
+            {
+              "label": "Ask Desmond to hand the book back to you, as if over the counter",
+              "if": "flag.returnCure",
+              "disabled": "!(flag.psalterTaken || flag.desmondTrust)",
+              "off": { "hint": "(he'd have to trust you)" },
+              "then": [
+                {
+                  "narrate": [
+                    "\"It was only ever lent, Desmond. Give it back to the shop it came from.\" You hold out your hands, the way you do at the counter a hundred times a day.",
+                    "Desmond looks at the book, then at you, and hands it across. It is just a book, bound in rather tatty grey fur. The Pack sits down in the reeds, embarrassed, and someone offers round the cookies."
+                  ]
+                },
+                { "set": { "cultSaved": "returned", "psalterTaken": false } },
+                { "rep": 9 },
+                {
+                  "hook": "addPsalter",
+                  "with": {
+                    "condLabel": "Returned",
+                    "clues": [{ "text": "Just a book now. It still growls, a little, at the full moon." }]
+                  },
+                  "if": "shelf.free"
+                },
+                { "say": "shepherd", "text": "...Thank you. Could I perhaps buy a different book? Something about long division?" }
+              ]
+            },
+            {
+              "label": "Creep round the stones and cut Merrit loose",
+              "needs": "cut",
+              "without": "He's only cable-tied. Anything with an edge would do.",
+              "then": [
+                { "use": "cut", "as": "used", "note": "items in use (docs/ITEMS_IN_USE.md): cut Merrit loose while every eye is on the smoke" },
+                {
+                  "narrate": [
+                    "While every face in the clearing is turned up to the smoke, you work round behind the stones and saw through the cable ties with the {used.name|lower|or:blade}. Merrit Gaunt, for once in his life, says nothing at all.",
+                    "The demon looks down for its offering and finds an empty stake. It howls, the fire goes out, and Desmond runs into the dark after it. The Pack wakes up in the cold with no idea why they are wearing hoods."
+                  ]
+                },
+                { "hook": "demon", "with": 0 },
+                { "set": { "cultSaved": "partial", "howlCut": true } },
+                { "rep": 4, "why": "Cut Merrit Gaunt loose at the Howling" },
+                { "say": "merrit", "text": "I will deny this happened. But I will also remember it. Your final installment is... somewhat reduced." },
+                { "hook": "installment", "with": 0.85 },
+                { "toast": "Merrit Gaunt owes you one: final installment cut by 15%", "look": "merrit" }
+              ]
+            }
+          ]
+        },
+        {
+          "if": "flag.cultSaved == 'amber' || flag.cultSaved == 'silver' || flag.cultSaved == 'ink' || flag.cultSaved == 'returned'",
+          "then": [
+            { "say": "merrit", "text": "Well. That was a debt of gratitude, which I loathe. Consider your final installment reduced." },
+            { "hook": "installment", "with": 0.75 },
+            { "toast": "Merrit Gaunt owes you one: final installment cut by 25%", "look": "merrit" }
+          ]
+        }
+      ]
+    },
+    "packOpenHouse": {
+      "title": "The Pack's open house in the bakery's back room",
+      "music": "cult",
+      "steps": [
+        {
+          "stage": "bakeryBack",
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [92, 166] },
+            { "id": "bettany", "cast": "bettany", "at": [150, 160] },
+            { "id": "desmond", "cast": "desmond", "at": [236, 156], "facingLeft": true },
+            {
+              "id": "pack",
+              "look": "random",
+              "outfit": { "hat": null, "ears": true },
+              "name": "The Pack",
+              "at": [[180, 162], [198, 166], [216, 162]],
+              "facingLeft": true
+            }
+          ]
+        },
+        { "narrate": "The back room of the bakery, after hours. Folding chairs, a tea urn, a sign-up sheet, cider in paper cups. Fourteen people in felt wolf ears and their good cardigans." },
+        { "say": "bettany", "text": "Welcome, welcome! Name badge? Ears are optional. Well. Ears are encouraged." },
+        { "say": "desmond", "text": "Thank you all for coming. The Moon Table needs four things: silver, a blade, a cup, and a heart of the sea. Then, at the full moon, the Book will be fed. Any questions? There are donuts." },
+        {
+          "enter": {
+            "id": "faraday",
+            "look": "random",
+            "outfit": { "hat": null, "ears": true },
+            "name": "Mrs. Faraday, of the Pack",
+            "at": [126, 164]
+          },
+          "note": "show and tell: a cup for the Moon Table, and the pawnbroker in the room"
+        },
+        { "say": "faraday", "text": "I brought the cup! My mother's christening cup. Solid silver. You're the pawnbroker, aren't you? Tell them it's solid silver." },
+        { "narrate": "Everyone turns to look at you. The cup is heavy and handsome, and where the rim is worn, there is copper showing through." },
+        {
+          "choose": [
+            {
+              "label": "\"It's silver plate. Lovely, but plate.\"",
+              "then": [
+                { "set": { "packCupTruth": true } },
+                { "hook": "power", "with": 1 },
+                { "rep": 1 },
+                { "say": "desmond", "text": "Plate. Thank you. The Book is very particular. The Pack will need true silver, then, from somebody who knows the difference." },
+                { "narrate": "He looks at you when he says it. Fourteen pairs of felt ears turn your way." }
+              ]
+            },
+            {
+              "label": "\"Solid silver. Beautiful piece.\"",
+              "then": [
+                { "set": { "packCupLie": true } },
+                { "hook": "power", "with": -1 },
+                { "say": "faraday", "text": "I knew it! Mother always said." },
+                { "narrate": "The cup goes on the Moon Table list, with a gold star next to it. Whatever the Book is expecting, it is now going to get copper." }
+              ]
+            },
+            {
+              "label": "\"I couldn't say without my loupe.\"",
+              "then": [{ "say": "desmond", "text": "Of course. A professional. We'll bring it by the shop." }]
+            }
+          ]
+        },
+        { "remove": "faraday" },
+        {
+          "choose": [
+            {
+              "label": "Join the Pack",
+              "hint": "(felt ears; they pay 180% but the cult grows twice as fast)",
+              "then": [
+                { "set": { "packMember": true } },
+                { "narrate": "Bettany pins a pair of felt ears in your hair. They are surprisingly comfortable. Somebody hands you a hymn sheet. All the words are AWOO." }
+              ]
+            },
+            {
+              "label": "Quietly take notes for Captain Barrow",
+              "hint": "(-6 heat; the Pack stops buying)",
+              "then": [
+                { "set": { "packSpy": true } },
+                { "heat": -6, "why": "Took notes at the Pack's open house for Barrow" },
+                { "narrate": "You write down fourteen names and the words \"heart of the sea\". Desmond watches you do it over his cider, and refills his cup." }
+              ]
+            },
+            {
+              "label": "Eat a donut and leave",
+              "then": [
+                { "narrate": "The donut is excellent. Bettany really is a very good baker, which doesn't help." }
+              ]
+            }
+          ],
+          "as": "joined"
+        },
+        {
+          "say": "bettany",
+          "note": "on the way out",
+          "text": { "if": "joined == 1", "then": "Here. Take a box of day-olds for the walk. And... Desmond reads everybody's notes. Even the ones in pockets.", "else": "Here, take a box of day-olds for the walk. Same time next month! If there is a next month. Ha! That's a Pack joke." }
+        },
+        { "set": { "bettanyWarned": true }, "if": "joined == 1" }
+      ]
+    },
+    "pennickDiary": {
+      "title": "Mrs. Pennick brings her husband's diary",
+      "customer": "pennick",
+      "steps": [
+        {
+          "say": "pennick",
+          "text": [
+            "Mrs. Pennick again. I hear what that book's doing to poor Mr. Wick. I feel responsible. I am responsible.",
+            "My husband kept a diary about it. Forty years of it. Ten dollars. There's a professor reading in the basement of the Athenaeum every night this week who'd give his eye teeth for it."
+          ]
+        },
+        { "offer": { "unique": "pennickDiary" }, "persona": "honest", "asking": 10, "min": 8 },
+        { "set": { "pyeKnown": true } },
+        { "toast": "Calendar: Professor Pye, the Athenaeum basement, {placed:athenaeum-pye} night", "look": "pennick" },
+        { "leave": "pennick" }
+      ]
+    },
+    "pyeBasement": {
+      "title": "Professor Pye in the Athenaeum basement",
+      "steps": [
+        {
+          "stage": "athenaeumBasement",
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [96, 166] },
+            { "id": "pye", "cast": "pye", "at": [200, 158], "facingLeft": true }
+          ]
+        },
+        { "narrate": "The Athenaeum basement: granite, pipes, and a trestle table under one bulb, buried in books with titles like \"Lycanthropy: A Clerical Error?\"." },
+        {
+          "say": "pye",
+          "text": [
+            "Ah, the pawnbroker. Is there a dog on you? No? Good. Sit.",
+            "Three cures, as far as anyone knows. Amber with a creature in it. True silver on the binding, if the Pack hasn't been fed too much. Or its name in ink that cannot lie."
+          ]
+        },
+        { "set": { "pyeLore": true, "howlingKnown": true } },
+        { "find": "diary", "in": "stock", "match": { "uniqueId": "pennickDiary" } },
+        {
+          "if": "diary",
+          "then": [
+            { "narrate": "You put Mr. Pennick's diary on the table. Pye reads for twenty minutes without breathing, as far as you can tell." },
+            {
+              "say": "pye",
+              "text": [
+                "Oh. OH. The curse is only ever LENT. If the Shepherd gives the book back to the shop that sold it, freely, the loan is closed and he's free. A fourth cure! And it's a matter of retail!",
+                "He'd have to trust you, mind. Or you'd have to already have the book. Wick grades papers at St. Brine's every evening. I would not go. But I am a coward."
+              ]
+            },
+            { "set": { "returnCure": true, "classroomKnown": true } },
+            { "toast": "Calendar: Desmond's classroom at St. Brine's, {placed:desmond-classroom} night", "look": "desmond" }
+          ],
+          "else": [
+            { "say": "pye", "text": "There may be more. Somebody in this town has been taking notes for decades, I can smell it. Find me their notes." }
+          ]
+        }
+      ]
+    },
+    "desmondClassroom": {
+      "title": "Desmond's classroom at St. Brine's, after dark",
+      "music": "cult",
+      "steps": [
+        {
+          "stage": "classroom",
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [100, 166] },
+            { "id": "desmond", "cast": "desmond", "at": [210, 158], "facingLeft": true }
+          ]
+        },
+        { "narrate": "St. Brine's, after dark. Desmond Wick sits under one lamp grading spelling tests. Every test has the same word on it, twenty times: MOON. He has given them all full marks." },
+        { "say": "desmond", "text": "Oh. Hello. Sorry. I'm only half here. The other half is... busy." },
+        { "narrate": "The Grey Psalter lies on the corner of his desk, breathing slowly." },
+        {
+          "choose": [
+            {
+              "label": "Sit with him and talk him through the evening",
+              "hint": "(the cult loses its grip a little)",
+              "then": [
+                { "set": { "desmondTrust": true } },
+                { "hook": "power", "with": -2 },
+                { "narrate": "You talk about nothing much for two hours: long division, his mother, the good bakery. Somewhere around ten, he laughs, and it is entirely his own laugh." },
+                { "say": "desmond", "text": "If it comes to it... I think I could give it back. To you. I think I'd like to." }
+              ]
+            },
+            {
+              "label": "Take the Psalter off his desk",
+              "hint": "(it bites: -$20 for a tetanus shot)",
+              "then": [
+                { "hook": "spend", "with": { "n": 20, "why": "A tetanus shot (the Psalter bit you)" } },
+                { "set": { "psalterTaken": true } },
+                { "narrate": "It bites. Of course it bites. But you get it under your coat, and Desmond only watches you go, with an expression of enormous relief that he doesn't seem to know about." }
+              ]
+            },
+            {
+              "label": "Leave him a note and go",
+              "then": [
+                { "narrate": "You leave a note on his desk: \"Come by the shop. Any time. - the Crooked Scale.\" He reads it twice and puts it in his pocket." }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "beats": [
+    { "at": "3-2", "cast": "pennick", "scene": "pennickDiary", "if": "flag.cultBegun" },
+    { "at": "1-3", "cast": "pennick", "scene": "pennickBooks" },
+    { "at": "1-5", "cast": "desmond", "scene": "desmondAsks" },
+    { "at": "2-2", "cast": "bettanyPack", "scene": "cultBaker", "if": "flag.cultBegun" },
+    { "at": "2-4", "cast": "brisket", "scene": "cultButcher", "if": "flag.cultBegun" },
+    { "at": "3-3", "cast": "lark", "scene": "twinsWorried", "if": "flag.cultBegun" },
+    { "at": "3-4", "cast": "shepherd", "scene": "shepherdVisit", "if": "flag.cultBegun" },
+    { "at": "4-1", "cast": "pye", "scene": "professorPye", "if": "flag.cultBegun && !flag.pyeLore" },
+    { "at": "3-2", "cast": "pye", "scene": "professorPye", "if": "flag.cultBegun && card.pye && !flag.pyeLore", "note": "Professor Pye's Card (js/cards.js): he comes a week early, before the Shepherd asks for the amber" },
+    { "at": "4-4", "night": true, "if": "flag.cultBegun", "steps": [{ "run": "howling" }] }
+  ],
+  "nights": [
+    {
+      "id": "pack-open-house",
+      "window": ["2-2", "2-4"],
+      "if": "flag.packOpenKnown && flag.cultBegun",
+      "scene": "packOpenHouse",
+      "test": [{ "set": { "packOpenKnown": true, "cultBegun": true } }]
+    },
+    {
+      "id": "athenaeum-pye",
+      "window": ["3-2", "4-3"],
+      "if": "flag.pyeKnown",
+      "scene": "pyeBasement",
+      "test": [{ "set": { "pyeKnown": true } }, { "add": { "unique": "pennickDiary" } }]
+    },
+    {
+      "id": "desmond-classroom",
+      "window": ["3-3", "4-3"],
+      "if": "flag.classroomKnown",
+      "scene": "desmondClassroom",
+      "test": [{ "set": { "classroomKnown": true, "cultBegun": true } }, { "hook": "testCoin", "with": 50 }]
+    }
+  ],
+  "calendar": [
+    { "id": "pack-open-house", "night": "pack-open-house", "story": "psalter", "where": "The bakery, Front Street", "title": "The Pack's open house", "known": "flag.packOpenKnown", "scene": "packOpenHouse" },
+    { "id": "athenaeum-pye", "night": "athenaeum-pye", "story": "psalter", "where": "The Athenaeum basement", "title": "Professor Pye's research", "known": "flag.pyeKnown", "scene": "pyeBasement" },
+    { "id": "desmond-classroom", "night": "desmond-classroom", "story": "psalter", "where": "St. Brine's", "title": "Desmond's classroom", "known": "flag.classroomKnown", "scene": "desmondClassroom" },
+    {
+      "id": "howling",
+      "week": 4,
+      "days": [4],
+      "night": true,
+      "story": "psalter",
+      "where": "Hob's Marsh",
+      "title": "The Howling at the Moon Table",
+      "known": "flag.howlingKnown",
+      "scene": "howling",
+      "bring": ["silver", "cut"]
+    }
+  ],
+  "mornings": [
+    {
+      "if": "week == 2 && day == 1 && flag.keptPsalter",
+      "note": "the book you wouldn't sell him goes to him anyway",
+      "then": [
+        { "find": "book", "in": "stock", "match": { "psalter": true } },
+        {
+          "if": "book",
+          "then": [
+            { "take": "book" },
+            { "set": { "psalter": "desmond", "cultBegun": true } },
+            { "narrate": "The Grey Psalter is gone from the high shelf. The window latch is scratched from the inside, and there's a tuft of grey fur on the sill.\n\nThe cat looks very pleased with itself." }
+          ]
+        }
+      ]
+    }
+  ],
+  "epilogue": [
+    { "line": "Desmond Wick teaches maths again. On your top shelf, a lump of amber growls whenever anyone mentions the moon.", "if": "flag.cultSaved == 'amber'" },
+    { "line": "The Pack of the Grey Psalter is now a knitting circle. They kept the ears.", "if": "flag.cultSaved == 'silver'" },
+    { "line": "Nobody in Hollow Neck can remember the demon's name. You can. You try very hard not to.", "if": "flag.cultSaved == 'ink'" },
+    { "line": "The Grey Psalter is back on your high shelf, not for sale. Desmond Wick visits it on Saturdays, the way you'd visit an old dog.", "if": "flag.cultSaved == 'returned'" },
+    { "line": "On full-moon nights, something howls out on the marshes. It sounds like it is doing long division.", "if": "flag.cultSaved == 'partial'" },
+    { "line": "The Grey Psalter sits in a police evidence locker. The desk sergeant on nights has started wearing felt ears.", "if": "flag.cultSaved == 'watch' || flag.cultSaved == 'late'" },
+    { "line": "Merrit Gaunt was never seen again. Nobody organized a search party.", "if": "flag.cultSaved == 'none'" },
+    { "line": "The twins' mom stopped howling at breakfast. Mostly.", "if": "flag.promisedTwins && flag.cultSaved && flag.cultSaved != 'none'" }
+  ]
+});

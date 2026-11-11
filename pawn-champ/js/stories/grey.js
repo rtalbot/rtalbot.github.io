@@ -1,0 +1,619 @@
+// Pawn Champ - The Gentleman in Grey: a soul bargain that stocks your shelves with wonders, one
+// favour at a time. Major quest M2 (docs/quests/MAJOR.md).
+// Grown in batch E: Madame Orsolya reads your palm, then the contract (the shop has had a Quillon
+// problem before); Mrs. Pryce and the Mirror of Second Chances, on Cliff Road; Abner Crooke's grave
+// (a lunch errand) and his clause at the reckoning. Mr. Quillon's curios and the favours they cost are
+// the curio engine, in the code half.
+//
+// Written as data: docs/STORY_DATA.md. Strict JSON inside the call. Code half: js/quests/grey.js.
+defineStory({
+  "id": "grey",
+  "kind": "major",
+  "colour": "#d05050",
+  "family": "uncanny",
+  "title": "The Gentleman in Grey",
+  "crosses": ["psalter", "fog", "benefit"],
+  "rumour": "A man in a grey suit is asking which shopkeeper in town wants more than they have.",
+  "endings": { "keeper": "The Keeper in Grey", "paid": "Paid in Full", "rewritten": "Rewritten", "betterOffer": "A Better Offer", "abner": "Abner's Clause", "refused": "Never Signed" },
+  "outcome": [
+    { "if": "flag.soulSold", "ending": "keeper" },
+    { "if": "flag.abnerFree", "ending": "abner" },
+    { "if": "flag.devilBought", "ending": "paid" },
+    { "if": "flag.devilBeaten", "ending": "rewritten" },
+    { "if": "flag.devilTraded", "ending": "betterOffer" },
+    { "if": "flag.devilRefused", "ending": "refused" }
+  ],
+  "about": [
+    "A deal with the devil, run as a shop. On the last Friday of week 2, Mr. Quillon, a polite man in a grey suit, offers to stock your shelves with wonders in return for your soul at month's end (§{quillonOffer}). Refuse and that's the story (Never Signed). Sign, and every few mornings a curio arrives: a mirror, a purse, a locket, each worth a lot of money and each quietly ruining whoever buys it.",
+    "That's the trap. Each curio you sell brings Quillon back the next morning to ask a favour: a cruel little errand against someone in town (a lying letter under Old Pell's door, a rumour about Sister Amabel, a dead gull on the twins' step). Do it, or pay him off. This part is the curio engine in the code half (js/quests/grey.js), so it doesn't show as scenes below; it's what the epilogue lines are about. Mrs. Pryce, who bought the Mirror of Second Chances and now relives the same evening over and over, is the one curio whose cost you can see and try to undo (§{pryceHousekeeper}, §{pryceHouse}).",
+    "Madame Orsolya reads the contract in your palm (§{orsolyaInvites}) and invites you to her parlor (§{orsolyaReading}). There she tells you about Abner Crooke, the keeper in 1952, the only one who ever got out, and sells you weekly cards that warn which favour comes next. His grave holds his secret (§{abnerGrave}): a keeper who gives back every curio unsold owes nothing. If The Fog Week is in the run, Abner's ghost can tell you himself.",
+    "In week 4 Quillon leaves the Ink That Writes True on your counter, not for sale. Orsolya offers $400 for it (§{inkCollector}); keep it and it can rewrite your contract.",
+    "The reckoning is the last Friday at midnight, down the stairs behind Neptune's Arcade, where the Proprietor keeps souls in jars (§{reckoning}). How you leave decides the ending: keep the bargain (The Keeper in Grey), hand back every curio under Abner's clause, if you never sold one (Abner's Clause), buy your soul back in cash (Paid in Full), rewrite the contract with the Ink (Rewritten), or offer the Gilded Hand's Ms. Vantreece in your place, if you hold Odile's ledger (A Better Offer)."
+  ],
+  "notes": "Mr. Quillon's curios (a seeded 3 to 5 of ten each run), the favour each one costs when it sells, the deliveries and Orsolya's weekly cards are the curio engine in js/quests/grey.js. The Proprietor is drawn on his throne by js/places/below.js; his look here is only for his portrait and speech bubble.",
+  "cast": {
+    "quillon": {
+      "name": "Mr. Quillon",
+      "look": { "skin": "#e8e0e0", "hair": "#c8c8d0", "hs": 0, "coat": "#5a5a66", "trim": "#a01818", "style": "suit", "hat": "top", "hatc": "#4a4a56", "band": "#a01818", "long": true, "eye": "#d01818", "pants": "#3a3a44" }
+    },
+    "proprietor": {
+      "name": "The Proprietor",
+      "look": { "skin": "#c8281e", "hair": "#1a0606", "hs": 2, "beard": "#1a0606", "style": "vest", "vest": "#3a2a4a", "coat": "#c8281e", "pants": "#8a1810", "stout": true, "eye": "#ffd040" }
+    },
+    "pryce": {
+      "name": "Mrs. Lowell Pryce",
+      "look": { "skin": "#f0d8c8", "hair": "#e8d8b0", "hs": 3, "coat": "#3a5a6a", "trim": "#e8e0c8", "style": "dress", "pants": "#2a2a32", "glasses": "#c8a050" }
+    },
+    "abner": {
+      "name": "Abner Crooke (deceased)",
+      "look": { "skin": "#c8dce8", "hair": "#e8f0f8", "hs": 0, "coat": "#5a6a7a", "trim": "#dfefff", "style": "vest", "vest": "#4a5a6a", "pants": "#3a4a5a", "moustache": "#e8f0f8", "glasses": "#8ab8e0", "eye": "#8af0ff" }
+    },
+    "housekeeper": {
+      "name": "Mrs. Pryce's housekeeper",
+      "look": { "skin": "#c89070", "hair": "#3a2a1e", "hs": 3, "coat": "#2a2a32", "trim": "#f4f0e8", "style": "dress", "apron": "#f4f0e8", "pants": "#2a2a32" }
+    }
+  },
+  "icons": {
+    "qticket": [
+      "............",
+      "............",
+      "kkkkkkkkkkkk",
+      "kppprppppppk",
+      "kpPPrpkkkkpk",
+      ".ppprppppppk",
+      ".pPPrpkkkppk",
+      "kppprppppppk",
+      "kkkkkkkkkkkk",
+      "............",
+      "............",
+      "............"
+    ],
+    "qgloves": [
+      "............",
+      ".k.k.k......",
+      "kckckck.....",
+      "kckckck.k...",
+      "kccccckck...",
+      "kcccccck....",
+      "kccccck.....",
+      ".kccck......",
+      ".kSSSk......",
+      ".kSSSk......",
+      ".kkkkk......",
+      "............"
+    ],
+    "qchair": [
+      "...kkkkkk...",
+      "...kWwwWk...",
+      "...kWwwWk...",
+      "...kWwwWk...",
+      "...kWwwWk...",
+      "..kkkkkkkk..",
+      "..kRRRRRRk..",
+      "..kkkkkkkk..",
+      "..kw....wk..",
+      "..kw....wk..",
+      "..kw....wk..",
+      "..kk....kk.."
+    ],
+    "qteacup": [
+      "....k..k....",
+      "...k..k.....",
+      "....k..k....",
+      "............",
+      ".kkkkkkkk...",
+      ".kcccccckkk.",
+      ".kcbbbbck.k.",
+      ".kcccccckkk.",
+      "..kcccck....",
+      "...kkkk.....",
+      "kkkkkkkkkk..",
+      ".kkkkkkkk..."
+    ],
+    "qumbrella": [
+      ".....kk.....",
+      "...kkbbkk...",
+      "..kbbBbbbk..",
+      ".kbbBbbbbbk.",
+      "kbbbbbbbbbbk",
+      "kkkkkkkkkkkk",
+      ".....kk.....",
+      ".....kk.....",
+      ".....kk.....",
+      ".....kk.....",
+      "..k..kk.....",
+      "...kkk......"
+    ]
+  },
+  "uniques": {
+    "contractStub": {
+      "name": "A 1952 contract stub",
+      "icon": "letter",
+      "cat": "curio",
+      "guide": 0,
+      "questKey": true,
+      "tells": [
+        "\"Received of A. Crooke, keeper of the Crooked Scale: one soul, on account.\" Torn across. Signed Q., in red.",
+        "On the back, in pencil: \"Give it ALL away and he can't touch you. - A.C.\""
+      ]
+    }
+  },
+  "scenes": {
+    "quillonOffer": {
+      "title": "Mr. Quillon offers to stock your shelves with wonders",
+      "music": "infernal",
+      "customer": "quillon",
+      "steps": [
+        {
+          "say": "quillon",
+          "text": [
+            "Good evening. What a lovely little shop. And what a lot of trouble you're in.",
+            "I deal in curiosities. Things people want so badly they'd do anything to have them.",
+            "I'll stock your shelves with wonders. Your customers will pay whatever you ask. Now and then I'll ask you for a small favour.",
+            "Sign here. Your name now, and at the end of the month, the usual."
+          ]
+        },
+        {
+          "choose": [
+            {
+              "label": "What's \"the usual\"?",
+              "then": [
+                { "say": "quillon", "text": "Your soul. You'll hardly miss it. Most people never use theirs." },
+                {
+                  "choose": [
+                    {
+                      "label": "Sign the contract",
+                      "then": [
+                        { "set": { "devil": true, "curiosGiven": 0, "favourQueue": [] } },
+                        { "hook": "runCurios" },
+                        { "set": { "cruel": 0 } },
+                        { "hook": "tone" },
+                        { "narrate": "The ink in his fountain pen is red, and warm. Your signature takes a long time to dry." },
+                        {
+                          "say": "quillon",
+                          "text": [
+                            "Splendid. Look for my first delivery in the morning.",
+                            "We settle up at month's end. Friday, midnight, at Neptune's Arcade on the boardwalk. I do love an arcade. Everyone there is so sure they're about to win."
+                          ]
+                        },
+                        { "toast": "Calendar: Mr. Quillon, Neptune's Arcade, last Friday at midnight", "look": "quillon" }
+                      ]
+                    },
+                    {
+                      "label": "Get out of my shop",
+                      "then": [
+                        { "set": { "devilRefused": true } },
+                        { "say": "quillon", "text": "As you like. Everyone in a pawnshop sells something eventually." }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Sign the contract",
+              "then": [
+                { "set": { "devil": true, "curiosGiven": 0, "favourQueue": [] } },
+                { "hook": "runCurios" },
+                { "set": { "cruel": 0 } },
+                { "hook": "tone" },
+                { "narrate": "The ink in his fountain pen is red, and warm. Your signature takes a long time to dry." },
+                {
+                  "say": "quillon",
+                  "text": [
+                    "Splendid. Look for my first delivery in the morning.",
+                    "We settle up at month's end. Friday, midnight, at Neptune's Arcade on the boardwalk. I do love an arcade. Everyone there is so sure they're about to win."
+                  ]
+                },
+                { "toast": "Calendar: Mr. Quillon, Neptune's Arcade, last Friday at midnight", "look": "quillon" }
+              ]
+            },
+            {
+              "label": "Get out of my shop",
+              "then": [
+                { "set": { "devilRefused": true } },
+                { "say": "quillon", "text": "As you like. Everyone in a pawnshop sells something eventually." }
+              ]
+            }
+          ]
+        },
+        { "leave": "quillon" }
+      ]
+    },
+    "inkCollector": {
+      "title": "Madame Orsolya wants the Ink That Writes True",
+      "music": "infernal",
+      "customer": "orsolya",
+      "steps": [
+        {
+          "say": "orsolya",
+          "text": [
+            "Madame Orsolya, collector of rarities. I can smell it from the street. You have the Ink.",
+            "Four hundred, cash. Now. Whatever is written in that ink becomes true."
+          ]
+        },
+        {
+          "choose": [
+            {
+              "label": "Sell her the Ink (+$400)",
+              "then": [
+                { "find": "ink", "in": "stock", "match": { "name": "Ink That Writes True" } },
+                { "take": "ink" },
+                { "coin": 400, "why": "Sold the Ink That Writes True" },
+                { "set": { "inkSold": true } },
+                { "say": "orsolya", "text": "You have no idea what you just sold." }
+              ]
+            },
+            {
+              "label": "It isn't for sale",
+              "then": [
+                { "say": "orsolya", "text": "Wise. Or foolish. With ink like that, it's hard to tell." }
+              ]
+            }
+          ]
+        },
+        { "leave": "orsolya" }
+      ]
+    },
+    "reckoning": {
+      "title": "Settling up with Mr. Quillon, below the arcade",
+      "music": "infernal",
+      "steps": [
+        { "stage": "arcade", "actors": [{ "id": "you", "cast": "keeper", "name": "You", "at": [140, 170] }] },
+        { "narrate": "Neptune's Arcade, end of the boardwalk, shut since Labor Day. The door is unlocked. Every machine is unplugged, and every machine is running." },
+        { "enter": { "id": "quillon", "cast": "quillon", "at": [340, 164], "facingLeft": true } },
+        { "walk": "quillon", "to": [214, 164] },
+        { "face": "quillon", "left": true },
+        { "say": "quillon", "text": "The month is up. Come downstairs. I keep the paperwork in the back." },
+        { "narrate": "He opens the door behind the prize counter, the one marked STAFF ONLY. The stairs behind it go down a long way further than the boardwalk does, and it gets warmer with every step." },
+        { "hook": "downstairs", "note": "fades out to the cavern below (js/places/below.js), the Proprietor asleep, you and Quillon at the foot of the stairs" },
+        {
+          "enter": {
+            "id": "boss",
+            "cast": "proprietor",
+            "at": [281, 108],
+            "alpha": 0,
+            "note": "speaks from the throne"
+          }
+        },
+        { "hook": "fadeIn" },
+        {
+          "narrate": [
+            "A cavern, lit from below by a river of fire. The far wall is cut into shelves, and on every shelf stand jars with a light moving in each one. Every jar has a ticket tied to it.",
+            "On a throne of iron strongboxes, under a plaque that says ALL SALES FINAL, something enormous and red is asleep in a waistcoat that gave up years ago."
+          ]
+        },
+        {
+          "say": "quillon",
+          "text": [
+            "(quietly) Every shop needs a back room. I only work here, you understand.",
+            "Sir? The keeper from the little shop on Main Street. Settling up."
+          ]
+        },
+        { "hook": "below", "with": { "devil": 1 } },
+        { "narrate": "One yellow eye opens. Then the other. The tail starts to go." },
+        { "say": "boss", "text": ["QUILLON. YOU WOKE ME FOR A PAWNBROKER.", "FINE. FINE! WHAT DO WE HAVE."] },
+        { "say": "quillon", "text": "One soul, sir, as agreed. I've come for the usual." },
+        { "say": "quillon", "text": "Though between us, after all those favours, there's rather less of it than there was.", "if": "flag.cruel >= 3" },
+        { "find": "ink", "in": "stock", "match": { "name": "Ink That Writes True" } },
+        {
+          "choose": [
+            {
+              "label": "Keep the bargain",
+              "then": [
+                { "set": { "soulSold": true } },
+                { "say": "quillon", "text": "A pleasure doing business. Don't worry, the shop will do wonderfully. Forever." },
+                { "hook": "below", "with": { "laugh": true } },
+                { "say": "boss", "text": "SECOND SHELF, NEAR THE END. HA! HA HA!" }
+              ]
+            },
+            {
+              "label": "Use your exit clause: buy it back for $150",
+              "disabled": "coin < 150",
+              "card": true,
+              "if": "card.clause",
+              "then": [
+                { "coin": -150, "why": "Bought back your soul", "note": "A Clause of Your Own (js/cards.js)" },
+                { "say": "quillon", "text": "Cash? How terribly modern." },
+                { "say": "boss", "text": "TAKE IT. TAKE IT, QUILLON. EVERYTHING IS GOING DIGITAL ANYWAY." },
+                { "say": "quillon", "text": "Very well. We're square." },
+                { "set": { "devilBought": true } }
+              ]
+            },
+            {
+              "label": "Buy it back for $300",
+              "disabled": "coin < 300",
+              "if": "!card.clause",
+              "then": [
+                { "coin": -300, "why": "Bought back your soul" },
+                { "say": "quillon", "text": "Cash? How terribly modern." },
+                { "say": "boss", "text": "TAKE IT. TAKE IT, QUILLON. EVERYTHING IS GOING DIGITAL ANYWAY." },
+                { "say": "quillon", "text": "Very well. We're square." },
+                { "set": { "devilBought": true } }
+              ]
+            },
+            {
+              "label": "Rewrite the contract with the Ink That Writes True",
+              "disabled": "!ink",
+              "hint": { "if": "ink", "then": "", "else": "(you no longer have it)" },
+              "then": [
+                { "take": "ink" },
+                { "narrate": "You dip his fountain pen and write one line across the contract: THIS SOUL WAS NEVER FOR SALE.\n\nThe ink drinks itself into the page. The contract catches fire, very politely." },
+                { "say": "quillon", "text": "...I really must stop handing that out." },
+                { "say": "boss", "text": "QUILLON. MY OFFICE. NOW." },
+                { "set": { "devilBeaten": true } }
+              ]
+            },
+            {
+              "label": "Offer him Ms. Vantreece's soul instead. The ledger proves she's earned it.",
+              "disabled": "!flag.ledger",
+              "hint": { "if": "flag.ledger", "then": "", "else": "(you'd need proof)" },
+              "then": [
+                { "say": "quillon", "text": "Vantreece? Oh, that is a far bigger soul." },
+                { "hook": "below", "with": { "laugh": true } },
+                { "say": "boss", "text": "PRACTICALLY A MANSION. QUILLON, GO AND GET HER. GO NOW." },
+                { "hook": "below", "with": { "laugh": false } },
+                { "say": "quillon", "text": "Done. And since she won't be needing her debts any more..." },
+                { "hook": "cancelDebt" },
+                { "set": { "devilTraded": true } },
+                { "toast": "Gilded Hand's final installment is canceled", "look": "vantreece" }
+              ]
+            },
+            {
+              "label": "Invoke Abner's clause: hand back every curio, unpaid",
+              "if": "flag.abnerClause",
+              "disabled": "flag.curioSales > 0",
+              "hint": { "if": "flag.curioSales > 0", "then": "(you sold one; the clause is void)", "else": "" },
+              "note": "Abner's clause: a keeper who gave away, unpaid, everything Quillon supplied owes him nothing",
+              "then": [
+                { "hook": "handBackCurios" },
+                { "narrate": "You put the 1952 stub on his counter, and beside it every curio he ever sent you, unsold." },
+                { "say": "quillon", "text": "...Abner Crooke. Of course. I'd hoped everyone had forgotten Abner." },
+                { "say": "boss", "text": "ABNER CROOKE. QUILLON, I TOLD YOU ABOUT ABNER CROOKE IN 1952." },
+                { "say": "quillon", "text": "You did, sir. A keeper who keeps nothing owes nothing. It's in the small print. I write very small print, and then I forget it's there." },
+                { "narrate": "He tears the contract in half, and in half again, and hands you the pieces with a little bow. It is the most polite thing that has ever happened down here." },
+                { "set": { "abnerFree": true, "devilDone": true } },
+                { "hook": "below", "with": { "devil": 0 } },
+                { "walk": "quillon", "to": [360, 164] },
+                { "remove": "quillon" },
+                { "narrate": "You climb back up into the arcade. Every machine has gone dark, and the door to the stairs is just a broom closet again." },
+                { "end": true }
+              ]
+            }
+          ]
+        },
+        { "set": { "devilDone": true } },
+        { "hook": "below", "with": { "laugh": false } },
+        { "hook": "below", "with": { "devil": 0 }, "if": "!flag.soulSold" },
+        { "walk": "quillon", "to": [360, 164] },
+        { "remove": "quillon" },
+        {
+          "narrate": { "if": "flag.soulSold", "then": "Behind you the Proprietor is still laughing. The stairs back up are shorter than they were on the way down. Your jar is on the second shelf, near the end. Somebody has already written your name on the ticket.", "else": "You climb back up into the arcade. Every machine has gone dark, and the door to the stairs is just a broom closet again." }
+        }
+      ]
+    },
+    "orsolyaInvites": {
+      "title": "Madame Orsolya sees the contract on your palm",
+      "music": "eerie",
+      "customer": "orsolya",
+      "steps": [
+        {
+          "say": "orsolya",
+          "text": [
+            "Madame Orsolya, from the end of the boardwalk. Give me your hand. No, the other one. Oh dear.",
+            "You've signed something with a man in a grey suit. It's all over your lifeline, in red.",
+            "Come to my parlor {placed:orsolya-reading} night. Bring the contract, if he left you a copy. He never leaves a copy."
+          ]
+        },
+        { "set": { "orsolyaKnown": true } },
+        { "toast": "Calendar: Madame Orsolya's parlor, {placed:orsolya-reading} night", "look": "orsolya" },
+        { "leave": "orsolya" }
+      ]
+    },
+    "orsolyaReading": {
+      "title": "A reading in Madame Orsolya's parlor",
+      "music": "eerie",
+      "steps": [
+        {
+          "stage": "orsolya",
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [104, 164] },
+            { "id": "orsolya", "cast": "orsolya", "at": [200, 156], "facingLeft": true }
+          ]
+        },
+        { "narrate": "Madame Orsolya's parlor. She turns your palm to the crystal ball and goes very quiet for a fortune-teller." },
+        {
+          "say": "orsolya",
+          "text": [
+            "Your shop has had a Quillon problem before. 1952. The keeper then was Abner Crooke. He signed, the same as you.",
+            "And he was the only one I ever heard of who got out. Nobody knows how. He took it to his grave, which is in the Old Burying Ground, under a willow, with a stone urn on it."
+          ]
+        },
+        { "say": "orsolya", "text": "Or ask him. When the Fog comes in, the dead are terribly chatty.", "if": "quest.fog" },
+        { "say": "orsolya", "text": "One more thing. For ten dollars I'll read the cards for you each week. They'll tell you which favour he'll ask for next. Forewarned is half a soul." },
+        {
+          "choose": [
+            {
+              "label": "Pay for the readings",
+              "hint": "(-$10)",
+              "disabled": "coin < 10",
+              "then": [
+                { "coin": -10, "why": "Madame Orsolya's readings" },
+                { "set": { "orsolyaCards": true } },
+                { "say": "orsolya", "text": "Good. The cards are cheaper than regret." }
+              ]
+            },
+            {
+              "label": "\"I'll take my chances.\"",
+              "then": [{ "say": "orsolya", "text": "Most people do. Most people regret it." }]
+            }
+          ]
+        },
+        { "set": { "abnerKnown": true } },
+        { "plan": "abner-grave" },
+        { "toast": "Calendar: Abner Crooke's grave, lunchtime {placed:abner-grave}", "icon": "letter" }
+      ]
+    },
+    "abnerGrave": {
+      "title": "Abner Crooke's grave, at noon",
+      "steps": [
+        {
+          "stage": "graveyardDay",
+          "fadeOut": false,
+          "actors": [{ "id": "you", "cast": "keeper", "name": "You", "at": [120, 164] }]
+        },
+        {
+          "narrate": [
+            "The Old Burying Ground at noon, crows and slate. Under the willow: ABNER CROOKE, KEEPER, 1891-1953. HE GAVE IT ALL AWAY. There is a stone urn on the grave, and something papery inside it.",
+            "A contract stub, 1952, torn across and signed Q. in red. On the back, in pencil: \"Give it ALL away and he can't touch you.\""
+          ]
+        },
+        { "set": { "abnerClause": true } },
+        { "add": { "unique": "contractStub" }, "if": "shelf.free" },
+        { "toast": "Abner's clause: if you never sell a curio, you can hand them all back at the reckoning", "icon": "letter" }
+      ]
+    },
+    "pryceHousekeeper": {
+      "title": "Mrs. Pryce's housekeeper asks for help",
+      "customer": "housekeeper",
+      "steps": [
+        {
+          "say": "housekeeper",
+          "text": [
+            "I keep house for Mrs. Pryce, up on Cliff Road. She bought a mirror here. She hasn't come out of the dining room since.",
+            "She sits in front of it and talks to Mr. Pryce. Mr. Pryce left in 1998.",
+            "Would you come up and see her? {placed:pryce-house} evening. She won't listen to me. She might listen to the shop."
+          ]
+        },
+        { "set": { "pryceKnown": true } },
+        { "toast": "Calendar: Mrs. Pryce, Cliff Road, {placed:pryce-house} night", "look": "housekeeper" },
+        { "leave": "housekeeper" }
+      ]
+    },
+    "pryceHouse": {
+      "title": "Mrs. Pryce and the Mirror of Second Chances",
+      "music": "eerie",
+      "steps": [
+        {
+          "stage": "cliffroad",
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [100, 166] },
+            { "id": "pryce", "cast": "pryce", "at": [200, 158], "facingLeft": true }
+          ]
+        },
+        { "narrate": "The house on Cliff Road. A long table laid for two, and at the end of it the Mirror of Second Chances, turned to face an empty chair." },
+        {
+          "say": "pryce",
+          "text": [
+            "Oh, it's you. Sit down. Lowell's about to leave. He leaves every evening at a quarter to eight. I keep trying to say the right thing.",
+            "This is the four hundredth time. I counted. I nearly had it on Tuesday."
+          ]
+        },
+        {
+          "choose": [
+            {
+              "label": "Offer to buy the mirror back at what she paid",
+              "hint": "(-$140)",
+              "disabled": "coin < 140 || !shelf.free",
+              "then": [
+                { "coin": -140, "why": "Bought back the Mirror of Second Chances" },
+                { "hook": "mirrorBack" },
+                { "say": "pryce", "text": "Take it. Take it before I change my mind. I'm going to go for a walk. I haven't been for a walk in a month." },
+                { "rep": 2 }
+              ]
+            },
+            {
+              "label": "Tell her the truth about where it came from",
+              "then": [
+                { "say": "pryce", "text": "A man in grey. Yes. He looked at me the way the mirror does." },
+                { "narrate": "She turns the mirror to the wall. She doesn't give it back, but she stops counting." },
+                { "rep": 1 }
+              ]
+            },
+            {
+              "label": "Leave quietly",
+              "then": [
+                { "narrate": "You let yourself out. Behind you, softly: \"Lowell, wait. Four hundred and one.\"" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "beats": [
+    { "at": "2-5", "cast": "quillon", "scene": "quillonOffer", "last": true },
+    { "at": "3-1", "cast": "housekeeper", "scene": "pryceHousekeeper", "if": "flag.mirrorSold && !flag.pryceKnown" },
+    { "at": "3-2", "cast": "housekeeper", "scene": "pryceHousekeeper", "if": "flag.mirrorSold && !flag.pryceKnown" },
+    { "at": "3-3", "cast": "housekeeper", "scene": "pryceHousekeeper", "if": "flag.mirrorSold && !flag.pryceKnown" },
+    { "at": "3-4", "cast": "housekeeper", "scene": "pryceHousekeeper", "if": "flag.mirrorSold && !flag.pryceKnown" },
+    { "at": "4-1", "cast": "housekeeper", "scene": "pryceHousekeeper", "if": "flag.mirrorSold && !flag.pryceKnown" },
+    { "at": "4-2", "cast": "housekeeper", "scene": "pryceHousekeeper", "if": "flag.mirrorSold && !flag.pryceKnown" },
+    { "at": "3-1", "cast": "orsolya", "scene": "orsolyaInvites", "if": "flag.devil && !flag.devilDone" },
+    { "at": "4-3", "cast": "orsolya", "scene": "inkCollector", "if": "flag.devil && hook.inkHere" },
+    {
+      "at": "4-5",
+      "night": true,
+      "first": true,
+      "if": "flag.devil && !flag.devilDone",
+      "steps": [{ "run": "reckoning" }],
+      "note": "midnight at the arcade comes before dawn at Gull Point"
+    }
+  ],
+  "nights": [
+    {
+      "id": "orsolya-reading",
+      "window": ["3-1", "3-4"],
+      "if": "flag.orsolyaKnown && flag.devil",
+      "scene": "orsolyaReading",
+      "test": [{ "set": { "devil": true, "orsolyaKnown": true } }, { "hook": "testCoin", "with": 50 }]
+    },
+    {
+      "id": "pryce-house",
+      "window": ["3-2", "4-4"],
+      "if": "flag.pryceKnown",
+      "scene": "pryceHouse",
+      "test": [{ "set": { "devil": true, "pryceKnown": true } }, { "hook": "testCoin", "with": 200 }]
+    }
+  ],
+  "errands": [
+    {
+      "id": "abner-grave",
+      "title": "Abner Crooke's grave",
+      "where": "The Old Burying Ground",
+      "scene": "abnerGrave",
+      "test": [{ "set": { "devil": true } }]
+    }
+  ],
+  "calendar": [
+    { "id": "abner-grave", "errand": "abner-grave", "story": "grey", "where": "The Old Burying Ground", "title": "Abner Crooke's grave", "known": "flag.abnerKnown" },
+    { "id": "orsolya-reading", "night": "orsolya-reading", "story": "grey", "where": "Madame Orsolya's parlor", "title": "A reading", "known": "flag.orsolyaKnown", "scene": "orsolyaReading" },
+    { "id": "pryce-house", "night": "pryce-house", "story": "grey", "where": "Cliff Road", "title": "Mrs. Pryce and the mirror", "known": "flag.pryceKnown", "scene": "pryceHouse" },
+    {
+      "id": "reckoning",
+      "week": 4,
+      "days": [5],
+      "night": true,
+      "story": "grey",
+      "where": "Neptune's Arcade",
+      "title": "Settling up with Mr. Quillon",
+      "known": "flag.devil",
+      "scene": "reckoning",
+      "order": -1
+    }
+  ],
+  "epilogue": [
+    { "line": "Old Pell found a cruel letter under his door one morning. He never learned who sent it.", "if": "flag.pellLetter" },
+    { "line": "Sister Amabel was cleared, eventually. The children's home lost its donors anyway.", "if": "flag.amabelSlandered" },
+    { "line": "The twins don't go to the beach any more.", "if": "flag.kidsScared" },
+    { "line": "A boy from the Point spent a night in a cell for a car he never touched. You know which night.", "if": "flag.barrowLied" },
+    { "line": "Skip Fairweather retired without a party. He told everyone he didn't want one.", "if": "flag.skipParty" },
+    { "line": "Gordie Haines and Tess Bascombe stopped speaking that month. Town Meeting has been very long ever since.", "if": "flag.selectmenSplit" },
+    { "line": "Dory Kittredge threw out a week of scallops and never found out why.", "if": "flag.doryFreezer" },
+    { "line": "A customer came back once, months later, and said you'd kept her change. You said she was mistaken.", "if": "flag.shortchanged" },
+    { "line": "The harbormaster's skiff washed up at Gull Point. She has a new padlock now, and looks at everybody.", "if": "flag.skiffLoose" },
+    { "line": "Abner Crooke's grave has fresh flowers on it every week now. You know who leaves them.", "if": "flag.abnerFree" },
+    { "line": "A grey top hat hangs on your coat stand. Nobody remembers who left it.", "if": "flag.devilBeaten" },
+    { "line": "Ms. Vantreece left town in a hurry one night, and nobody saw her shadow go with her.", "if": "flag.devilTraded" }
+  ]
+});

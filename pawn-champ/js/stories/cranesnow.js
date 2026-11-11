@@ -1,0 +1,256 @@
+// Pawn Champ - Crane in the Snow: the sequel to M1 Four Minutes Late (docs/quests/SEQUELS.md#crane-in-the-snow).
+// Batch U, round 3. Drawn in a later month of a stay, only if Four Minutes Late ended Promoted or
+// Hush Money (js/stay.js, owedChapters).
+//
+// Promoted    Crane resigned, and is out on bail. Hollis, GS-9 now, finds a forged destruction
+//             certificate in the files that names your shop. One night in the records room, with
+//             snow on the arched windows, you catch Crane filing more of them.
+// Hush Money  You took Crane's envelope in October. A man who takes one envelope takes two. He wants
+//             a box collected from the Customs dock on Pier Nine and kept in your back room for a
+//             week, and Hollis is working late.
+// Endings (both ways): Crane in the Snow (he's caught), Square with Crane (you deal), Hands Clean
+// (you walk away, and Crane remembers).
+//
+// Written as data: docs/STORY_DATA.md. Strict JSON inside the call. Code half: js/quests/cranesnow.js.
+defineStory({
+  "id": "cranesnow",
+  "kind": "minor",
+  "title": "Crane in the Snow",
+  "location": "customsRecords",
+  "sequel": "hollis",
+  "after": ["promoted", "hush"],
+  "months": [2, 3, 4, 5, 6],
+  "rumour": "Deputy Director Crane has been seen at the Customs House after dark, and he doesn't work there anymore.",
+  "teaser": "Snow on the Customs House steps, and one set of footprints going up them after closing. Water Street says Crane is back in town.",
+  "endings": { "caught": "Crane in the Snow", "square": "Square with Crane", "clean": "Hands Clean" },
+  "about": [
+    "A winter sequel to Four Minutes Late; which way it runs depends on how that ended (§{csHook}). If Hollis was promoted, he brings a forged destruction certificate releasing a seized chronometer \"for sale to The Crooked Scale\", stamped with Crane's stamp after Crane resigned, and asks you to be his witness in the records room after hours. If you took Crane's hush money, Crane himself comes in, \"consulting\" now, and asks you to collect a box from the Customs dock and keep it in your back room for a week.",
+    "On the night (§{csNight}) in the records room, keep Crane talking while Hollis calls Captain Barrow (Crane in the Snow), take his forgeries and let him out the fire door (Hands Clean), or take his $150 (Square with Crane). On the dock, Hollis catches you with the box: take it for Crane (Square with Crane), hand it to Hollis and admit why the case went cold in October (Crane in the Snow), or leave it on the dock (Hands Clean)."
+  ],
+  "notes": "Which way it goes is how Four Minutes Late ended: Hush Money (ended.hollis == 'hush') brings Crane himself to the counter and sends you to the Customs dock; anything else (Promoted) brings Hollis and the records room. The weather hook picks the line for the month.",
+  "uniques": {
+    "forgedCert": {
+      "name": "Destruction certificate No. 5102",
+      "icon": "letter",
+      "cat": "curio",
+      "guide": 0,
+      "questKey": true,
+      "tells": [
+        "\"One (1) ship's chronometer, seized goods, released for sale to THE CROOKED SCALE, Main Street.\" Your shop, on Customs paper.",
+        "Signed with Deputy Director Crane's old stamp. The ink is a month old. Crane has been gone for two."
+      ]
+    }
+  },
+  "scenes": {
+    "csHook": {
+      "title": "Hollis with a forged certificate, or Crane with an errand",
+      "customer": "visitor",
+      "steps": [
+        {
+          "if": "ended.hollis != 'hush'",
+          "then": [
+            { "say": "visitor", "text": "Hollis Fenn. GS-9. I have an office with a door now. I keep it shut. That's not why I'm here." },
+            { "view": { "counterIcon": "letter" } },
+            { "narrate": "He lays a carbon copy on the counter: a destruction certificate on Customs paper, releasing one seized ship's chronometer for sale to The Crooked Scale. Your shop. Signed with Crane's stamp." },
+            {
+              "say": "visitor",
+              "text": [
+                "Filed last month. Crane resigned in October. Somebody still has his stamp and a key to the records room, and they're writing your name into the files. Mine will be next.",
+                "I can let us in after hours, {placed:cs-night} night. If he comes back, I want a witness who isn't me."
+              ]
+            },
+            { "view": { "counterIcon": null } },
+            { "add": { "unique": "forgedCert" }, "if": "shelf.free" },
+            { "refresh": "panel" },
+            { "set": { "csKnown": true } },
+            { "toast": "Calendar: the Customs House records room, {placed:cs-night} night", "look": "visitor" }
+          ],
+          "else": [
+            { "say": "visitor", "text": "Charming little shop. Still. I hear you have a back room." },
+            {
+              "narrate": { "if": "month >= 3 && month <= 5", "then": "Deputy Director Crane, in a camel coat with snow on the shoulders. He doesn't work for Customs anymore, he says, and then he says what he does do, which is \"consulting\".", "else": "Deputy Director Crane, in a camel coat with rain on the shoulders. He doesn't work for Customs anymore, he says, and then he says what he does do, which is \"consulting\"." }
+            },
+            {
+              "say": "visitor",
+              "text": [
+                "You took my envelope in October. A man who takes one envelope can take two. There's a box on the Customs dock at the end of Pier Nine. Collect it, keep it in your back room a week, and forget what's in it.",
+                "{placed:cs-night} night. The guard will expect you. One hundred and fifty dollars, the usual way."
+              ]
+            },
+            { "set": { "csKnown": true } },
+            { "toast": "Calendar: a box on the Customs dock, {placed:cs-night} night", "look": "visitor" }
+          ]
+        },
+        { "leave": "visitor" }
+      ]
+    },
+    "csNight": {
+      "title": "Crane after hours",
+      "music": "tension",
+      "steps": [
+        {
+          "if": "ended.hollis != 'hush'",
+          "then": [
+            {
+              "stage": "customsRecords",
+              "actors": [
+                { "id": "you", "cast": "keeper", "name": "You", "at": [100, 166] },
+                { "id": "hollis", "cast": "hollis", "at": [136, 164] }
+              ]
+            },
+            {
+              "hook": "weather",
+              "sets": ["weather"],
+              "with": { "2": "frost on the railings", "3": "snow on the steps", "4": "snow piled to the windowsills", "5": "grey slush in the gutters", "6": "meltwater running off the roof", "other": "snow on the steps" }
+            },
+            {
+              "narrate": [
+                "The records room after ten, with {weather} outside the arched windows and the radiator ticking like it might work this year. Hollis has brought a thermos and a flashlight he doesn't turn on.",
+                "At eleven a key turns in the gallery door. Somebody comes along the iron rail above you in good shoes, opens a drawer marked DESTROYED 2025-26 and starts filing by the light of his phone."
+              ]
+            },
+            { "enter": { "id": "crane", "cast": "crane", "at": [250, 150], "facingLeft": true } },
+            { "say": "hollis", "text": "Good evening, Deputy Director." },
+            {
+              "say": "crane",
+              "text": [
+                "Fenn. And the pawnbroker. I was hoping it would be one of you. It saves me a letter.",
+                "My employers in Boston need a few seized things to have been sold legally, and they need somebody local to have sold them. You have a shop. Fenn has a desk. Nobody has to go to prison. I'll make it worth a hundred and fifty."
+              ]
+            },
+            {
+              "choose": [
+                {
+                  "label": "Keep him talking while Hollis telephones Captain Barrow",
+                  "hint": "(he's caught)",
+                  "then": [
+                    { "say": "you", "text": "Who in Boston? Which employers? You've signed your own name on half of these, you know. The stamp's got your initials on the handle." },
+                    { "narrate": "Crane explains, at length, how much cleverer he is than a stamp. Hollis mutters into his phone behind a filing cabinet. The first cruiser pulls up outside with no siren, and its headlights come through the arched windows and across the gallery." },
+                    { "say": "crane", "text": "You kept me talking. I do that to people. I didn't think anyone did it back." },
+                    { "hook": "siren" },
+                    { "set": { "csEnd": "caught" } },
+                    { "rep": 5, "why": "Caught Crane in the Customs records room" },
+                    { "heat": -5 }
+                  ]
+                },
+                {
+                  "label": "Take the forged certificates off him and let him out the fire door",
+                  "hint": "(your name comes out of the files)",
+                  "then": [
+                    { "narrate": "He hands them over with a little bow, as if he's doing you a favor. Hollis feeds every one of them into the shredder by the door while Crane goes down the fire stairs into the dark." },
+                    { "say": "hollis", "text": "Your name's out of the files. Mine never got in. He'll just do it somewhere else, you know." },
+                    { "set": { "csEnd": "clean" } },
+                    { "heat": -3 }
+                  ]
+                },
+                {
+                  "label": "Hear the rest of his offer",
+                  "hint": "(+$150, and his papers name somebody else)",
+                  "then": [
+                    { "say": "crane", "text": "Sensible. The papers will name a scrap dealer in Fall River who died in August. He won't mind." },
+                    { "narrate": "He counts a hundred and fifty onto the long table under the green lamp. Hollis watches you pick it up, and then he turns his flashlight on for the first time and walks out without it." },
+                    { "set": { "csEnd": "square" } },
+                    { "coin": 150, "why": "Crane paid you to forget the records room" },
+                    { "heat": 6 },
+                    { "rep": -3 }
+                  ]
+                }
+              ]
+            },
+            { "find": "cert", "in": "stock", "match": { "uniqueId": "forgedCert" } },
+            { "take": "cert" }
+          ],
+          "else": [
+            {
+              "stage": "docks",
+              "actors": [{ "id": "you", "cast": "keeper", "name": "You", "at": [100, 164] }]
+            },
+            {
+              "hook": "weather",
+              "sets": ["weather"],
+              "with": { "2": "frost on the railings", "3": "snow on the steps", "4": "snow piled to the windowsills", "5": "grey slush in the gutters", "6": "meltwater running off the roof", "other": "snow on the steps" }
+            },
+            { "narrate": "Pier Nine after midnight, with {weather} on the Customs shed. A banker's box sits by the dock door with nothing written on it, which is how you know it's the one." },
+            { "enter": { "id": "hollis", "cast": "hollis", "at": [250, 160], "facingLeft": true } },
+            { "narrate": "The shed door opens. Hollis Fenn, GS-7, working late so nobody can say he doesn't, with a mug of soup and his coat buttoned wrong. He sees you, and then he sees the box." },
+            { "say": "hollis", "text": "That's the box Crane signed out of evidence on Friday. As \"destroyed\". Did he send you for it?" },
+            {
+              "choose": [
+                {
+                  "label": "Pick up the box and go. Crane is paying.",
+                  "hint": "(+$150)",
+                  "then": [
+                    { "say": "hollis", "text": "Right. Right. Good night, then." },
+                    { "narrate": "He watches you all the way down the pier. In the morning there's an envelope on your counter. Every week after that, Crane nods to you in the street, as if you're in a club together." },
+                    { "set": { "csEnd": "square" } },
+                    { "coin": 150, "why": "Crane paid you to keep his box" },
+                    { "heat": 8 }
+                  ]
+                },
+                {
+                  "label": "Hand Hollis the box: \"This is what you were looking for in October.\"",
+                  "hint": "(Crane is caught, and Hollis learns why the case went cold)",
+                  "then": [
+                    { "narrate": "Hollis opens it on the dock with frozen fingers. Seized watches, forty of them, each one tagged DESTROYED in Crane's hand. He turns one over, reads the tag, and looks up at you." },
+                    { "say": "hollis", "text": "He paid you to forget the stakeout. In October. Didn't he." },
+                    { "say": "you", "text": "He did." },
+                    { "say": "hollis", "text": "Well. You remembered. I'll take it from here." },
+                    { "hook": "siren" },
+                    { "set": { "csEnd": "caught" } },
+                    { "rep": 4, "why": "Gave Hollis Fenn the box from the Customs dock" },
+                    { "heat": -4 }
+                  ]
+                },
+                {
+                  "label": "Leave the box on the dock and walk home",
+                  "hint": "(Crane won't like it)",
+                  "then": [
+                    { "say": "hollis", "text": "You're just going to leave it there?" },
+                    { "narrate": "You do. In the morning the box is gone, and so is the envelope you were never going to get. Crane stops nodding to you in the street. A week later somebody reports your shop to the state for buying stolen watches. Nothing comes of it except a visit." },
+                    { "set": { "csEnd": "clean" } },
+                    { "heat": 3 }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "beats": [
+    { "drift": "cs-hook", "from": "1-2", "to": "1-4", "cast": "hollis", "scene": "csHook", "if": "ended.hollis != 'hush' && !flag.csKnown" },
+    { "drift": "cs-hook", "from": "1-2", "to": "1-4", "cast": "crane", "scene": "csHook", "if": "ended.hollis == 'hush' && !flag.csKnown" }
+  ],
+  "nights": [
+    {
+      "id": "cs-night",
+      "window": ["2-1", "3-4"],
+      "if": "flag.csKnown && !flag.csEnd",
+      "scene": "csNight",
+      "test": [
+        { "set": { "csKnown": true } },
+        { "roll": { "hollisWin": [true, false] } },
+        { "set": { "craneBlackmail": true }, "if": "!flag.hollisWin" },
+        { "set": { "craneBlackmail": false }, "if": "flag.hollisWin" }
+      ]
+    }
+  ],
+  "calendar": [
+    { "id": "cs-night", "night": "cs-night", "story": "cranesnow", "where": "The Customs House", "title": "Crane after hours", "known": "flag.csKnown", "scene": "csNight" }
+  ],
+  "epilogue": [
+    { "line": "Crane was arraigned in Barnstable in a camel coat. His employers in Boston sent a lawyer, and then, more tellingly, didn't send another.", "if": "flag.csEnd == 'caught'" },
+    { "line": "Somewhere in the Customs House files, a dead scrap dealer from Fall River has sold a great many seized things. Crane nods to you in the street.", "if": "flag.csEnd == 'square'" },
+    { "line": "Crane is still in town, consulting. You don't know for whom, and you've decided not to.", "if": "flag.csEnd == 'clean'" }
+  ],
+  "talk": {
+    "by": "agathe",
+    "rumour": [
+      "Crane is back. The Deputy Director. Former. I saw him go up the Customs House steps last night after they'd locked them, and he had a key.",
+      "A man who stops other men's watches doesn't retire. He finds a new employer."
+    ],
+    "react": { "caught": "They took Crane out of the Customs House in handcuffs, past my window. Hollis came in afterwards to have his watch set. It didn't need setting. He just wanted to tell somebody.", "square": "Crane tips his hat to you in the street now. I've seen him do it. A man like that only tips his hat to people he owns a piece of.", "clean": "Hollis says your name came out of the files. Crane's didn't go into any. Clocks are simpler. They only lie about one thing." }
+  },
+  "outcome": "flag.csEnd"
+});

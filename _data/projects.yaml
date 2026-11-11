@@ -1,6 +1,12 @@
 # Projects shown on the home page (first four) and the Projects page.
 # image: 16:10 screenshot under /assets/img/projects/
 
+- name: Pawn Champ
+  link: /pawn-champ/
+  image: /assets/img/projects/pawn-champ.png
+  description: A narrative pawnshop game set in a foggy New England harbor town. Haggle, lend, spot fakes and stolen goods, pay the bills every Friday, and find out where your aunt went.
+  tags: [game, narrative]
+
 - name: Sprite Dash
   link: /spritetest
   image: /assets/img/projects/sprite-dash.png

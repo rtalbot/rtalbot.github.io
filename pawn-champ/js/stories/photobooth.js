@@ -1,0 +1,206 @@
+// Pawn Champ - The Photo Booth. Minor quest m61, batch L (docs/quests/MINOR.md#m61-the-photo-booth).
+// Bev Santos sells the 1966 photo booth out of the Pinwheel Lanes lobby. Every strip has four
+// frames, and in the fourth there's a man standing behind the sitter who wasn't there: Len Santos,
+// Bev's late husband, who built the pinsetters and kept the booth running for thirty years.
+// Leave it at the lanes, sell it to the arcade, or keep it running in your shop at $2 a sitting.
+// The lobby at closing (pinwheelLobby) is drawn in the code half.
+//
+// Written as data: docs/STORY_DATA.md. Strict JSON inside the call. Code half: js/quests/photobooth.js.
+defineStory({
+  "id": "photobooth",
+  "kind": "minor",
+  "title": "The Photo Booth",
+  "location": "pinwheel",
+  "rumour": "Bev Santos is selling the photo booth out of the Pinwheel Lanes lobby.",
+  "endings": { "len": "Len Stays", "arcade": "Sold to the Boardwalk", "running": "Two Dollars a Sitting" },
+  "icons": {
+    "photostrip": [
+      "...kkkkkk...",
+      "...kcccck...",
+      "...kcPPck...",
+      "...kcccck...",
+      "...kkkkkk...",
+      "...kcPPck...",
+      "...kcccck...",
+      "...kkkkkk...",
+      "...kcPPck...",
+      "...kdPdck...",
+      "...kcccck...",
+      "...kkkkkk..."
+    ]
+  },
+  "uniques": {
+    "photobooth": {
+      "name": "1966 photo booth",
+      "icon": "photostrip",
+      "cat": "curio",
+      "guide": 160,
+      "questKey": true,
+      "tells": [
+        "An Auto-Photo cabinet, 1966. Every part inside has been replaced at least once, by the same careful hand.",
+        "Pencilled inside the coin door: L.S. 1974. L.S. 1988. L.S. 2003. FIXED IT AGAIN.",
+        "The last strip in the slot: a teenager pulling faces. In the fourth frame a man in a work shirt stands behind her, smiling."
+      ]
+    }
+  },
+  "about": [
+    "A gentle ghost story. Bev Santos is selling the 1966 photo booth from the Pinwheel Lanes lobby to pay for a pinsetter belt; people say it's haunted (§{bevBooth}). She asks you to collect it after closing and to sit in it once first.",
+    "After the last string (§{boothClosing}) the fourth frame of your strip shows a broad man with a pencil behind his ear standing behind you: Len, Bev's late husband, who built the pinsetters and fixed the booth every winter. Leave it in the lobby and she buys it back (Len Stays), sell it to Neptune's Arcade on the boardwalk (Sold to the Boardwalk), or set it up by your door at two dollars a sitting, where Len still turns up in strangers' strips (Two Dollars a Sitting)."
+  ],
+  "scenes": {
+    "bevBooth": {
+      "title": "Bev Santos sells the photo booth",
+      "customer": "bev",
+      "steps": [
+        {
+          "say": "bev",
+          "text": [
+            "You heard I'm selling the photo booth. Don't look at me like that. The pinsetter on lane three needs a new belt, and the booth makes about nine dollars a month.",
+            "It's a 1966 Auto-Photo. Four pictures, two dollars. People love it. People also say it's haunted, which is bad for business on a Tuesday.",
+            "One-twenty and it's yours. You pick it up after closing. It weighs more than my husband did."
+          ]
+        },
+        { "offer": { "unique": "photobooth" }, "persona": "honest", "asking": 120, "min": 90 },
+        {
+          "if": "offer != 'deal'",
+          "then": [
+            { "say": "bev", "text": "Fine. It can keep haunting the lobby." },
+            { "leave": "bev" },
+            { "end": true }
+          ]
+        },
+        { "set": { "boothIn": true } },
+        { "say": "bev", "text": "Come by {placed:booth-closing} night, after the last string. Bring a dolly. And sit in it once before we move it. Everybody should, once." },
+        { "toast": "Calendar: pick up the photo booth at Pinwheel Lanes", "look": "bev" },
+        { "leave": "bev" }
+      ]
+    },
+    "boothClosing": {
+      "title": "Pick up the photo booth",
+      "steps": [
+        { "hook": "flash", "with": 0, "note": "The booth lamp, not flashing." },
+        {
+          "stage": "pinwheelLobby",
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [120, 166] },
+            { "id": "bev", "cast": "bev", "at": [170, 162], "facingLeft": true }
+          ]
+        },
+        { "narrate": "Pinwheel Lanes after the last string. The lane lights are off, the carpet glows faintly, and the only thing still lit is the photo booth by the snack bar." },
+        { "say": "bev", "text": "Sit. Two dollars. I'll even pay." },
+        { "narrate": "You sit. The curtain smells of popcorn and fifty years. The lamp flashes four times." },
+        { "hook": "flashes", "note": "The booth lamp flashes four times." },
+        {
+          "narrate": [
+            "The strip drops into the slot, still damp. One: you, surprised. Two: you, trying. Three: you, giving up.",
+            "Four: you, and behind you, one hand on the curtain rail, a broad man in a work shirt with a pencil behind his ear. Nobody was in there with you."
+          ]
+        },
+        {
+          "say": "bev",
+          "text": [
+            "Oh. Oh, there he is.",
+            "That's Len. My husband. He built every pinsetter in this place, and he fixed that booth every winter for thirty years. He died in 2009 and he's been in the fourth frame ever since.",
+            "He's never in anyone's strip twice. He just likes to see who's come in. I thought if I sold it, he'd finally get some rest. Then I got the dolly out and I couldn't."
+          ]
+        },
+        { "find": "booth", "in": "stock", "match": { "uniqueId": "photobooth" } },
+        {
+          "choose": [
+            {
+              "label": "Leave it in the lobby. It's Len's.",
+              "hint": "(Bev pays you back $80)",
+              "disabled": "!booth",
+              "then": [
+                { "set": { "boothEnd": "len" } },
+                { "take": "booth" },
+                { "refresh": "panel" },
+                { "coin": 80, "why": "Bev bought back the photo booth" },
+                { "rep": 3 },
+                { "say": "bev", "text": "I'll get the belt some other way. I'll raffle a turkey. Len would have hated that, and he'd have bought ten tickets." },
+                { "narrate": "Before you go she sits in the booth on her own. You wait by the door until it flashes four times." }
+              ]
+            },
+            {
+              "label": "Sell it on to the arcade on the boardwalk",
+              "hint": "($200 from Mr. Fontaine)",
+              "disabled": "!booth",
+              "then": [
+                { "set": { "boothEnd": "arcade" } },
+                { "sell": "booth", "to": "arcade" },
+                { "refresh": "panel" },
+                { "coin": 200, "why": "Sold the photo booth to Neptune's Arcade" },
+                { "say": "bev", "text": "The boardwalk. Well. He always said the lanes were too quiet. He'll have a lot of people to look at." },
+                { "narrate": "Mr. Fontaine collects it in the morning with two nephews and a van. He doesn't ask about the fourth frame. He's run an arcade for forty years; he knows not to." }
+              ]
+            },
+            {
+              "label": "Wheel it back to your shop and keep it running",
+              "hint": "($2 a sitting)",
+              "disabled": "!booth",
+              "then": [
+                { "set": { "boothEnd": "running" } },
+                {
+                  "edit": "booth",
+                  "set": { "questKey": false, "nosale": true },
+                  "note": "Yours now, and not for sale: it earns its keep in the corner."
+                },
+                { "refresh": "panel" },
+                { "say": "bev", "text": "Your shop? Huh. He'd like that. Lots of people coming in with things they love. That was his favorite kind of person." },
+                { "narrate": "The booth goes in the corner by your door. By morning it has made six dollars, and someone has left the strip from the fourth sitting on your counter." }
+              ]
+            },
+            {
+              "label": "Leave it for tonight, and think about it",
+              "then": [
+                { "say": "bev", "text": "Take your time. He's not going anywhere." },
+                { "edit": "booth", "set": { "questKey": false, "nosale": false } },
+                { "refresh": "panel" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "beats": [{ "drift": "photobooth", "from": "1-2", "to": "2-2", "cast": "bev", "scene": "bevBooth" }],
+  "nights": [
+    {
+      "id": "booth-closing",
+      "window": ["2-1", "3-4"],
+      "if": "flag.boothIn && !flag.boothEnd",
+      "scene": "boothClosing",
+      "test": [{ "set": { "boothIn": true } }, { "add": { "unique": "photobooth" } }]
+    }
+  ],
+  "calendar": [
+    { "id": "booth-closing", "night": "booth-closing", "story": "photobooth", "where": "Pinwheel Lanes", "title": "Pick up the photo booth", "known": "flag.boothIn", "scene": "boothClosing" }
+  ],
+  "mornings": [
+    { "find": "booth", "in": "stock", "match": { "uniqueId": "photobooth" } },
+    {
+      "if": "flag.boothEnd == 'running' && booth",
+      "note": "Kept running: two dollars a sitting, every morning, and now and then a fourth frame.",
+      "then": [
+        { "hook": "sittings" },
+        { "toast": "A strip in the photo booth slot this morning: a customer, and in the fourth frame, a broad man with a pencil behind his ear.", "look": "bev", "if": "hook.fourthFrame" }
+      ]
+    }
+  ],
+  "epilogue": [
+    { "find": "booth", "in": "stock", "match": { "uniqueId": "photobooth" } },
+    { "line": "The photo booth is still in the Pinwheel Lanes lobby. Len turns up in the fourth frame, once a sitter, and never twice.", "if": "flag.boothEnd == 'len'" },
+    { "line": "Neptune's Arcade has a 1966 photo booth by the change machine. The kids dare each other to sit in it.", "if": "flag.boothEnd == 'arcade'" },
+    { "line": "Your photo booth makes two dollars a sitting. You keep the fourth frames in a shoebox.", "if": "flag.boothEnd == 'running' && booth" }
+  ],
+  "talk": {
+    "by": "bev",
+    "rumour": [
+      "I'm selling the photo booth. Don't make that face. Everybody makes that face.",
+      "People say it's haunted. It isn't haunted. It's just got Len in it."
+    ],
+    "react": { "len": "The booth stays in the lobby. I sat in it this morning. Fourth frame. He's put on weight.", "arcade": "The booth's on the boardwalk now. Fontaine says it's his best earner. Of course it is. Len always liked a crowd.", "running": "You've got the booth by your door. If a big man with a pencil turns up in your pictures, tell him the lane three belt is fixed." },
+    "sway": { "len": { "bev": 2 }, "arcade": { "bev": -1 }, "running": { "bev": 1 } }
+  },
+  "outcome": "flag.boothEnd"
+});

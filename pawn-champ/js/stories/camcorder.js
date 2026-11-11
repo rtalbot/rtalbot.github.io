@@ -1,0 +1,235 @@
+// Pawn Champ - The Camcorder. Minor quest m51, batch K (docs/quests/MINOR.md).
+// A cable crew making a ghost-hunting show rents props from you and films outside Neptune's Arcade
+// at night. Nothing happens. Then the show is cancelled, the camera operator pawns her old camcorder,
+// and the tape in it shows something in the arcade window the crew didn't see. Its scene is a night on
+// the boardwalk (arcadeFront, drawn in js/quests/busker.js). If M2 is in the run, the thing on the
+// tape is the gentleman in grey; it only reads whether M2 is drawn.
+//
+// Written as data: docs/STORY_DATA.md. Strict JSON inside the call. No code half.
+defineStory({
+  "id": "camcorder",
+  "kind": "minor",
+  "title": "The Camcorder",
+  "location": "arcadeFront",
+  "rumour": "There's a TV crew in town making a ghost show. They want to film at the arcade.",
+  "endings": { "aired": "On Air", "kept": "The Tape", "taped": "Taped Over" },
+  "outcome": "flag.camEnd",
+  "about": [
+    "A ghost-hunting comedy with something real at the end. Dash Hartigan, host of the cable show Haunted Harbors, rents props from your shelves for a shoot at Neptune's Arcade (§{dashRents}). At the shoot (§{camcorder}) nothing happens for forty-seven minutes, while camera operator Wendy's old camcorder records the arcade windows.",
+    "The show is cancelled. Wendy pawns her camcorder with the tape still in it (§{wendyPawns}), and on the tape the arcade screens light up and someone is tidying the prize counter inside; if The Gentleman in Grey is in the run, it's Mr. Quillon, who raises his hat to the lens. Dash wants the tape back because the network called (§{dashWants}). Sell it to him (On Air), keep it (The Tape), or tape over it in front of him (Taped Over)."
+  ],
+  "cast": {
+    "dash": {
+      "name": "Dash Hartigan",
+      "look": { "skin": "#f0c8a8", "hair": "#d8a040", "hs": 2, "coat": "#1a1a20", "style": "jacket", "trim": "#c84a3a", "pants": "#2a3a5a" }
+    },
+    "wendy": {
+      "name": "Wendy Oduya",
+      "look": { "skin": "#8a5a3a", "hair": "#1a1410", "hs": 4, "coat": "#4a5a3a", "style": "puffer", "pants": "#2a2a2a", "hat": "beanie", "hatc": "#e8a030" }
+    }
+  },
+  "icons": {
+    "camcorder": [
+      "............",
+      "............",
+      "..kkkkkkk...",
+      ".kddddddkkk.",
+      ".kdkkkkdkBk.",
+      ".kdkBBkdkbk.",
+      ".kdkkkkdkkk.",
+      ".kddRdddk...",
+      ".kkkkkkkk...",
+      "...kk.......",
+      "...kk.......",
+      "............"
+    ]
+  },
+  "uniques": {
+    "camcorder": {
+      "name": "1990s camcorder, tape inside",
+      "icon": "camcorder",
+      "cat": "curio",
+      "guide": 35,
+      "questKey": true,
+      "tells": [
+        "A Hi8 camcorder with a cracked viewfinder hood. There's a tape in it, labelled NEPTUNE NIGHT 1, CAM B.",
+        "The counter on the tape stops at 00:47:12. Something happens at 00:31."
+      ]
+    }
+  },
+  "scenes": {
+    "dashRents": {
+      "title": "Dash Hartigan wants props for Haunted Harbors",
+      "customer": "dash",
+      "steps": [
+        {
+          "say": "dash",
+          "text": [
+            "Dash Hartigan. You might know me from Haunted Harbors, Thursday nights, channel two-hundred-and-something. We're shooting the season finale at your arcade.",
+            "We need props. Old stuff. Spooky stuff. Things that look like they have a story. Forty bucks to borrow anything off your shelves for a night. You can come and watch."
+          ]
+        },
+        {
+          "choose": [
+            {
+              "label": "\"Take what you like. I'll come and watch.\" (+$40)",
+              "then": [
+                { "set": { "camRented": true } },
+                { "coin": 40, "why": "Rented props to Haunted Harbors" },
+                { "toast": "Calendar: Haunted Harbors at Neptune's Arcade, {placed:camcorder} night", "look": "dash" },
+                { "say": "dash", "text": "Wear something dark. Not for the ghosts. For the lighting." }
+              ]
+            },
+            {
+              "label": "\"No props. Good luck with the ghosts.\"",
+              "then": [{ "say": "dash", "text": "Your loss. The ghosts won't mind. They never do." }]
+            }
+          ]
+        },
+        { "leave": "dash" }
+      ]
+    },
+    "camcorder": {
+      "title": "Haunted Harbors films at Neptune's Arcade",
+      "music": "eerie",
+      "steps": [
+        {
+          "stage": "arcadeFront",
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [92, 166] },
+            { "id": "dash", "cast": "dash", "at": [176, 162] },
+            { "id": "wendy", "cast": "wendy", "at": [132, 164] }
+          ]
+        },
+        { "narrate": "Neptune's Arcade at midnight, out of season. The sign is lit for the shoot. Two cameras, one boom, one host, your second-best candlestick and a doll from a box lot that you should probably have thrown away." },
+        { "say": "dash", "text": "Rolling? Rolling. Tonight... we enter... Neptune's Arcade. Where, legend says..." },
+        { "say": "wendy", "text": "Dash, we can't go in. It's locked. We don't have a permit to go in." },
+        { "say": "dash", "text": "Where, legend says... outside... is also very haunted." },
+        {
+          "choose": [
+            {
+              "label": "\"Nothing's going to happen. It's a shut arcade.\"",
+              "then": [{ "say": "dash", "text": "That's what the ghosts WANT you to think." }]
+            },
+            {
+              "label": "Knock on the arcade doors, for the drama",
+              "then": [
+                { "narrate": "You knock three times. Dash screams, professionally. Wendy's old camcorder on the railing goes on recording the windows, because nobody remembered to switch it off." }
+              ]
+            },
+            {
+              "label": "Help Wendy set her old camcorder on the railing, pointed at the windows",
+              "then": [
+                { "set": { "camWindow": true } },
+                { "say": "wendy", "text": "Cam B. It's twenty-five years old. It sees better in the dark than the new ones. Nobody believes me." }
+              ]
+            }
+          ]
+        },
+        { "narrate": "Forty-seven minutes of Dash whispering to the doors. Nothing happens. Absolutely nothing. At one in the morning they pack the van and give you your candlestick back, and the doll, unfortunately." },
+        { "set": { "camShot": true } }
+      ]
+    },
+    "wendyPawns": {
+      "title": "Wendy pawns Cam B, and the tape in it",
+      "customer": "wendy",
+      "steps": [
+        {
+          "say": "wendy",
+          "text": [
+            "Wendy Oduya, from the shoot. Haunted Harbors got cancelled. By email. During the finale edit. We're all a bit broke.",
+            "This is Cam B. My camcorder. I've had it since college. There's a tape in it from the arcade, I never even looked, nobody looks at Cam B. Thirty?"
+          ]
+        },
+        { "offer": { "unique": "camcorder" }, "persona": "desperate", "asking": 30, "min": 18 },
+        {
+          "if": "offer != 'deal'",
+          "then": [
+            { "say": "wendy", "text": "Fine. I'll sell it online. To someone who'll never look either." },
+            { "leave": "wendy" },
+            { "end": true }
+          ]
+        },
+        { "set": { "camHeld": true } },
+        { "leave": "wendy" },
+        { "narrate": "After she's gone, you flip open the cracked viewfinder and press PLAY. The arcade windows, grainy green, Dash murmuring off-camera. At 00:31, inside, the Harbor Blaster screens light up one by one." },
+        {
+          "narrate": { "if": "quest.grey", "then": "Behind the prize counter, a tall man in a grey suit is tidying the shelves. He stops. He looks straight down the lens. He raises his hat.", "else": "Behind the prize counter, something tall is tidying the shelves, quite slowly, the way you would if you had all night and the night was very long. It doesn't look at the camera. It doesn't need to." }
+        },
+        { "narrate": "It's half out of frame. Whoever set the camera down didn't aim it. But it's there.", "if": "!flag.camWindow" }
+      ]
+    },
+    "dashWants": {
+      "title": "Dash wants the tape back",
+      "customer": "dash",
+      "steps": [
+        { "find": "it", "in": "stock", "match": { "uniqueId": "camcorder" } },
+        { "say": "dash", "text": "Hey. HEY. Wendy says she sold you Cam B, with the tape. I need that tape. Somebody uploaded a still from it and the network called. The NETWORK. Haunted Harbors is back." },
+        {
+          "if": "!it",
+          "then": [
+            { "say": "dash", "text": "You sold it? To who? Never mind. I'll find it. I find things. It's my whole show." },
+            { "set": { "camEnd": "aired" } },
+            { "leave": "dash" },
+            { "end": true }
+          ]
+        },
+        {
+          "choose": [
+            {
+              "label": { "if": "flag.camWindow", "then": "Sell him the camcorder and tape (+$150)", "else": "Sell him the camcorder and tape (+$90)" },
+              "then": [
+                { "set": { "camEnd": "aired" } },
+                { "sell": "it" },
+                { "coin": 150, "why": "Sold the Haunted Harbors tape back to Dash Hartigan", "if": "flag.camWindow" },
+                { "coin": 90, "why": "Sold the Haunted Harbors tape back to Dash Hartigan", "if": "!flag.camWindow" },
+                { "say": "dash", "text": "You're going in the credits. Small. Near the end. But IN them." }
+              ]
+            },
+            {
+              "label": "\"Some things shouldn't be on television.\"",
+              "then": [
+                { "set": { "camEnd": "kept" } },
+                { "edit": "it", "set": { "questKey": false, "nosale": true } },
+                { "refresh": "panel" },
+                { "say": "dash", "text": "You've SEEN it. You've seen it and you're keeping it. That's... honestly that's a great episode. Nobody would believe it." }
+              ]
+            },
+            {
+              "label": "Tape over it, there at the counter, and sell him the camera (+$20)",
+              "then": [
+                { "set": { "camEnd": "taped" } },
+                { "take": "it" },
+                { "coin": 20, "why": "Sold Dash Hartigan an empty camcorder" },
+                { "narrate": "You press RECORD with the lens cap on, and let it run past 00:31, past 00:47, to the end. Dash watches the whole time, the way you'd watch someone pour out good wine." }
+              ]
+            }
+          ]
+        },
+        { "leave": "dash" }
+      ]
+    }
+  },
+  "beats": [
+    { "at": "1-3", "cast": "dash", "scene": "dashRents" },
+    { "at": "3-1", "cast": "wendy", "scene": "wendyPawns", "if": "flag.camShot" },
+    { "at": "3-4", "cast": "dash", "scene": "dashWants", "if": "flag.camHeld && !flag.camEnd" }
+  ],
+  "nights": [
+    {
+      "id": "camcorder",
+      "window": ["1-4", "2-4"],
+      "if": "flag.camRented && !flag.camShot",
+      "scene": "camcorder",
+      "test": [{ "set": { "camRented": true } }]
+    }
+  ],
+  "calendar": [
+    { "id": "camcorder", "night": "camcorder", "story": "camcorder", "where": "Neptune's Arcade", "title": "Haunted Harbors", "known": "flag.camRented", "scene": "camcorder" }
+  ],
+  "epilogue": [
+    { "line": "Haunted Harbors got a second season on the strength of thirty-one seconds of tape. Neptune's Arcade gets a lot more visitors at night now. Most of them leave quickly.", "if": "flag.camEnd == 'aired'" },
+    { "line": "The tape from Cam B is in a drawer under your counter. You've watched it more times than you'd admit. At 00:31 the screens still light up.", "if": "flag.camEnd == 'kept'" },
+    { "line": "Thirty-one seconds of the arcade window are gone for good, taped over with the lens cap on. Some nights the sign flickers when you walk past, as if to say thank you.", "if": "flag.camEnd == 'taped'" }
+  ]
+});

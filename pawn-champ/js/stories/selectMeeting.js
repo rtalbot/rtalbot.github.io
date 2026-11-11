@@ -1,0 +1,279 @@
+// Pawn Champ - A Year on the Board: the second chapter of The Selectmen's Race's long arc (round 3,
+// batch T). Docs: docs/quests/MAJOR.md#m11-the-long-arc. Stay-on only, March.
+//
+// Article 31, the future of Pier Nine, on the floor of the Annual Town Meeting. If M32 is drawn too,
+// it plays inside that meeting (the "warrant" cue at the end of its open); if not, the Select Board
+// calls a special town meeting of its own. The first chapter is js/stories/selectTerm.js; the
+// chapters share a code half: js/quests/selectarc.js.
+//
+// Written as data: docs/STORY_DATA.md. Strict JSON inside the call.
+defineStory({
+  "id": "selectMeeting",
+  "kind": "major",
+  "colour": "#4a8ab0",
+  "family": "town",
+  "title": "A Year on the Board",
+  "arc": "selectTerm",
+  "months": [6],
+  "crosses": ["warrant"],
+  "teaser": { "if": "flag.selectWin == 'gordie'", "then": "The Annual Town Meeting warrant is out. Article 31, by request of Selectman Haines: \"To see what the Town will do about Pier Nine.\"", "else": "The Annual Town Meeting warrant is out. Article 31, by request of Selectman Bascombe: \"To see what the Town will do about Pier Nine.\"" },
+  "rumour": "Article 31 at Town Meeting is the whole fight over Pier Nine again, a year later.",
+  "endings": { "pier": "Pier Nine Stays", "marina": "The Marina Goes In", "both": "Half and Half" },
+  "outcome": "flag.meetEnd",
+  "code": "selectarc",
+  "about": [
+    "The last chapter of the Pier Nine arc, in March. Article 31 at Town Meeting asks what the town will do about Pier Nine: Gordie's four-million-dollar marina bond, or Tess's bylaw keeping the pier for the fleet for good. The selectman canvasses you (§{meetGov}), remembering what you said at last winter's hearing, and the other one asks you to think again (§{meetOther}).",
+    "On the night (§{meetArticle}), at a special town meeting or inside The Annual Town Meeting if that's in the run, you speak for the fleet, for the marina, or for the split you made at the hearing, or keep your seat. A friend in the hall may back you up. The count decides it: Pier Nine Stays, The Marina Goes In, or Half and Half."
+  ],
+  "notes": "flag.selectWin == 'gordie' means Selectman Haines is in office; anything else is Selectman Bascombe. With The Annual Town Meeting (M32) in the run, Article 31 is taken inside it (the warrant cue); otherwise the Select Board calls a special town meeting.",
+  "scenes": {
+    "meetGov": {
+      "title": "The selectman canvasses you for Article 31",
+      "customer": "gov",
+      "steps": [
+        {
+          "if": "flag.selectWin == 'gordie'",
+          "then": [
+            { "say": "gov", "text": "One year! One year as Selectman Haines. I have a plaque. I made it myself. Article 31 at Town Meeting: four million dollars of marina bond. That's the big one." },
+            { "say": "gov", "text": "Half a marina, like you said at the hearing. The south half. I've come round. Half a marina is very elegant.", "if": "flag.termEnd == 'deal'" },
+            { "say": "gov", "text": "You spoke against me at the hearing. I don't hold grudges. I hold a microphone. Speak for me this time.", "if": "flag.termEnd == 'opposed'" },
+            { "say": "gov", "text": "You backed me at the hearing. Back me at the meeting. Same speech, bigger room.", "if": "flag.termEnd != 'deal' && flag.termEnd != 'opposed'" }
+          ],
+          "else": [
+            { "say": "gov", "text": "Tess. A year on the Select Board, and I'd still rather be on the water. Article 31 at Town Meeting: Pier Nine for the fleet, in the bylaws, so nobody can draw yachts on it again." },
+            {
+              "say": "gov",
+              "text": { "if": "flag.termEnd == 'opposed'", "then": "You stood with Hal on the parking ban. That's fine. This one's the pier. I'm asking anyway.", "else": "You stood up at the hearing. Stand up at the meeting. That's all I'm asking." }
+            },
+            {
+              "if": "hook.compassHeld",
+              "then": [
+                { "say": "gov", "text": "And I'm back for my father's compass the first week of March, like I said. The first boat goes out after Town Meeting." }
+              ],
+              "else": [
+                { "say": "gov", "text": "The compass is back in the wheelhouse. Leon plowed till the thaw. The town paid me back in the end. I never asked them to.", "if": "flag.termCompass" }
+              ]
+            }
+          ]
+        },
+        { "set": { "meetIn": true } },
+        { "toast": "Calendar: Article 31 at the Annual Town Meeting", "look": "gov" },
+        { "leave": "gov" }
+      ]
+    },
+    "meetOther": {
+      "title": "The other one asks you not to",
+      "customer": "other",
+      "steps": [
+        {
+          "say": "other",
+          "text": {
+            "if": "flag.selectWin == 'gordie'",
+            "then": [
+              "Tess. I lost the election, not the pier. Article 31 is Gordie's marina bond, four million dollars, and the room listens to people it's seen behind a counter.",
+              "I'm not asking you to stand against him. Just think about who's still here in a bad winter."
+            ],
+            "else": [
+              "Gordie Haines. Haines Motors, Route 1. Former candidate, future candidate. Article 31 is Tess locking up Pier Nine forever. Forever! Nobody should do anything forever.",
+              "I'm going to stand up and say \"marina\". Say it with me. Or after me. Or just nod."
+            ]
+          }
+        },
+        { "set": { "meetOther": true } },
+        { "leave": "other" }
+      ]
+    },
+    "meetArticle": {
+      "title": "Article 31 on the floor of town meeting",
+      "note": "On the warrant cue it plays inside M32's Annual Town Meeting, where the moderator and you are already there; otherwise it's a special town meeting the Select Board calls itself.",
+      "steps": [
+        {
+          "if": "cue",
+          "then": [{ "hook": "fromHub", "sets": ["mo", "keeper"] }],
+          "else": [
+            { "hook": "music", "with": "night" },
+            {
+              "stage": "townhall",
+              "actors": [
+                { "id": "keeper", "cast": "keeper", "name": "You", "at": [150, 168] },
+                { "id": "mo", "cast": "marguerite", "at": [226, 148], "facingLeft": true },
+                {
+                  "id": "voter",
+                  "look": "random",
+                  "name": "A voter",
+                  "at": [[30, 160], [50, 165], [70, 160], [90, 165], [110, 160]]
+                }
+              ]
+            },
+            { "narrate": "A special town meeting, called by the Select Board for one article. Three hundred folding chairs, mud on every boot, and the whole of Hollow Neck in its second-best coat to argue about one pier." }
+          ]
+        },
+        { "enter": { "id": "tess", "cast": "tess", "at": [250, 154], "facingLeft": true } },
+        { "enter": { "id": "gordie", "cast": "gordie", "at": [210, 154] } },
+        { "enter": { "id": "mo", "cast": "marguerite", "at": [226, 148], "facingLeft": true }, "if": "!mo" },
+        { "hook": "met" },
+        {
+          "say": "mo",
+          "text": { "if": "flag.selectWin == 'gordie'", "then": "Article 31. To see what the Town will do about Pier Nine. The chair recognizes Selectman Haines for the Select Board's report.", "else": "Article 31. To see what the Town will do about Pier Nine. The chair recognizes Selectman Bascombe for the Select Board's report." }
+        },
+        {
+          "if": "flag.selectWin == 'gordie'",
+          "then": [
+            {
+              "say": "gordie",
+              "text": { "if": "flag.termEnd == 'deal'", "then": "One year! We split the pier at the hearing, and nobody died! The fee is gone! The jingle is better! I move the bond: two million, for the south half.", "else": "One year! Survey done. Drawings done. Bistro menu, in draft. I move the bond: four million dollars, for a marina at Pier Nine." }
+            },
+            { "narrate": "Somebody at the back has brought the old steamer-wharf bell up from the pier on a hand truck. They don't ring it. They just leave it in the aisle where everyone can see.", "if": "flag.termBell == 'pier'" },
+            { "narrate": "The old steamer-wharf bell sits on the Select Board table with a little card in front of it: MARINA HERITAGE. Some of the old men are looking at it.", "if": "flag.termBell == 'gordie'" },
+            { "say": "tess", "text": "Eleven boats. Eleven families. That's my whole speech." }
+          ],
+          "else": [
+            {
+              "say": "tess",
+              "text": { "if": "flag.termEnd == 'opposed'", "then": "A year. We lost the parking ban, and the plow took eleven hours, and we all survived it. I move the bylaw: Pier Nine is working waterfront, for the fleet, for good.", "else": "A year. The plow got through. The eleven boats are still fishing. I move the bylaw: Pier Nine is working waterfront, for the fleet, for good." }
+            },
+            { "find": "compass", "in": "stock", "match": { "uniqueId": "binnacle" } },
+            { "narrate": "She has the binnacle compass under her arm, polished, on its way back to the Theresa B. after this.", "if": "flag.termCompass && !compass" },
+            { "say": "gordie", "text": "A marina! Jobs! Parking! Forever is a very long time, folks!" }
+          ]
+        },
+        {
+          "choose": [
+            {
+              "label": "Speak for the fleet",
+              "hint": "(Pier Nine stays a working pier)",
+              "then": [
+                { "say": "keeper", "text": "Every morning I open up and hear the boats go out. When I stop hearing them, this stops being a harbor town. That's all." },
+                { "hook": "speak", "with": 2, "sets": ["you", "backer"] }
+              ]
+            },
+            {
+              "label": "Speak for the marina",
+              "hint": "(the bond)",
+              "then": [
+                { "say": "keeper", "text": "Front Street needs people walking up it in February. A marina brings them. That's all." },
+                { "hook": "speak", "with": -2, "sets": ["you", "backer"] }
+              ]
+            },
+            {
+              "label": "Speak for the split you made at the hearing",
+              "hint": "(half and half)",
+              "if": "flag.selectPier == 'split' || flag.termEnd == 'deal'",
+              "then": [
+                { "say": "keeper", "text": "We split the pier once, at the hearing, and the sky didn't fall. Berths on the south, the fleet on the north. Let's just do it." },
+                { "hook": "speak", "with": "split", "sets": ["you", "backer"] }
+              ]
+            },
+            {
+              "label": "Keep your seat",
+              "then": [
+                { "narrate": "You keep your seat. The debate goes on without you, for an hour and ten minutes, and gets onto parking twice." },
+                { "hook": "speak", "with": 0, "sets": ["you", "backer"] }
+              ]
+            }
+          ]
+        },
+        { "narrate": "{backer.name} stands up after you and says the same thing, worse, and louder. It helps.", "if": "backer" },
+        {
+          "hook": "count",
+          "sets": ["count"],
+          "note": "the room before you spoke (your sign in October, the hearing, where the bell went), what you said, and some luck"
+        },
+        { "say": "mo", "text": "The chair is in doubt. Tellers, count. Count them twice. Not you, Gordon." },
+        {
+          "if": "count == 'both'",
+          "then": [
+            { "set": { "meetEnd": "both" } },
+            { "rep": 3, "why": "Town Meeting split Pier Nine" },
+            { "narrate": "The amended motion carries: berths on the south half of Pier Nine, the fleet on the north, written into the bylaws so nobody draws on it again. Gordie and Tess shake hands at the front of the hall, briefly, as if it might be catching." },
+            { "sway": "tess", "by": 1, "why": "Half and half" },
+            { "sway": "gordie", "by": 1, "why": "Half and half" }
+          ]
+        },
+        {
+          "if": "count == 'pier'",
+          "then": [
+            { "set": { "meetEnd": "pier" } },
+            { "rep": 3, "why": "Pier Nine stays a working pier", "if": "you > 0" },
+            { "rep": 1, "why": "Pier Nine stays a working pier", "if": "!(you > 0)" },
+            {
+              "narrate": { "if": "flag.selectWin == 'gordie'", "then": "The bond fails, two hundred and twelve to a hundred and eighty. Pier Nine stays eleven boats and a bell. Gordie says \"next year\" into the microphone, then, quieter, \"maybe\".", "else": "The bylaw carries, two hundred and forty to a hundred and fifty. Pier Nine is working waterfront for good. Tess sits down very fast, and doesn't look at anybody." }
+            },
+            { "sway": "tess", "by": 2, "why": "Pier Nine stays" },
+            { "sway": "gordie", "by": -1, "why": "Pier Nine stays" }
+          ]
+        },
+        {
+          "if": "count == 'marina'",
+          "then": [
+            { "set": { "meetEnd": "marina" } },
+            { "rep": 1, "why": "The marina goes in", "if": "you < 0" },
+            { "rep": -1, "why": "The marina goes in", "if": "!(you < 0)" },
+            {
+              "narrate": { "if": "flag.selectWin == 'gordie'", "then": "The bond passes, two hundred and one to a hundred and ninety-six. Gordie plays the jingle on his phone, into the microphone. The eleven boats will move to the town landing by June.", "else": "The bylaw fails, two hundred and five to a hundred and ninety. Gordie stands on a chair and announces a marina study committee before anyone can stop him." }
+            },
+            { "sway": "gordie", "by": 2, "why": "The marina goes in" },
+            { "sway": "tess", "by": -2, "why": "The marina goes in" }
+          ]
+        },
+        { "remove": "tess" },
+        { "remove": "gordie" }
+      ]
+    }
+  },
+  "beats": [
+    { "drift": "meet-gov", "from": "1-2", "to": "1-4", "cast": "gordie", "scene": "meetGov", "if": "flag.selectWin == 'gordie'" },
+    { "drift": "meet-gov", "from": "1-2", "to": "1-4", "cast": "tess", "scene": "meetGov", "if": "flag.selectWin != 'gordie'" },
+    { "drift": "meet-other", "from": "2-1", "to": "2-3", "cast": "tess", "scene": "meetOther", "if": "flag.selectWin == 'gordie' && flag.meetIn" },
+    { "drift": "meet-other", "from": "2-1", "to": "2-3", "cast": "gordie", "scene": "meetOther", "if": "flag.selectWin != 'gordie' && flag.meetIn" }
+  ],
+  "cues": [
+    { "cue": "warrant", "scene": "meetArticle", "if": "flag.meetIn && !flag.meetEnd", "note": "with The Annual Town Meeting drawn too, Article 31 is taken inside it, after the gavel's own articles, so it can't be skipped for a vignette" }
+  ],
+  "nights": [
+    {
+      "id": "select-meeting",
+      "window": ["4-1", "4-3"],
+      "if": "flag.meetIn && !flag.meetEnd && !hook.warrantInRun",
+      "scene": "meetArticle",
+      "test": [
+        { "roll": { "selectWin": ["tess", "gordie"] } },
+        { "set": { "meetIn": true } },
+        {
+          "roll": {
+            "signFor": ["tess", "gordie", null],
+            "termEnd": ["backed", "opposed", "deal"],
+            "termBell": ["pier", "gordie", null]
+          }
+        },
+        {
+          "if": "flag.termEnd == 'deal'",
+          "then": [{ "set": { "selectPier": "split" } }],
+          "else": [{ "roll": { "selectPier": ["fleet", "marina"] } }]
+        }
+      ]
+    }
+  ],
+  "calendar": [
+    { "id": "select-meeting", "night": "select-meeting", "story": "selectMeeting", "where": "Town Hall", "title": "Article 31: Pier Nine", "known": "flag.meetIn && !hook.warrantInRun", "scene": null },
+    { "id": "select-meeting-hub", "night": "hub-warrant", "story": "selectMeeting", "where": "Town Hall", "title": "Article 31: Pier Nine", "known": "flag.meetIn", "scene": null, "order": 2 }
+  ],
+  "epilogue": [
+    { "line": "Pier Nine is a working pier, in the bylaws, for good. The eleven boats go out at five. You hear them from upstairs.", "if": "flag.meetEnd == 'pier'" },
+    { "line": "The marina goes in at Pier Nine in June. Gordie has already named the bistro. The eleven boats are moving to the town landing, and Tess helps them do it.", "if": "flag.meetEnd == 'marina'" },
+    { "line": "Half a marina on the south of Pier Nine and the fleet on the north, and people from both ends drink at the Rusty Anchor. Mostly at different tables.", "if": "flag.meetEnd == 'both'" }
+  ],
+  "talk": {
+    "by": "marguerite",
+    "rumour": [
+      "Article 31: \"To see what the Town will do about Pier Nine.\" I wrote the wording myself. It took a week.",
+      "I expect three hours on it. I have asked for coffee accordingly."
+    ],
+    "react": { "pier": "Pier Nine is in the bylaws as working waterfront. I wrote it into the minutes and underlined nothing, because I do not take sides.", "marina": "The marina bond carried by five votes. Five. I counted them myself. Twice.", "both": "Half and half on Pier Nine. The room applauded a compromise. I have never heard that sound in this hall before." },
+    "sway": {
+      "pier": { "tess": 2, "dory": 1 },
+      "marina": { "gordie": 2, "dory": -1 },
+      "both": { "marguerite": 1, "tess": 1, "gordie": 1 }
+    }
+  }
+});
