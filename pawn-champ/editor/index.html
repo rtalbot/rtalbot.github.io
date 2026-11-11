@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Story Editor · Pawn Champ</title>
+  <link rel="stylesheet" href="editor.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">Story Editor</div>
+    <div class="story-title" id="story-title"></div>
+    <div class="top-actions">
+      <span class="status" id="status"></span>
+      <button id="undo" title="Undo (Ctrl+Z)">Undo</button>
+      <button id="redo" title="Redo (Ctrl+Shift+Z)">Redo</button>
+      <button id="save" class="primary" title="Save (Ctrl+S)">Save</button>
+      <a class="button" href="art.html" title="The game's art: places, characters and icons, with notes">Art</a>
+    </div>
+  </header>
+  <div class="layout">
+    <nav class="side" id="side"></nav>
+    <main class="page" id="page"><p class="muted">Loading the game…</p></main>
+    <aside class="notes" id="notes"></aside>
+  </div>
+  <!-- the game itself, hidden: the editor reads its characters, places and items and checks stories with it -->
+  <iframe id="game" src="../index.html?editor=1" title="game" tabindex="-1" aria-hidden="true"></iframe>
+  <script src="../tools/storyfile.js"></script>
+  <script src="static.js"></script>
+  <script src="../tools/narrative.js"></script>
+  <script src="editor.js"></script>
+</body>
+</html>

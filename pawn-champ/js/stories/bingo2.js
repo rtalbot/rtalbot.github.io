@@ -1,0 +1,195 @@
+// Pawn Champ - Bingo Night, Again: m3 Bingo Night comes round again in a long stay
+// (docs/quests/SEQUELS.md#bingo-night-again). Batch U, round 3. One of the two repeat minors.
+// A minor is never told twice in one stay, so the repeat is a chapter of its own: drawn the month
+// after Bingo Night, however it ended (js/stay.js).
+//
+// Exposed or Full House   Dolores Fitch is back at the Grange and winning every week again. Dex says
+//                         she gave the roof fund a new bingo cage for Christmas.
+// Lady Luck               Dolores herself comes in: somebody else is winning every week now, and it
+//                         isn't her. She finds it unprofessional.
+// Errand: noon bingo at the Grange. Endings: Called Out, A Quiet Word, Fair Balls.
+//
+// Written as data: docs/STORY_DATA.md. Strict JSON inside the call. Code half: js/quests/bingo2.js.
+defineStory({
+  "id": "bingo2",
+  "kind": "minor",
+  "title": "Bingo Night, Again",
+  "location": "grange",
+  "sequel": "bingo",
+  "months": [2, 3, 4, 5, 6],
+  "rumour": "Somebody is winning the roof-fund bingo every single week. Again.",
+  "teaser": "A flyer on the Grange Hall door: ROOF-FUND BINGO, EVERY TUESDAY, NEW CAGE! Somebody has written underneath it, in pencil, \"Again?\"",
+  "endings": { "called": "Called Out", "word": "A Quiet Word", "fair": "Fair Balls" },
+  "about": [
+    "A sequel to Bingo Night, for runs after it. The Grange has a new brass bingo cage, a Christmas gift from Dolores Fitch, and somebody is winning every week again. If Dolores was exposed or you played her dauber yourself, Dex brings in a bingo ball from the new cage: her numbers are all heavier, so the cage throws them up first. If she kept her word last time (Lady Luck), Dolores comes in herself, because someone else is winning, and she suspects her grandson (§{bingo2Hook}).",
+    "At noon bingo (§{bingo2Noon}) you can call out the cheat in front of Father Ignatius (Called Out), have a quiet word (A Quiet Word), or swap the old wooden balls back into the new cage and say nothing (Fair Balls)."
+  ],
+  "notes": "Exposed or Full House: Dolores Fitch is back at the Grange and winning every week again, and Dex says she gave the roof fund a new bingo cage for Christmas. Lady Luck: Dolores kept her word, so the new cheat is somebody else (Dex), and Dolores herself comes in. Errand: noon bingo at the Grange.",
+  "uniques": {
+    "weightedBall": {
+      "name": "Bingo ball, B-4",
+      "icon": "bowlball",
+      "cat": "curio",
+      "guide": 2,
+      "tells": [
+        "A white plastic bingo ball, printed B-4. It's heavy for plastic, and something inside rattles like a ball bearing."
+      ]
+    }
+  },
+  "scenes": {
+    "bingo2Hook": {
+      "title": "A Fitch with a bingo ball",
+      "customer": "visitor",
+      "steps": [
+        {
+          "if": "ended.bingo != 'lady'",
+          "then": [
+            {
+              "say": "visitor",
+              "text": [
+                "Dex. Fitch. You remember. Gran's back. She's winning every week again, and this time she isn't even using the dauber.",
+                "She gave the Grange a new bingo cage for Christmas, out of the goodness of her heart. Father Ignatius cried. I took one of the balls home. Feel it."
+              ]
+            },
+            {
+              "offer": { "unique": "weightedBall" },
+              "persona": "shifty",
+              "asking": 5,
+              "min": 2,
+              "onWatch": "continue"
+            },
+            {
+              "if": "offer == 'watch'",
+              "then": [{ "set": { "bingo2Known": true } }, { "plan": "bingo2-noon" }, { "end": true }]
+            },
+            { "say": "visitor", "text": "There's one ball in that cage for every number she's got on her cards. All heavier. The cage throws the heavy ones up first. It's physics. She's eighty-one and she's doing physics." }
+          ],
+          "else": [
+            {
+              "say": "visitor",
+              "text": [
+                "Dolores Fitch. Don't look at me like that, I've kept my word. I win once a month. I lose with dignity. I'm very good at it.",
+                "But somebody else is winning every week now. Every week! It's vulgar. Whoever it is has no sense of proportion. I want you to find out who, and I want you to tell me before you tell anyone else."
+              ]
+            },
+            { "narrate": "She doesn't say who she suspects. She looks, very hard, at the photograph of her grandson that she keeps in her purse." }
+          ]
+        },
+        { "plan": "bingo2-noon" },
+        { "set": { "bingo2Known": true } },
+        { "toast": "Calendar: roof-fund bingo, the Grange Hall, {placed:bingo2-noon} at noon", "look": "visitor" },
+        { "leave": "visitor" }
+      ]
+    },
+    "bingo2Noon": {
+      "title": "Roof-fund bingo, again",
+      "steps": [
+        {
+          "stage": "grange",
+          "view": { "sign": "BINGO FOR THE ROOF" },
+          "fadeOut": false,
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [84, 166] },
+            { "id": "ignatius", "cast": "ignatius", "at": [236, 158], "facingLeft": true },
+            { "id": "dolores", "cast": "dolores", "at": [150, 164] },
+            { "id": "dex", "cast": "dex", "at": [186, 164], "facingLeft": true }
+          ]
+        },
+        { "narrate": "Noon bingo at the Grange Hall. Thirty players, coats on, because the heating is also on the roof-fund list. A brand-new brass cage sits on the table in front of Father Ignatius, and it gleams." },
+        { "say": "ignatius", "text": "B-4! It's always B-4 first with the new cage. Funny thing. Lucky number." },
+        {
+          "if": "ended.bingo == 'lady'",
+          "then": [
+            { "say": "dex", "text": "BINGO." },
+            { "narrate": "Dex Fitch, who has never played bingo in his life, wins in nine calls. Dolores watches him walk up to collect, and her face doesn't move at all, which is how you know. Under his chair, in his backpack, you can see the end of a magnetic dauber." }
+          ],
+          "else": [
+            { "say": "dolores", "text": "BINGO." },
+            { "narrate": "Dolores Fitch wins in nine calls. The cage throws up her numbers like it's fond of her. You pick a ball off the table while Father Ignatius is checking her card. It's heavy." }
+          ]
+        },
+        {
+          "choose": [
+            {
+              "label": "Tell Father Ignatius, out loud",
+              "then": [
+                { "set": { "bingo2End": "called" } },
+                { "rep": 2, "why": "Called out the bingo cheat, again" },
+                {
+                  "say": "ignatius",
+                  "text": { "if": "ended.bingo == 'lady'", "then": "Dex? Dexter Fitch? Your grandmother sat in that chair for thirty years!", "else": "Dolores! Again! At Christmas! With a gift!" }
+                },
+                { "say": "dex", "if": "ended.bingo == 'lady'", "text": "She taught me everything I know." },
+                { "say": "dolores", "if": "ended.bingo != 'lady'", "text": "I'd like it noted that the cage was a very nice cage." },
+                {
+                  "narrate": { "if": "ended.bingo == 'lady'", "then": "Dex is banned for a month. Dolores pays his fine out of her purse, and then she pays it again into the roof jar, and then she takes him home by the ear.", "else": "Dolores is banned for a month, again. She takes the cage with her. Father Ignatius lets her. It's hers, after all." }
+                }
+              ]
+            },
+            {
+              "label": "Have a quiet word",
+              "then": [
+                { "set": { "bingo2End": "word" } },
+                { "say": "dex", "if": "ended.bingo == 'lady'", "text": "Gran said you'd notice. She said you've got eyes. Fine. I'll lose. I'm not good at losing. She says I'll learn." },
+                { "say": "dolores", "if": "ended.bingo != 'lady'", "text": "Well. You've still got eyes, then. Once a month. As agreed. I'm a woman of my word, and occasionally of my weight." },
+                {
+                  "narrate": { "if": "ended.bingo == 'lady'", "then": "Dex loses the next five games with no dignity at all. Dolores wins the sixth. She looks at you over her glasses and puts the whole pot in the roof jar.", "else": "Dolores loses four games with tremendous grace. Afterwards the heavy balls go quietly into her handbag, one by one, while Father Ignatius is stacking chairs." }
+                },
+                {
+                  "hook": "roofFund",
+                  "if": "quest.benefit",
+                  "with": [30, "The Fitches gave the roof their bingo winnings."]
+                }
+              ]
+            },
+            {
+              "label": "Swap the new balls for the old set in the Grange closet, and say nothing",
+              "then": [
+                { "set": { "bingo2End": "fair" } },
+                { "rep": 1 },
+                {
+                  "narrate": [
+                    "While Father Ignatius is making the tea, you find the old wooden box of balls in the Grange closet, chipped, yellowed, every one exactly the weight it ought to be, and swap them into the new cage.",
+                    "The next game is won by a woman from the Clam Shack who has never won anything. She screams. Both Fitches look at the cage, and then at each other, and then, for a long time, at you."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        { "view": { "sign": null } },
+        { "refresh": "panel" }
+      ]
+    }
+  },
+  "beats": [
+    { "drift": "bingo2-hook", "from": "1-2", "to": "2-3", "cast": "dex", "scene": "bingo2Hook", "if": "ended.bingo != 'lady'" },
+    { "drift": "bingo2-hook", "from": "1-2", "to": "2-3", "cast": "dolores", "scene": "bingo2Hook", "if": "ended.bingo == 'lady'" }
+  ],
+  "errands": [
+    {
+      "id": "bingo2-noon",
+      "title": "Roof-fund bingo, again",
+      "where": "The Grange Hall",
+      "scene": "bingo2Noon",
+      "test": [{ "set": { "bingo2Known": true } }, { "roll": { "bingoEnd": ["exposed", "lady", "full"] } }]
+    }
+  ],
+  "calendar": [
+    { "id": "bingo2-noon", "errand": "bingo2-noon", "story": "bingo2", "where": "The Grange Hall", "title": "Roof-fund bingo, again", "known": "flag.bingo2Known", "scene": "bingo2Noon" }
+  ],
+  "epilogue": [
+    { "line": "Two Fitches have now been banned from the roof-fund bingo. Father Ignatius has started checking the balls on a kitchen scale.", "if": "flag.bingo2End == 'called'" },
+    { "line": "The Fitches win the roof-fund bingo about once a month now, between them, and put it in the roof jar. Father Ignatius thinks it's providence.", "if": "flag.bingo2End == 'word'" },
+    { "line": "The roof-fund bingo is honest again, with the old chipped balls in a new brass cage. Nobody has won twice in a row since.", "if": "flag.bingo2End == 'fair'" }
+  ],
+  "talk": {
+    "by": "ignatius",
+    "rumour": [
+      "We have a new bingo cage at the Grange! A gift. Brass. It throws the balls up beautifully. B-4 every time, first. It's a sign, I think.",
+      "And somebody has won every single week since we got it. Again. I try not to notice these things. It's the roof."
+    ],
+    "react": { "called": "Another Fitch, banned. I weigh the balls now, on Mrs. Haskell's kitchen scale. I never thought the priesthood would come to this.", "word": "The Fitches win once a month and give it all to the roof. I've asked no questions. The roof doesn't ask questions either.", "fair": "Somebody swapped the old balls into the new cage. I know it was you. I've decided it was the Holy Spirit. Same thing, some weeks." }
+  },
+  "outcome": "flag.bingo2End"
+});

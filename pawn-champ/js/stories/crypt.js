@@ -1,0 +1,237 @@
+// Pawn Champ - The Bethel Crypt: the sequel to M5 The Benefit (docs/quests/SEQUELS.md#the-bethel-crypt).
+// Batch U, round 3. Drawn in a later month of a stay, only if The Benefit ended Sea View Condos.
+// (A Good Roof on Sold Land gets the children's last pageant instead: js/quests/pageant.js.)
+//
+// Hook (W1)       Sully Brandao, the foreman on the condo dig, pawns a silver cup he says he found in a
+//                 dumpster. It's engraved SEAMEN'S BETHEL 1771.
+// Middle (W1-W2)  Hester Quint: there was a sailors' chapel on the lot before Saint Brine's, and its
+//                 dead were never moved. Sister Amabel asks you to come and see before the concrete pour.
+// Scene (W2-W3)   Saint Brine's hall at night, and the brick vault under the dig. Merrit Gaunt wants it
+//                 filled by Friday.
+// Endings: Hallowed Ground (the dig stops for the winter), Moved with Honor (the dead go to the Old
+// Burying Ground at the Hand's expense), Poured by Friday (you take Sully's cut).
+//
+// Written as data: docs/STORY_DATA.md. Strict JSON inside the call.
+defineStory({
+  "id": "crypt",
+  "kind": "minor",
+  "title": "The Bethel Crypt",
+  "location": "saintbrines",
+  "sequel": "benefit",
+  "after": ["condos"],
+  "months": [2, 3, 4, 5, 6],
+  "rumour": "The condo dig on the Saint Brine's lot hit brick, and the crew won't say what's under it.",
+  "teaser": "The diggers have come to the Saint Brine's lot. The children watch the yellow machines from the hall windows, and Sister Amabel has stopped drawing the curtains.",
+  "endings": { "stopped": "Hallowed Ground", "moved": "Moved with Honor", "poured": "Poured by Friday" },
+  "about": [
+    "A winter story set on the Saint Brine's lot after it was sold for condos. Sully Brandao, who runs the dig crew, pawns a 1771 communion cup he says came from a dumpster (§{cryptSully}). Hester has been in the deeds: the lot was a sailors' chapel, the Seamen's Bethel, and its dead were never moved (§{cryptHester}). Sister Amabel wants someone to see what's down there before Merrit Gaunt has it filled with concrete on Friday.",
+    "Under the dig (§{cryptNight}) is a brick vault of forty sailors' coffins with their small possessions beside them. Report it to the state and the dig stops for the winter (Hallowed Ground; photographing every lid does the same); ring Gaunt and get the sailors reburied properly at the Hand's expense (Moved with Honor); or take Sully's cut of the grave goods (Poured by Friday). If you have the cup, you can give it back."
+  ],
+  "cast": {
+    "sully": {
+      "name": "Sully Brandao",
+      "look": { "skin": "#b07850", "hair": "#2a1e16", "hs": 0, "coat": "#e8a020", "trim": "#c8c8c8", "style": "vest", "vest": "#e8a020", "pants": "#3a4a5a", "hat": "cap", "hatc": "#e8e030", "beard": "#2a1e16", "stout": true }
+    }
+  },
+  "uniques": {
+    "bethelCup": {
+      "name": "Silver communion cup, 1771",
+      "icon": "goblet",
+      "cat": "silver",
+      "guide": 180,
+      "condLabel": "Black with age",
+      "tells": [
+        "Hand-raised silver, plain as a tin mug. Engraved round the rim: SEAMEN'S BETHEL, HOLLOW NECK, 1771.",
+        "Clay in the foot, the yellow clay that's six feet down on Front Street. It didn't come out of a dumpster."
+      ]
+    }
+  },
+  "scenes": {
+    "cryptSully": {
+      "title": "Sully pawns a cup from a dumpster",
+      "customer": "sully",
+      "steps": [
+        { "say": "sully", "text": "Sully Brandao. I run the crew on the condo job, the old Saint Brine's lot. Found this in a dumpster. People throw out anything." },
+        {
+          "offer": { "unique": "bethelCup" },
+          "persona": "shifty",
+          "asking": 60,
+          "min": 40,
+          "onWatch": "continue"
+        },
+        { "set": { "cryptMet": true } },
+        { "end": true, "if": "offer == 'watch'", "note": "the police have him; Hester still comes" },
+        { "set": { "cryptCup": true }, "if": "offer == 'deal'" },
+        { "say": "sully", "text": "If anybody asks, it was a dumpster. And if you get any more like it, you know where I'm digging." },
+        { "leave": "sully" }
+      ]
+    },
+    "cryptHester": {
+      "title": "Hester has been in the deeds",
+      "customer": "hester",
+      "steps": [
+        {
+          "say": "hester",
+          "text": [
+            "You'll have heard about the dig. I've been in the deeds all week. Before Saint Brine's there was a sailors' chapel on that lot, the Seamen's Bethel, from 1771.",
+            "It burned in 1840. They built the children's home on the foundations. And the Bethel's dead, the sailors who were buried under its floor, were never moved. Not one. It's in the vestry minutes."
+          ]
+        },
+        { "say": "hester", "if": "flag.cryptCup", "text": "You've got their cup on your shelf, I hear. Communion silver. They don't throw that in dumpsters." },
+        { "say": "hester", "text": "Sister Amabel wants somebody who knows what things are worth to see what's down there before they pour the concrete. {placed:crypt-night} night. Merrit Gaunt wants it filled by Friday." },
+        { "set": { "cryptKnown": true } },
+        { "toast": "Calendar: Saint Brine's, under the dig, {placed:crypt-night} night", "look": "hester" },
+        { "leave": "hester" }
+      ]
+    },
+    "cryptNight": {
+      "title": "Under the dig",
+      "music": "eerie",
+      "steps": [
+        {
+          "stage": "saintbrines",
+          "view": { "timeOfDay": 0.95 },
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [92, 166] },
+            { "id": "amabel", "cast": "amabel", "at": [128, 164] },
+            { "id": "hester", "cast": "hester", "at": [220, 162], "facingLeft": true },
+            { "id": "sully", "cast": "sully", "at": [262, 164], "facingLeft": true }
+          ]
+        },
+        {
+          "narrate": [
+            "Saint Brine's hall after the children are in bed. The new roof is very quiet. Through the back door, the dig is a square black hole under one work light, with a ladder going down into it.",
+            "Twelve feet down there's a brick vault, broken open at one end. Inside, on stone shelves, are long wooden boxes, and beside each one a little pile of things: a clay pipe, a horn button, a ring."
+          ]
+        },
+        { "say": "hester", "text": "Forty of them, I think. Some have names cut into the lids. \"J. Pennywell, Mariner, drown'd 1789.\" They had a chapel over their heads for seventy years and a children's home for a hundred and eighty." },
+        { "say": "sully", "text": "Look. I've got a concrete truck booked for Friday and a man from the Hand who rings me twice a day. There's rings down there. There's a watch. A cut for you, a cut for me, and Friday it's all under a parking garage." },
+        { "say": "amabel", "text": "Or. There are laws about the dead. Aren't there? Somebody must know the law." },
+        {
+          "choose": [
+            {
+              "label": "Report it to the state as an unmarked burial ground",
+              "hint": "(the dig stops)",
+              "then": [
+                { "narrate": "Hester knows exactly which office in Boston to ring, and what to say so they come in person. You sign the report as the person who appraised the silver." },
+                { "narrate": "A state truck arrives on Thursday. A man with a clipboard puts orange tape round the hole and a sign on the fence: PROTECTED SITE, NO WORK UNTIL FURTHER NOTICE. The concrete truck goes back to Plymouth." },
+                { "say": "amabel", "text": "They can't dig until spring. The children have the winter in the hall. Thank you. And thank Mr. Pennywell, I suppose." },
+                { "set": { "cryptEnd": "stopped" } },
+                { "rep": 5, "why": "Stopped the condo dig on the Bethel crypt" },
+                { "heat": -2 }
+              ]
+            },
+            {
+              "label": "Ring Merrit Gaunt: the sailors are moved to the Old Burying Ground, properly, at the Hand's expense",
+              "hint": "(the dig goes on)",
+              "then": [
+                {
+                  "narrate": [
+                    "Gaunt answers on the first ring, as if he'd been waiting. A burial-ground report would cost the Hand a year. A reverend, an undertaker and forty new plots cost them a week. He agrees before you've finished explaining.",
+                    "On Saturday the sailors go up Front Street to the Old Burying Ground in forty plain boxes, one at a time, with Father Ignatius walking in front and half the town walking behind. Sully carries J. Pennywell himself."
+                  ]
+                },
+                { "say": "sully", "text": "I'm not a monster. I just had a truck booked." },
+                { "set": { "cryptEnd": "moved" } },
+                { "rep": 3, "why": "Saw the Bethel sailors buried properly" }
+              ]
+            },
+            {
+              "label": "Take Sully's cut",
+              "hint": "(+$120)",
+              "then": [
+                { "narrate": "Sully goes down the ladder with a bucket. He comes up with rings, buttons, a silver watch and a seal. You take your share in cash and don't look at the bucket." },
+                { "say": "amabel", "text": "I see. Yes. Good night." },
+                { "narrate": "The concrete truck comes on Friday. Sister Amabel draws the curtains on that side of the hall and keeps them drawn." },
+                { "set": { "cryptEnd": "poured" } },
+                { "coin": 120, "why": "Your cut of the Bethel grave goods" },
+                { "rep": -4 },
+                { "heat": 4 }
+              ]
+            },
+            {
+              "label": "Photograph every lid and every name before anyone touches anything",
+              "needs": "photo",
+              "without": "With a proper camera you could put every name on record tonight.",
+              "then": [
+                { "use": "photo", "as": "camera" },
+                { "narrate": "You go down the ladder with the {camera.name|lower|or:camera} and Hester holding the light. Forty lids, forty frames. By midnight every name is on a memory card and on its way to the state archaeologist." },
+                { "rep": 2 },
+                { "narrate": "A state truck arrives on Thursday. A man with a clipboard puts orange tape round the hole and a sign on the fence: PROTECTED SITE, NO WORK UNTIL FURTHER NOTICE. The concrete truck goes back to Plymouth." },
+                { "say": "amabel", "text": "They can't dig until spring. The children have the winter in the hall. Thank you. And thank Mr. Pennywell, I suppose." },
+                { "set": { "cryptEnd": "stopped" } },
+                { "rep": 5, "why": "Stopped the condo dig on the Bethel crypt" },
+                { "heat": -2 }
+              ]
+            }
+          ]
+        },
+        {
+          "if": "flag.cryptCup && flag.cryptEnd != 'poured'",
+          "then": [
+            { "find": "cup", "in": "stock", "match": { "uniqueId": "bethelCup" } },
+            {
+              "choose": [
+                {
+                  "label": "Give the cup back to the sailors",
+                  "then": [
+                    { "take": "cup" },
+                    { "rep": 2 },
+                    { "narrate": "Hester wraps it in a clean dish towel. It goes back on J. Pennywell's shelf, or onto his new grave, depending on how the winter goes." }
+                  ]
+                },
+                { "label": "Keep it on your shelf" }
+              ],
+              "if": "cup"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "beats": [
+    { "drift": "crypt-sully", "from": "1-2", "to": "1-3", "cast": "sully", "scene": "cryptSully" },
+    { "drift": "crypt-hester", "from": "1-4", "to": "2-1", "cast": "hester", "scene": "cryptHester", "if": "!flag.cryptKnown" }
+  ],
+  "nights": [
+    {
+      "id": "crypt-night",
+      "window": ["2-1", "3-3"],
+      "if": "flag.cryptKnown && !flag.cryptEnd",
+      "scene": "cryptNight",
+      "test": [
+        { "set": { "cryptKnown": true } },
+        {
+          "if": "random < 0.5",
+          "then": [{ "set": { "cryptCup": true } }, { "add": { "unique": "bethelCup" } }]
+        }
+      ]
+    }
+  ],
+  "calendar": [
+    {
+      "id": "crypt-night",
+      "night": "crypt-night",
+      "story": "crypt",
+      "where": "Saint Brine's",
+      "title": "Under the dig",
+      "known": "flag.cryptKnown",
+      "scene": "cryptNight",
+      "bring": ["photo"]
+    }
+  ],
+  "epilogue": [
+    { "line": "The Saint Brine's lot is a protected site until the state says otherwise. The children spent the winter in the hall, and the condos are a sign on a fence.", "if": "flag.cryptEnd == 'stopped'" },
+    { "line": "Forty sailors from the Seamen's Bethel lie in a new row at the Old Burying Ground. Somebody keeps leaving clay pipes on J. Pennywell's stone.", "if": "flag.cryptEnd == 'moved'" },
+    { "line": "There's a parking garage over the Seamen's Bethel now. The night attendant has asked for a transfer twice.", "if": "flag.cryptEnd == 'poured'" }
+  ],
+  "talk": {
+    "by": "hester",
+    "rumour": [
+      "The condo dig on the Saint Brine's lot hit brick last week, and the crew stopped and went for coffee for two hours. Nobody goes for coffee for two hours.",
+      "There was a sailors' chapel on that lot in 1771. I've been saying so for thirty years. I've been in the deeds all week."
+    ],
+    "react": { "stopped": "An unmarked burial ground. The state put tape round it. I've written it up for the Historical Society bulletin, with footnotes. Forty-one footnotes. I counted the sailors twice.", "moved": "Forty sailors walked up Front Street on Saturday, in a manner of speaking. I've never seen the town turn out like that for anyone it actually knew.", "poured": "They poured on Friday. I have the vestry minutes and nothing else. You were down there. I hope it was worth it." }
+  },
+  "outcome": "flag.cryptEnd"
+});

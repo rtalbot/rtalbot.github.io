@@ -1,0 +1,224 @@
+// Pawn Champ - The Figurehead. Minor quest m66, batch L (docs/quests/MINOR.md#m66-the-figurehead).
+// Dory Kittredge's nets dragged up a ship's figurehead off Gannet: a woman with one hand raised.
+// Three families each say she's their great-great-grandmother, carved from life. She lies on the
+// ice on the fish market floor until you decide whose she is, auction her to all three, or sell her
+// to Ruthie Kroll to hang over the bar at the Rusty Anchor.
+//
+// Written as data: docs/STORY_DATA.md. Strict JSON inside the call. Code half: js/quests/figurehead.js.
+defineStory({
+  "id": "figurehead",
+  "kind": "minor",
+  "title": "The Figurehead",
+  "location": "coldroom",
+  "rumour": "Dory Kittredge's nets brought up a wooden woman off Gannet.",
+  "endings": { "claimed": "Home Again", "auction": "Going, Going", "anchor": "Over the Bar" },
+  "outcome": "flag.figureEnd",
+  "about": [
+    "Dory Kittredge's nets brought up a ship's figurehead off Gannet, a wooden woman with one hand raised, and three families each say she's their great-great-grandmother (§{doryFigurehead}). Dory sells her to you to get her off the ice, and you collect her from the fish market at lunch.",
+    "On the market floor (§{fishMarket}) Bea Lightfoot, Constance Avery and Manny Furtado each make their case. Decide whose she is (Home Again): only if you choose Maria Furtado do you scrape the paint and find the carver's name, J. FURTADO 1871, which settles it. Or auction her among the three for $810 and make enemies (Going, Going), or sell her to Ruthie to hang over the bar at the Rusty Anchor, where everyone can visit (Over the Bar)."
+  ],
+  "cast": {
+    "lightfoot": {
+      "name": "Bea Lightfoot",
+      "look": { "skin": "#f0d0b8", "hair": "#d8d8d8", "hs": 3, "coat": "#5a3a6a", "style": "jacket", "long": true, "pants": "#3a2a3a", "glasses": "#2a2a2e" }
+    },
+    "furtado": {
+      "name": "Manny Furtado",
+      "look": { "skin": "#c89070", "hair": "#2a1e16", "hs": 0, "coat": "#c8a020", "style": "puffer", "pants": "#2a3a5a", "moustache": "#2a1e16", "stout": true }
+    },
+    "avery": {
+      "name": "Constance Avery",
+      "look": { "skin": "#7a5038", "hair": "#3a2a1e", "hs": 5, "coat": "#2a5a6a", "trim": "#e8e0cc", "style": "jacket", "pants": "#2a2a30" }
+    }
+  },
+  "icons": {
+    "figurehead": [
+      "........kk..",
+      ".......kWk..",
+      ".....kkkWk..",
+      "....kpppk...",
+      "...kpPpk....",
+      "...kpppk....",
+      "..kRRRRk....",
+      ".kRRrRRk....",
+      ".kRRrRRRk...",
+      "kRRrrRRRk...",
+      "kWWWWWWWWk..",
+      ".kkkkkkkkk.."
+    ]
+  },
+  "uniques": {
+    "figurehead": {
+      "name": "Ship's figurehead, a woman with one hand raised",
+      "icon": "figurehead",
+      "cat": "art",
+      "guide": 260,
+      "questKey": true,
+      "tells": [
+        "Oak, lead paint over older paint. Her raised hand holds a carved scallop shell, not a torch or a wreath.",
+        "Cut into the scroll at her base, under a century of paint: J. FURTADO CARVR 1871."
+      ]
+    }
+  },
+  "scenes": {
+    "doryFigurehead": {
+      "title": "Dory sells you the wooden woman off her ice",
+      "customer": "dory",
+      "steps": [
+        {
+          "say": "dory",
+          "text": [
+            "You'll have heard. Wooden woman, off Gannet, in my nets. She's on my ice. The haddock are complaining.",
+            "And three families have been in already to say she's their great-great-grandmother. Carved from life. All three of them. I sell fish. I'm not a judge.",
+            "Buy her off me and she's your problem. A hundred and fifty, and you collect from the market at lunch. Bring someone strong."
+          ]
+        },
+        { "offer": { "unique": "figurehead" }, "persona": "honest", "asking": 150, "min": 110 },
+        {
+          "if": "offer != 'deal'",
+          "then": [
+            { "say": "dory", "text": "Then she stays on the ice and I start charging the families rent." },
+            { "leave": "dory" },
+            { "end": true }
+          ]
+        },
+        { "set": { "figureIn": true } },
+        { "say": "dory", "text": "They'll all be there. They're always there. One of them brought a folding chair." },
+        { "plan": "fish-market" },
+        { "leave": "dory" }
+      ]
+    },
+    "fishMarket": {
+      "title": "Three families claim the figurehead on the fish market floor",
+      "steps": [
+        {
+          "stage": "fishMarket",
+          "fadeOut": false,
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [40, 168] },
+            { "id": "dory", "cast": "dory", "at": [290, 160], "facingLeft": true },
+            { "id": "lightfoot", "cast": "lightfoot", "at": [76, 160] },
+            { "id": "furtado", "cast": "furtado", "at": [230, 162], "facingLeft": true },
+            { "id": "avery", "cast": "avery", "at": [262, 158], "facingLeft": true }
+          ]
+        },
+        { "narrate": "The fish market floor at noon. Gulls in the rafters, the haddock pushed down to one end of the ice, and on the rest of it, a wooden woman on her back with one hand raised, as if she's asking a question." },
+        { "say": "lightfoot", "text": "Bea Lightfoot. That is Hannah Lightfoot, wife of Captain Asa Lightfoot of the Halcyon. She waved him out of the harbor every voyage. That is the wave." },
+        { "say": "avery", "text": "Constance Avery. That's Prudence Avery, who sailed with her husband when no wives sailed, and ran the ship when he died off the Azores. Look at that jaw." },
+        { "say": "furtado", "text": "Manny Furtado. That's Maria Furtado. Her husband carved her. She sold scallops on this pier. She's holding a scallop. I rest my case." },
+        { "say": "dory", "text": "You see what I've been dealing with." },
+        { "find": "her", "in": "stock", "match": { "uniqueId": "figurehead" } },
+        {
+          "if": "!her",
+          "then": [
+            { "say": "dory", "text": "You haven't... you sold her? Already? Then you can explain it to these three." },
+            { "end": true }
+          ]
+        },
+        {
+          "choose": [
+            {
+              "label": "Decide whose she is",
+              "hint": "(look at her first)",
+              "then": [
+                {
+                  "choose": [
+                    {
+                      "label": "Hannah Lightfoot",
+                      "then": [
+                        { "set": { "figureEnd": "claimed", "figureTo": "lightfoot" } },
+                        { "take": "her" },
+                        { "say": "lightfoot", "text": "I knew it. I knew it! Wait till I tell my sister." },
+                        { "say": "furtado", "text": "She is holding a SCALLOP." },
+                        { "narrate": "Nobody looks at the base, where there's a name under the paint. Nobody but Dory, who sighs." },
+                        { "rep": 1 },
+                        { "coin": 150, "why": "Bea Lightfoot paid what you paid for her" }
+                      ]
+                    },
+                    {
+                      "label": "Prudence Avery",
+                      "then": [
+                        { "set": { "figureEnd": "claimed", "figureTo": "avery" } },
+                        { "take": "her" },
+                        { "say": "avery", "text": "I knew it. I knew it! Wait till I tell my sister." },
+                        { "say": "furtado", "text": "She is holding a SCALLOP." },
+                        { "narrate": "Nobody looks at the base, where there's a name under the paint. Nobody but Dory, who sighs." },
+                        { "rep": 1 },
+                        { "coin": 150, "why": "Constance Avery paid what you paid for her" }
+                      ]
+                    },
+                    {
+                      "label": "Maria Furtado",
+                      "then": [
+                        { "set": { "figureEnd": "claimed", "figureTo": "furtado" } },
+                        { "take": "her" },
+                        { "narrate": "You scrape a thumbnail of paint off the scroll at her base. Under it, cut deep: J. FURTADO CARVR 1871." },
+                        { "say": "furtado", "text": "João Furtado. Her husband. He carved her the year they married, for the Esperança, and she went down with it. Grandmother said she was the only thing on that ship he ever finished." },
+                        { "say": "lightfoot", "text": "Well. She does have a Lightfoot wave." },
+                        { "say": "avery", "text": "And an Avery jaw. Fine. FINE." },
+                        { "rep": 4 },
+                        { "coin": 150, "why": "Manny Furtado paid what you paid for her" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Auction her, here, to all three",
+              "hint": "(highest bid wins)",
+              "then": [
+                { "set": { "figureEnd": "auction" } },
+                { "sell": "her", "to": "auction" },
+                { "narrate": "Dory hands you a fish scale for a gavel. It goes three hundred, four hundred, five. Bea drops out at six with a sound like a kettle. Constance and Manny go on in tens until Manny says \"eight-ten\" and Constance says \"she's all yours\" and walks out." },
+                { "coin": 810, "why": "Auctioned the figurehead on the fish market floor" },
+                { "say": "furtado", "text": "Eight hundred and ten dollars for my own great-great-grandmother. She'd have had something to say about that." },
+                { "rep": -2 }
+              ]
+            },
+            {
+              "label": "Sell her to Ruthie Kroll for over the bar at the Rusty Anchor",
+              "hint": "($320)",
+              "then": [
+                { "set": { "figureEnd": "anchor" } },
+                { "sell": "her", "to": "anchor" },
+                { "coin": 320, "why": "Sold the figurehead to the Rusty Anchor" },
+                { "narrate": "Ruthie Kroll comes down from the Anchor with a hand truck and two regulars. By six o'clock the wooden woman is over the bar with her hand raised, as if she's ordering." },
+                { "say": "avery", "text": "Well. At least all three of us can visit her." },
+                { "say": "furtado", "text": "Every night. She'll like that. She liked company." }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "beats": [{ "drift": "figurehead", "from": "1-2", "to": "3-2", "cast": "dory", "scene": "doryFigurehead" }],
+  "errands": [
+    {
+      "id": "fish-market",
+      "title": "Collect the figurehead from the fish market",
+      "where": "Kittredge Fish, Pier Nine",
+      "scene": "fishMarket",
+      "test": [{ "add": { "unique": "figurehead" } }, { "set": { "figureIn": true } }]
+    }
+  ],
+  "calendar": [
+    { "id": "fish-market", "errand": "fish-market", "story": "figurehead", "where": "Kittredge Fish", "title": "Collect the figurehead", "known": "flag.figureIn" }
+  ],
+  "epilogue": [
+    { "line": "Maria Furtado stands in Manny's front garden on Water Street, holding up her scallop shell to the harbor.", "if": "flag.figureEnd == 'claimed' && flag.figureTo == 'furtado'" },
+    { "line": "The figurehead stands in Bea Lightfoot's front hall. Manny Furtado still says she's holding a scallop.", "if": "flag.figureEnd == 'claimed' && flag.figureTo == 'lightfoot'" },
+    { "line": "The figurehead stands in Constance Avery's front hall. Manny Furtado still says she's holding a scallop.", "if": "flag.figureEnd == 'claimed' && flag.figureTo == 'avery'" },
+    { "line": "Manny Furtado paid $810 for the figurehead. The other two families stopped speaking to him, and to you.", "if": "flag.figureEnd == 'auction'" },
+    { "line": "The wooden woman over the bar at the Rusty Anchor has her hand raised. On busy nights Ruthie says she's ordering.", "if": "flag.figureEnd == 'anchor'" }
+  ],
+  "talk": {
+    "by": "dory",
+    "rumour": [
+      "My nets brought up a wooden woman off Gannet. She's on my ice with her hand up like she's got a question.",
+      "Three families have been in already to say she's their great-great-grandmother. My haddock are getting crowded out."
+    ],
+    "react": { "claimed": "The figurehead's gone home with a family. Off my ice, anyway. The haddock are very relieved.", "auction": "Eight hundred and ten dollars for a wooden woman. On my floor. With a fish scale for a gavel. I should charge rent.", "anchor": "She's over the bar at the Anchor with her hand up. Ruthie says she's ordering. I say she's asking for the bill." }
+  }
+});

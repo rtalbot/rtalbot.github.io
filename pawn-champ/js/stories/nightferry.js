@@ -1,0 +1,700 @@
+// Pawn Champ - The Night Ferry: the island ferry makes a run at 2 a.m. that isn't on the timetable.
+// Major quest M14, batch H (docs/quests/MAJOR.md#m14-the-night-ferry).
+//
+// Hook (W1 Wed, shop)        Roz Teague, deckhand, pawns a carved stone cormorant. It has a museum
+//                            number on its base that somebody tried to scrub off.
+// Middle (W2 Mon, shop)      Roz again, with a sealed jar of 1786 beach plum jam and a brass-rimmed
+//                            tag. "There's no two o'clock boat." She'll stow you aboard.
+// Scene 1 (W2 Tue-Thu night) the ferry deck at 2 a.m.: crates of MARINE PARTS, a launch with no lights.
+// Middle (W3 Mon, shop)      Roz brings the tags she's kept. The buyer meets the boat himself on Thursday.
+// Scene 2 (W3 Tue-Thu night) the Gannet Island dock at 2 a.m.: it's Merrit Gaunt. He offers you a cut.
+// Middle (W4 Mon, shop)      Roz, getting out, sells what she grabbed from the last crate.
+// Finale (W3 Thu-W4 Thu)     the harbormaster's shack with Tess: hand her the tags, post the pieces
+//                            home one by one, or tell her nothing and keep the envelope.
+// Who runs it: Merrit Gaunt, the Gilded Hand's collector, whom every run meets on day one. The Hand
+// repossesses island heirlooms, and some of what it repossesses was never the debtor's to pledge.
+// Crossings: Static on Channel 16 (Tess has been watching the ferry log since 1991), The Museum Job
+// (Dr. Lusk's touring crowns were on the list), The Overdue Book (the Athenaeum tag means more to Hester).
+'use strict';
+//
+// Written as data: docs/STORY_DATA.md. Strict JSON inside the call. Code half: js/quests/nightferry.js.
+defineStory({
+  "id": "nightferry",
+  "kind": "major",
+  "colour": "#3a6ab8",
+  "family": "crime",
+  "title": "The Night Ferry",
+  "crosses": ["radio", "museum", "overdue"],
+  "rumour": "The island ferry makes a run at two in the morning. It isn't on the timetable.",
+  "endings": { "exposed": "Lit Up", "cut": "Riding Along", "returned": "Return to Sender", "ashore": "Missed the Boat" },
+  "outcome": [
+    { "if": "flag.nfEnd == 'exposed'", "ending": "exposed" },
+    { "if": "flag.nfEnd == 'cut'", "ending": "cut" },
+    { "if": "flag.nfEnd == 'returned'", "ending": "returned" },
+    { "if": "flag.nfEnd == 'ashore'", "ending": "ashore" },
+    { "if": "flag.nfAshore", "ending": "ashore" }
+  ],
+  "cast": {
+    "roz": {
+      "name": "Roz Teague",
+      "look": { "skin": "#e0b090", "hair": "#c8642a", "hs": 3, "coat": "#e8a020", "trim": "#2a2a30", "style": "puffer", "hat": "beanie", "hatc": "#2a3a5a", "pants": "#3a3a42" }
+    }
+  },
+  "icons": {
+    "acctag": [
+      "............",
+      ".....kk.....",
+      "....k..k....",
+      "...kkkkkk...",
+      "..kyppppyk..",
+      "..kpPPPPpk..",
+      "..kpppppPk..",
+      "..kpPPPppk..",
+      "..kpppppPk..",
+      "..kpPPpppk..",
+      "..kyppppyk..",
+      "...kkkkkk..."
+    ],
+    "cormorant": [
+      "............",
+      "......kkk...",
+      ".....kdddk..",
+      "....kdkdd.k.",
+      "....kddk.ka.",
+      "...kdddk....",
+      "..kdddddk...",
+      ".kdddddddk..",
+      ".kddddddk...",
+      "..kkddddk...",
+      "...kwwwwk...",
+      "..kkkkkkkk.."
+    ]
+  },
+  "uniques": {
+    "nfBird": {
+      "name": "Carved stone cormorant",
+      "icon": "cormorant",
+      "cat": "art",
+      "guide": 220,
+      "condLabel": "Museum-kept",
+      "tells": [
+        "Black soapstone, wings half open, drying itself the way they do on the pilings.",
+        "Under the base, half scrubbed away, a number painted in white: 1931.44. That is a museum's number."
+      ]
+    },
+    "nfJam": {
+      "name": "Beach plum jam, 1786",
+      "icon": "glassjar",
+      "cat": "curio",
+      "guide": 15,
+      "condLabel": "Sealed with wax",
+      "wantedBy": { "name": "Bettany Lowe", "mult": 16 },
+      "wantedKnown": "flag.nfJamWanted",
+      "tells": [
+        "A squat green jar, waxed and tied with linen. Inside, something dark that was plums once.",
+        "The paper label, in iron-gall ink: \"Beach Plum. Gannet. Sept. 1786. M.H.\" It has never been opened."
+      ]
+    },
+    "nfTag": {
+      "name": "Museum accession tag",
+      "icon": "acctag",
+      "cat": "curio",
+      "guide": 0,
+      "condLabel": "Cut from its string",
+      "questKey": true,
+      "tells": ["A small card tag with a brass rim. It came off a piece on the two o'clock boat."]
+    },
+    "nfPiece": {
+      "name": "Crated museum piece",
+      "icon": "statuette",
+      "cat": "art",
+      "guide": 160,
+      "condLabel": "Still in its straw",
+      "tells": [
+        "Packed in straw, with a museum's number on it. It belongs on a shelf with a little card under it."
+      ]
+    }
+  },
+  "about": [
+    "A smuggling story. Roz Teague, a deckhand on the island ferry, pawns a carved stone cormorant she says was left aboard (§{rozBird}). Then she tells you about the run at two in the morning that isn't on the timetable: crates of \"marine parts\", every item tagged from a museum collection, and a jar of 1786 beach plum jam loose in the straw (§{rozJar}). Get her to take you aboard, or keep the tag and stay out of it (Missed the Boat).",
+    "On the two o'clock ferry (§{nfDeck}) a launch with no lights swaps crates in the dark, and a man in a long coat counts them. Roz brings you the tags she's kept (§{rozTags}). On Gannet's back dock (§{nfDock}) the man turns out to be Merrit Gaunt of the Gilded Hand: the Hand repossesses island houses and sells on what was never theirs to pledge. He offers you an envelope to store things for a week. Odile said no to him once.",
+    "Tess, the harbormaster, wants to know why you've been on her water at two in the morning (§{nfShack}). Put two or more museum tags on her desk and the ferry is shut down (Lit Up). Post the pieces back to the museums anonymously (Return to Sender). Or say you were fishing, and keep taking envelopes if you took one (Riding Along). Roz quits and sells you what was left loose in the last crate (§{rozOut}), and Bettany would pay $240 for the 1786 jam (§{nfBettany})."
+  ],
+  "notes": "Each piece on the night boat carries a museum tag, from a collection somebody emptied: the Athenaeum, Fall River and the Commonwealth. Who runs it: Merrit Gaunt, the Gilded Hand's collector.",
+  "scenes": {
+    "rozBird": {
+      "title": "Roz Teague pawns a stone cormorant with a museum number",
+      "customer": "roz",
+      "steps": [
+        {
+          "say": "roz",
+          "text": [
+            "Roz Teague. I work the island ferry. Deckhand, ropes, tickets, sick bags.",
+            "Somebody left this aboard. Nobody's claimed it, so it's salvage, right? That's how salvage works."
+          ]
+        },
+        {
+          "offer": { "unique": "nfBird", "nfLoot": true },
+          "persona": "desperate",
+          "asking": 70,
+          "min": 45,
+          "onWatch": "continue"
+        },
+        { "if": "offer == 'watch'", "then": [{ "set": { "nfAshore": true } }, { "end": true }] },
+        { "set": { "nfMet": true } },
+        {
+          "say": "roz",
+          "text": { "if": "offer == 'deal'", "then": "If anyone asks, I found it on the night run. No. I found it on the day run. There's no night run.", "else": "Fine. I'll throw it over the side. That's what they'd want. Probably." }
+        },
+        { "leave": "roz" }
+      ]
+    },
+    "rozJar": {
+      "title": "Roz tells you about the two o'clock boat",
+      "customer": "roz",
+      "steps": [
+        {
+          "say": "roz",
+          "text": [
+            "Me again. I need to tell somebody, and you're the only one in town who looks at things for a living.",
+            "Two nights a week the ferry goes out at two in the morning. Not on the timetable. No passengers. Just crates, MARINE PARTS. They pay me two hundred a run to tie up and not look.",
+            "I looked. Everything in those crates has one of these on it."
+          ]
+        },
+        { "view": { "counterIcon": "acctag" } },
+        { "narrate": "She puts a little brass-rimmed tag on the counter. HOLLOW NECK ATHENAEUM, 1902.117." },
+        { "say": "roz", "text": "And this was loose in the straw. It's jam. It's jam from 1786. Who ships jam at two in the morning?" },
+        { "view": { "counterIcon": null } },
+        {
+          "offer": { "unique": "nfJam", "nfLoot": true },
+          "persona": "honest",
+          "asking": 20,
+          "min": 10,
+          "onWatch": "continue"
+        },
+        { "if": "offer == 'watch'", "then": [{ "set": { "nfAshore": true } }, { "end": true }] },
+        {
+          "choose": [
+            {
+              "label": "\"Get me aboard.\"",
+              "hint": "(she keeps the tag for you)",
+              "then": [
+                { "set": { "nfAboard": true } },
+                {
+                  "if": "shelf.free",
+                  "then": [
+                    {
+                      "add": {
+                        "unique": "nfTag",
+                        "name": "Athenaeum tag",
+                        "tells": [
+                          "A museum tag, brass-rimmed: HOLLOW NECK ATHENAEUM, 1902.117. \"Gift of Capt. J. Hale.\""
+                        ]
+                      }
+                    },
+                    { "refresh": "panel" }
+                  ],
+                  "else": [
+                    { "toast": "No room on your shelves: athenaeum tag stays with Roz.", "look": "roz" }
+                  ]
+                },
+                { "say": "roz", "text": "{placed:nf-deck}, quarter to two, the town slip. Wear something dark. If the skipper asks, you're my cousin and you get seasick." },
+                { "toast": "Calendar: the ferry at 2 a.m.", "look": "roz" }
+              ]
+            },
+            {
+              "label": "Take the tag, and stay out of it",
+              "then": [
+                {
+                  "if": "shelf.free",
+                  "then": [
+                    {
+                      "add": {
+                        "unique": "nfTag",
+                        "name": "Athenaeum tag",
+                        "tells": [
+                          "A museum tag, brass-rimmed: HOLLOW NECK ATHENAEUM, 1902.117. \"Gift of Capt. J. Hale.\""
+                        ]
+                      }
+                    },
+                    { "refresh": "panel" }
+                  ],
+                  "else": [
+                    { "toast": "No room on your shelves: athenaeum tag stays with Roz.", "look": "roz" }
+                  ]
+                },
+                { "set": { "nfAshore": true } },
+                { "say": "roz", "text": "Keep it, then. If something happens to me, at least somebody's got a tag." }
+              ]
+            },
+            {
+              "label": "\"Not my boat, Roz.\"",
+              "then": [
+                { "set": { "nfAshore": true } },
+                { "say": "roz", "text": "Nobody's boat. That's the whole trouble." }
+              ]
+            }
+          ]
+        },
+        { "leave": "roz" }
+      ]
+    },
+    "nfDeck": {
+      "title": "The ferry at two in the morning",
+      "steps": [
+        {
+          "stage": "ferryNight",
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [96, 166] },
+            { "id": "roz", "cast": "roz", "at": [140, 164] }
+          ]
+        },
+        { "narrate": "The island ferry, two in the morning, running without her deck lights. Nobody in the wheelhouse says a word. The skipper is a shape in a cap behind the glass." },
+        { "say": "roz", "text": "Behind the life jackets. If anyone comes aft, you're sick." },
+        { "narrate": "Halfway across, the engine drops to an idle. Out of the dark a launch comes alongside, no running lights, and somebody hands a crate across and takes one back." },
+        {
+          "choose": [
+            {
+              "label": "Get a look inside a crate",
+              "hint": "(another tag, but someone might notice)",
+              "then": [
+                { "walk": "you", "to": [216, 166] },
+                { "narrate": "The lid is only tacked down. Straw, and a ship's decanter with a little card tied to its neck. You slip the card into your pocket and press the lid back." },
+                {
+                  "if": "shelf.free",
+                  "then": [
+                    {
+                      "add": {
+                        "unique": "nfTag",
+                        "name": "Fall River tag",
+                        "tells": [
+                          "A museum tag: FALL RIVER MARINE COLLECTION, 1958.22. The string has been cut, not untied."
+                        ]
+                      }
+                    },
+                    { "refresh": "panel" }
+                  ],
+                  "else": [
+                    { "toast": "No room on your shelves: fall river tag stays with Roz.", "look": "roz" }
+                  ]
+                },
+                { "set": { "nfSeen": true } },
+                { "narrate": "From the launch, a polite voice: \"One of the lids is up, Roz.\" Then the launch is gone." },
+                { "say": "roz", "text": "He counts lids. He counts everything." }
+              ]
+            },
+            {
+              "label": "Stay behind the life jackets and watch the launch",
+              "then": [
+                { "narrate": "On the launch, a man in a long coat stands very still, with the light catching a pair of glasses. He checks each crate against a clipboard and doesn't once look at the sea." },
+                { "say": "roz", "text": "Never says his name. Says thank you. Every time. That's the worst part." }
+              ]
+            }
+          ]
+        },
+        { "narrate": "On the way back you pass the harbormaster's shack. A light is on. A pair of binoculars catches the moon. Somebody has been watching this boat for a long time.", "if": "quest.radio" },
+        { "say": "roz", "text": "Thursday next week is the big run. He comes to the island himself to sign for it. The old coal dock, round the back of Gannet." },
+        { "set": { "nfDeck": true } },
+        { "toast": "Calendar: Gannet Island's back dock, next week", "look": "roz" }
+      ]
+    },
+    "rozTags": {
+      "title": "Roz brings the tags she's kept",
+      "customer": "roz",
+      "steps": [
+        {
+          "say": "roz",
+          "text": [
+            "He knew. Someone had been aboard. He asked me, very nicely, if I had a cousin. I said I have six. I do have six.",
+            "I've been keeping these. One off every crate I could. I want them somewhere that isn't my locker."
+          ]
+        },
+        { "say": "roz", "text": "One crate said LUSK on the side. Crowns of the Stage, the label said. So that's where that was going.", "if": "quest.museum" },
+        {
+          "choose": [
+            {
+              "label": "Keep her tags safe",
+              "hint": "(another tag)",
+              "then": [
+                {
+                  "if": "shelf.free",
+                  "then": [
+                    {
+                      "add": {
+                        "unique": "nfTag",
+                        "name": "Commonwealth tag",
+                        "tells": [
+                          "A museum tag: COMMONWEALTH MARITIME MUSEUM, 1931.44. Somebody tried to rub the number off with a thumb."
+                        ]
+                      }
+                    },
+                    { "refresh": "panel" }
+                  ],
+                  "else": [
+                    { "toast": "No room on your shelves: commonwealth tag stays with Roz.", "look": "roz" }
+                  ]
+                },
+                { "say": "roz", "text": "Thank you. I feel lighter. I feel about a tag lighter." }
+              ]
+            },
+            {
+              "label": "\"Burn them, Roz.\"",
+              "then": [{ "say": "roz", "text": "You burn them. I can't. My hands won't." }]
+            }
+          ]
+        },
+        { "leave": "roz" }
+      ]
+    },
+    "nfDock": {
+      "title": "Who signs for the crates, on Gannet's back dock",
+      "steps": [
+        {
+          "stage": "gannetDock",
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [300, 166] },
+            { "id": "roz", "cast": "roz", "at": [120, 164] }
+          ]
+        },
+        {
+          "narrate": [
+            "The old coal dock round the back of Gannet Island, two in the morning. A bulb burns in the boathouse. Crates wait on a hand truck. Out on the black water, the launch idles with no lights.",
+            "A man in a long coat steps off it onto the ladder, clipboard first."
+          ]
+        },
+        { "enter": { "id": "merrit", "cast": "merrit", "name": "The man from the launch", "at": [200, 164] } },
+        { "say": "merrit", "text": "Good evening. Or good morning. I never know which, at this hour." },
+        { "hook": "named", "with": "merrit", "note": "now you know who he is" },
+        {
+          "say": "merrit",
+          "text": [
+            "Keeper. Of course it's you. Your aunt used to stand exactly there, a long time ago, before she lost her nerve.",
+            "The Hand repossesses. Island houses, mostly. And what's in the houses. Some of what we take was never theirs to pledge: a museum's, a library's. Nobody has missed it in a hundred years.",
+            "It goes out on the night boat to people who will miss it very much indeed, and pay accordingly. You have a shop. Shops are wonderful places to keep things for a week."
+          ]
+        },
+        { "narrate": "He holds out an envelope. It is thick." },
+        {
+          "choose": [
+            {
+              "label": "Take the envelope",
+              "hint": "(+$150, and you're part of it)",
+              "then": [
+                { "coin": 150, "why": "Merrit Gaunt's envelope" },
+                { "heat": 6 },
+                { "set": { "nfCut": true, "nfDouble": false } },
+                { "say": "merrit", "text": "Splendid. You'll find it's very quiet work. Nobody ever asks a pawnshop where something came from. You've made sure of that yourself." }
+              ]
+            },
+            {
+              "label": "Take it, and keep every tag you can",
+              "hint": "(+$150; Tess might still hear)",
+              "then": [
+                { "coin": 150, "why": "Merrit Gaunt's envelope" },
+                { "heat": 6 },
+                { "set": { "nfCut": true, "nfDouble": true } },
+                { "say": "merrit", "text": "Splendid. You'll find it's very quiet work. Nobody ever asks a pawnshop where something came from. You've made sure of that yourself." }
+              ]
+            },
+            {
+              "label": "\"No.\"",
+              "then": [
+                { "set": { "nfRefused": true } },
+                { "say": "merrit", "text": "No. Odile said no, too. Well. It's a long month, keeper, and the installments don't pay themselves." }
+              ]
+            }
+          ],
+          "as": "i"
+        },
+        {
+          "if": "flag.nfDouble || i == 2",
+          "then": [
+            { "narrate": "While he signs for the crates, Roz bumps the hand truck. A tag comes loose and lands by your boot. You put your foot on it." },
+            { "hook": "pickOne", "with": 3, "sets": ["n"], "note": "one of the three tags, at random" },
+            {
+              "if": "n == 0",
+              "then": [
+                {
+                  "if": "shelf.free",
+                  "then": [
+                    {
+                      "add": {
+                        "unique": "nfTag",
+                        "name": "Athenaeum tag",
+                        "tells": [
+                          "A museum tag, brass-rimmed: HOLLOW NECK ATHENAEUM, 1902.117. \"Gift of Capt. J. Hale.\""
+                        ]
+                      }
+                    },
+                    { "refresh": "panel" }
+                  ],
+                  "else": [
+                    { "toast": "No room on your shelves: athenaeum tag stays with Roz.", "look": "roz" }
+                  ]
+                }
+              ]
+            },
+            {
+              "if": "n == 1",
+              "then": [
+                {
+                  "if": "shelf.free",
+                  "then": [
+                    {
+                      "add": {
+                        "unique": "nfTag",
+                        "name": "Fall River tag",
+                        "tells": [
+                          "A museum tag: FALL RIVER MARINE COLLECTION, 1958.22. The string has been cut, not untied."
+                        ]
+                      }
+                    },
+                    { "refresh": "panel" }
+                  ],
+                  "else": [
+                    { "toast": "No room on your shelves: fall river tag stays with Roz.", "look": "roz" }
+                  ]
+                }
+              ]
+            },
+            {
+              "if": "n == 2",
+              "then": [
+                {
+                  "if": "shelf.free",
+                  "then": [
+                    {
+                      "add": {
+                        "unique": "nfTag",
+                        "name": "Commonwealth tag",
+                        "tells": [
+                          "A museum tag: COMMONWEALTH MARITIME MUSEUM, 1931.44. Somebody tried to rub the number off with a thumb."
+                        ]
+                      }
+                    },
+                    { "refresh": "panel" }
+                  ],
+                  "else": [
+                    { "toast": "No room on your shelves: commonwealth tag stays with Roz.", "look": "roz" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        { "say": "roz", "text": "I'm done after this. I'm done. I'm saying it out loud so it counts." },
+        { "set": { "nfDock": true } },
+        { "toast": "Calendar: the harbormaster's shack, after dark", "look": "tess" }
+      ]
+    },
+    "rozOut": {
+      "title": "Roz gets out, and sells what was loose in the last crate",
+      "customer": "roz",
+      "steps": [
+        {
+          "say": "roz",
+          "text": [
+            "I quit. Handed in my ticket punch. The skipper didn't even look up.",
+            "I took what was left loose in the last crate. I want it gone, and I want it to go somewhere good. I don't know where good is. You might."
+          ]
+        },
+        {
+          "offer": {
+            "unique": "nfPiece",
+            "nfLoot": true,
+            "name": "Scrimshaw busk, crated",
+            "tells": [
+              "A whalebone corset busk, carved with a ship and two initials. A tag: HOLLOW NECK ATHENAEUM, 1902.120."
+            ]
+          },
+          "persona": "desperate",
+          "asking": 40,
+          "min": 25
+        },
+        {
+          "say": "roz",
+          "text": { "if": "offer == 'deal'", "then": "There. It's yours. I'm going to go and stand in a field.", "else": "Then it goes in the harbor. Maybe the fish will put it in a little case." }
+        },
+        { "leave": "roz" }
+      ]
+    },
+    "nfShack": {
+      "title": "Tess has questions, at the harbormaster's shack",
+      "steps": [
+        {
+          "stage": "harbormasterNight",
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [110, 164] },
+            { "id": "tess", "cast": "tess", "at": [220, 160], "facingLeft": true }
+          ]
+        },
+        { "narrate": "The harbormaster's shack, after dark. The ferry's logbook is open on the desk. Two in the morning is written nowhere in it." },
+        { "say": "tess", "text": "You've been out on my water at two in the morning. Twice. I'd like to know why, before I decide what to think about you." },
+        { "say": "tess", "text": "I've watched that ferry since 1991. Boats that go out with no lights, I take personally.", "if": "quest.radio" },
+        { "find": "tags", "in": "stock", "match": { "uniqueId": "nfTag" }, "all": true },
+        { "find": "loot", "in": "stock", "match": { "nfLoot": true }, "all": true },
+        {
+          "choose": [
+            {
+              "label": "Lay the museum tags on her desk",
+              "hint": "({tags.count} tags)",
+              "disabled": "tags.count < 2",
+              "off": { "hint": "(you need at least two)" },
+              "then": [
+                { "hook": "drop", "with": "tags" },
+                { "say": "tess", "text": "Athenaeum. Fall River. Commonwealth. That's not smuggling, that's a library card." },
+                { "narrate": "On Thursday Tess and two state troopers are on the town slip at a quarter to two. The ferry doesn't leave. The launch does, very fast, and is found next morning tied up at the Gilded Hand's own mooring." },
+                {
+                  "if": "flag.nfCut",
+                  "then": [
+                    { "say": "tess", "text": "And the envelope he gave you, you'll give that to the church roof. I'm not asking." },
+                    { "hook": "giveBack", "with": "Merrit's envelope, to the Saint Brine's roof", "note": "up to $150, as much as you have" }
+                  ]
+                },
+                { "narrate": "Merrit Gaunt's name is never in the paper. A shell company called Gannet Coal is fined a great deal. On Monday he collects your installment without a word, and counts the bills twice." },
+                { "rep": 8, "why": "Shut down the two o'clock ferry" },
+                { "heat": -6 },
+                { "set": { "nfEnd": "exposed" } }
+              ]
+            },
+            {
+              "label": "Post the pieces home, one parcel at a time",
+              "hint": "({loot.count} in your stock)",
+              "disabled": "!loot.count",
+              "off": { "hint": "(you hold none of them)" },
+              "then": [
+                { "hook": "drop", "with": "loot" },
+                {
+                  "say": "tess",
+                  "text": [
+                    "You want to post them back. With no name on the parcel. To museums.",
+                    "I didn't hear that. I'll lend you my packing tape. I didn't lend you that either."
+                  ]
+                },
+                {
+                  "narrate": { "if": "loot.count == 1", "then": "For a week, a parcel goes out of the Hollow Neck post office every Tuesday with no return address. A curator in Fall River writes to the paper about it. She calls you \"a friend of the collection.\"", "else": "For {loot.count} weeks, a parcel goes out of the Hollow Neck post office every Tuesday with no return address. A curator in Fall River writes to the paper about it. She calls you \"a friend of the collection.\"" }
+                },
+                { "hook": "repEach", "with": { "each": 3, "of": "loot", "why": "Sent the pieces home" } },
+                { "set": { "nfEnd": "returned" } }
+              ]
+            },
+            {
+              "label": "\"Fishing, Tess. Just fishing.\"",
+              "then": [
+                { "say": "tess", "text": "Fishing. At two in the morning. On a ferry." },
+                { "narrate": "She looks at you, then at the logbook, and closes it." },
+                {
+                  "if": "flag.nfCut",
+                  "then": [
+                    { "set": { "nfEnd": "cut" } },
+                    { "heat": 4 },
+                    { "narrate": "On the way home there's a parcel on your step: a crate of MARINE PARTS to keep for a week, and another envelope." },
+                    { "coin": 60, "why": "Holding a crate for Merrit" }
+                  ],
+                  "else": [{ "set": { "nfEnd": "ashore" } }]
+                }
+              ]
+            }
+          ]
+        },
+        { "set": { "nfDone": true } }
+      ]
+    },
+    "nfBettany": {
+      "title": "Bettany wants the 1786 jam",
+      "customer": "bettany",
+      "steps": [
+        { "find": "jar", "in": "stock", "match": { "uniqueId": "nfJam" } },
+        { "set": { "nfJamWanted": true } },
+        {
+          "say": "bettany",
+          "text": [
+            "Is that... in the green jar. Is that beach plum? Off Gannet? I can see the wax from the door.",
+            "I've been trying to make beach plum the old way for twenty years. Nobody writes it down. That jar is a recipe with a lid on."
+          ]
+        },
+        {
+          "choose": [
+            {
+              "label": "Sell it to Bettany",
+              "hint": "(+$240, a dollar a year)",
+              "then": [
+                { "sell": "jar", "to": "bettany" },
+                { "coin": 240, "why": "Sold the 1786 jam to Bettany Lowe" },
+                { "say": "bettany", "text": "I'm not going to eat it. I'm going to smell it once, at Christmas, and cry." }
+              ]
+            },
+            {
+              "label": "\"It's spoken for.\"",
+              "then": [
+                { "say": "bettany", "text": "If it's ever unspoken for. Twenty years. I can wait another week." }
+              ]
+            }
+          ]
+        },
+        { "leave": "bettany" }
+      ]
+    }
+  },
+  "beats": [
+    { "at": "1-3", "cast": "roz", "scene": "rozBird" },
+    { "at": "2-1", "cast": "roz", "scene": "rozJar", "if": "flag.nfMet && !flag.nfAshore" },
+    { "at": "3-1", "cast": "roz", "scene": "rozTags", "if": "flag.nfDeck" },
+    { "at": "4-1", "cast": "roz", "scene": "rozOut", "if": "flag.nfDock && !flag.nfDone && shelf.free" },
+    { "at": "4-3", "cast": "bettany", "scene": "nfBettany", "if": "hook.jamHere" }
+  ],
+  "nights": [
+    {
+      "id": "nf-deck",
+      "window": ["2-2", "2-4"],
+      "if": "flag.nfAboard",
+      "scene": "nfDeck",
+      "test": [{ "set": { "nfAboard": true } }]
+    },
+    {
+      "id": "nf-dock",
+      "window": ["3-2", "3-4"],
+      "if": "flag.nfDeck",
+      "scene": "nfDock",
+      "test": [{ "set": { "nfDeck": true } }]
+    },
+    {
+      "id": "nf-shack",
+      "window": ["3-4", "4-4"],
+      "if": "flag.nfDock && !flag.nfDone",
+      "scene": "nfShack",
+      "test": [
+        { "set": { "nfDock": true, "nfCut": true } },
+        {
+          "add": {
+            "unique": "nfTag",
+            "name": "Athenaeum tag",
+            "tells": [
+              "A museum tag, brass-rimmed: HOLLOW NECK ATHENAEUM, 1902.117. \"Gift of Capt. J. Hale.\""
+            ]
+          }
+        },
+        {
+          "add": {
+            "unique": "nfTag",
+            "name": "Fall River tag",
+            "tells": [
+              "A museum tag: FALL RIVER MARINE COLLECTION, 1958.22. The string has been cut, not untied."
+            ]
+          }
+        },
+        { "add": { "unique": "nfPiece", "nfLoot": true } }
+      ]
+    }
+  ],
+  "calendar": [
+    { "id": "nf-deck", "night": "nf-deck", "story": "nightferry", "where": "The island ferry", "title": "The two o'clock boat", "known": "flag.nfAboard", "scene": "nfDeck" },
+    { "id": "nf-dock", "night": "nf-dock", "story": "nightferry", "where": "Gannet Island, the back dock", "title": "Who signs for the crates", "known": "flag.nfDeck", "scene": "nfDock" },
+    { "id": "nf-shack", "night": "nf-shack", "story": "nightferry", "where": "The harbormaster's shack", "title": "Tess has questions", "known": "flag.nfDock", "scene": "nfShack" }
+  ],
+  "epilogue": [
+    { "line": "The two o'clock ferry is a timetable joke now. Roz Teague works at the Athenaeum, cataloging everything twice.", "if": "flag.nfEnd == 'exposed'" },
+    { "line": "Three museums have a new card in a case: \"Returned anonymously, Hollow Neck.\" Nobody in Hollow Neck says a word.", "if": "flag.nfEnd == 'returned'" },
+    { "line": "Some weeks a crate of MARINE PARTS sits in your back room for a night. You never open it. You count the envelope instead.", "if": "flag.nfEnd == 'cut'" }
+  ]
+});

@@ -1,0 +1,227 @@
+// Pawn Champ - The Séance. Minor quest m20, batch E (docs/quests/MINOR.md).
+// Madame Orsolya borrows a dead man's writing box from your stock for a séance. The dead man asks
+// where his will is. You know: it's in the box. An evening scene in Orsolya's parlor.
+//
+// Written as data: docs/STORY_DATA.md. Strict JSON inside the call.
+defineStory({
+  "id": "seance",
+  "kind": "minor",
+  "title": "The Séance",
+  "location": "orsolya",
+  "rumour": "Madame Orsolya's doing a séance for the Harrow widow.",
+  "endings": { "will": "The Will", "lid": "Shut the Lid" },
+  "outcome": "flag.seanceEnd",
+  "about": [
+    "Marv Kettle sells you a writing box initialled E.H. from the study of the late Edmund Harrow (§{marvBox}). Madame Orsolya asks to borrow it for a séance for his widow, Ida, because Edmund left no will anyone can find and his nephew Clement inherits everything without one (§{orsolyaBorrows}).",
+    "At the séance (§{seance}) Edmund speaks through Orsolya: he put the will where he always put things. You realise the box has a false bottom. Open it at the table, revealing a will leaving everything to Ida and his fountain pen to Clement (The Will), or keep the lid shut and find the will and a lining of old banknotes at home, which makes the box worth far more (Shut the Lid)."
+  ],
+  "cast": {
+    "idaHarrow": {
+      "name": "Ida Harrow",
+      "look": { "skin": "#f0d8c8", "hair": "#c8c8c8", "hs": 3, "coat": "#1a1a22", "style": "dress", "hat": "veil", "hatc": "#1a1a22", "pants": "#1a1a22" }
+    },
+    "clement": {
+      "name": "Clement Harrow",
+      "look": { "skin": "#f0d0b8", "hair": "#c8a050", "hs": 1, "coat": "#3a3a4a", "style": "suit", "pants": "#2a2a32", "trim": "#c84a3a" }
+    }
+  },
+  "icons": {
+    "writebox": [
+      "............",
+      "............",
+      ".kkkkkkkkkk.",
+      ".kWWWWWWWWk.",
+      ".kWWWyyWWWk.",
+      ".kkkkkkkkkk.",
+      ".kwwwwwwwwk.",
+      ".kwwwyywwwk.",
+      ".kwwwwwwwwk.",
+      ".kkkkkkkkkk.",
+      "............",
+      "............"
+    ]
+  },
+  "uniques": {
+    "harrowBox": {
+      "name": "Writing box, initialled E.H.",
+      "icon": "writebox",
+      "cat": "curio",
+      "guide": 45,
+      "mark": "the initials E.H.",
+      "tells": [
+        "Walnut, brass corners, a sloped writing lid. 1920s.",
+        "The inside is a quarter of an inch shallower than the outside. A false bottom."
+      ]
+    }
+  },
+  "scenes": {
+    "marvBox": {
+      "title": "Marv Kettle brings in a dead man's writing box",
+      "customer": "marv",
+      "steps": [
+        {
+          "say": "marv",
+          "text": [
+            "Marv Kettle, house clearances. Cleared out old Edmund Harrow's study up on Fern Hill. The nephew wanted the lot gone by Friday.",
+            "Nice writing box. E.H. on the lid. The nephew said \"sell it, it's just a box\"."
+          ]
+        },
+        { "offer": { "unique": "harrowBox" }, "persona": "honest", "asking": 26, "min": 16 },
+        { "set": { "harrowBox": true }, "if": "offer == 'deal'" },
+        { "leave": "marv" }
+      ]
+    },
+    "orsolyaBorrows": {
+      "title": "Madame Orsolya wants to borrow the box for a séance",
+      "customer": "orsolya",
+      "steps": [
+        { "find": "box", "in": "stock", "match": { "uniqueId": "harrowBox" } },
+        {
+          "say": "orsolya",
+          "text": [
+            "Madame Orsolya, from the boardwalk. Palms, cards, and the occasional dead husband.",
+            "I am holding a séance for the Harrow widow. Edmund Harrow, God rest him, died without leaving a will that anyone can find. The nephew gets everything unless one turns up."
+          ]
+        },
+        {
+          "if": "!box",
+          "then": [
+            { "say": "orsolya", "text": "I need something of Edmund's to call him by. I hear his writing box came through here, but I see it has gone again. A pity." },
+            { "leave": "orsolya" },
+            { "end": true }
+          ]
+        },
+        { "say": "orsolya", "text": "That writing box. E.H. That was his. May I borrow it, for one evening? And you must come. The dead are calmer when the owner of the object is in the room." },
+        {
+          "choose": [
+            {
+              "label": "Lend it, and go",
+              "then": [
+                { "set": { "seanceOn": true } },
+                {
+                  "edit": "box",
+                  "set": { "nosale": true, "questKey": true, "condLabel": "On loan to Madame Orsolya" }
+                },
+                { "refresh": "panel" },
+                { "say": "orsolya", "text": "{placed:seance}, after dark. The parlor at the end of the boardwalk, with the fairy lights. Do not wear anything that jingles." },
+                { "toast": "Calendar: the séance at Madame Orsolya's, {placed:seance} night", "look": "orsolya" }
+              ]
+            },
+            {
+              "label": "\"It's stock. It stays on the shelf.\"",
+              "then": [
+                { "say": "orsolya", "text": "Then Edmund will have to find his own way. They usually do, eventually." }
+              ]
+            }
+          ]
+        },
+        { "leave": "orsolya" }
+      ]
+    },
+    "seance": {
+      "title": "The séance",
+      "music": "eerie",
+      "steps": [
+        {
+          "stage": "orsolya",
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [92, 164] },
+            { "id": "orsolya", "cast": "orsolya", "at": [160, 154] },
+            { "id": "ida", "cast": "idaHarrow", "at": [210, 156], "facingLeft": true },
+            { "id": "clement", "cast": "clement", "at": [236, 160], "facingLeft": true }
+          ]
+        },
+        { "find": "box", "in": "stock", "match": { "uniqueId": "harrowBox" } },
+        { "narrate": "Madame Orsolya's parlor, after dark. The fairy lights are turned down. Edmund Harrow's writing box sits beside the crystal ball, and everybody's hands are on the table." },
+        { "say": "clement", "text": "Can we get on? I have the solicitor at nine." },
+        { "say": "orsolya", "text": "Edmund Harrow. Edmund. We have your box. Come and sit with us." },
+        { "narrate": "The candle flames lie down flat. The crystal ball goes white. And then Orsolya speaks in a voice that is not Orsolya's." },
+        { "say": "orsolya", "text": "IDA. Ida, I wrote it. I put it where I always put things. Why does nobody look where I put things?" },
+        { "say": "ida", "text": "Edmund? Where? Where did you put it?" },
+        { "say": "clement", "text": "This is a parlor trick. Madame, I'm not paying for a parlor trick." },
+        {
+          "narrate": { "if": "box && box.inspected", "then": "You know where. You put the loupe on that box the day it came in: a quarter of an inch too shallow inside. A false bottom.", "else": "Your thumb finds it without you meaning to: the floor of the box sits a quarter of an inch too high. A false bottom." }
+        },
+        {
+          "choose": [
+            {
+              "label": "Open the false bottom, here at the table",
+              "then": [
+                { "set": { "seanceEnd": "will" } },
+                { "narrate": "Under the false bottom: a will, handwritten, witnessed, dated last spring. Everything to Ida. To Clement, \"my fountain pen, which he has always admired, and my advice, which he has always ignored\"." },
+                { "say": "clement", "text": "That's... I'll be contesting that." },
+                {
+                  "say": "ida",
+                  "text": [
+                    "Contest away, dear. You have the pen to do it with.",
+                    "Thank you. Please, take this for your trouble. And the box is yours. I couldn't look at it."
+                  ]
+                },
+                { "coin": 50, "why": "Ida Harrow's thanks" },
+                { "rep": 2 },
+                {
+                  "if": "box",
+                  "then": [
+                    { "edit": "box", "set": { "guide": 60, "condLabel": "One of a kind" } },
+                    { "edit": "box", "set": { "questKey": false, "nosale": false } },
+                    { "refresh": "panel" }
+                  ]
+                }
+              ]
+            },
+            {
+              "label": "Say nothing. Keep the lid shut.",
+              "then": [
+                { "set": { "seanceEnd": "lid" } },
+                { "narrate": "The candles stand back up. The ball clears. Orsolya opens her eyes and looks straight at you, and you look at the curtains." },
+                { "say": "clement", "text": "Well, that settles it. Nothing. Good evening, Aunt Ida." },
+                { "narrate": "At home you open the false bottom. The will, and under it, a lining of old banknotes, folded flat: Edmund's rainy-day money. The box is worth a great deal more than you paid." },
+                {
+                  "if": "box",
+                  "then": [
+                    {
+                      "edit": "box",
+                      "set": {
+                        "guide": 130,
+                        "tells": [
+                          "Walnut, brass corners. The false bottom is lined with old banknotes. And a will nobody will ever read."
+                        ],
+                        "condLabel": "One of a kind"
+                      }
+                    },
+                    { "edit": "box", "set": { "questKey": false, "nosale": false } },
+                    { "refresh": "panel" }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "nights": [
+    {
+      "id": "seance",
+      "window": ["3-3", "4-3"],
+      "if": "flag.seanceOn",
+      "scene": "seance",
+      "test": [
+        { "set": { "seanceOn": true } },
+        { "add": { "unique": "harrowBox" }, "as": "b" },
+        { "edit": "b", "set": { "nosale": true } }
+      ]
+    }
+  ],
+  "beats": [
+    { "at": "2-5", "cast": "marv", "scene": "marvBox" },
+    { "at": "3-2", "cast": "orsolya", "scene": "orsolyaBorrows", "if": "flag.harrowBox" }
+  ],
+  "calendar": [
+    { "id": "seance", "night": "seance", "story": "seance", "where": "Madame Orsolya's parlor", "title": "The séance", "known": "flag.seanceOn", "scene": "seance" }
+  ],
+  "epilogue": [
+    { "line": "Ida Harrow kept the house on Fern Hill. Clement Harrow kept the pen.", "if": "flag.seanceEnd == 'will'" },
+    { "line": "Clement Harrow sold his uncle's house within the month. Madame Orsolya has not read your palm since.", "if": "flag.seanceEnd == 'lid'" }
+  ]
+});

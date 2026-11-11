@@ -1,0 +1,192 @@
+// Pawn Champ - The Storm Glass: a weather glass whose crystals grow into a coast that isn't on any chart.
+// Minor quest m59, the deep set (docs/quests/MINOR.md#the-deep-set-m53-to-m60-proposed).
+// Heard from Tess; Hap Lorimer sells it; Tess wants it for the shack; a lunch errand at the harbormaster's shack.
+//
+// Written as data: docs/STORY_DATA.md. Strict JSON inside the call. Code half: js/quests/stormglass.js.
+defineStory({
+  "id": "stormglass",
+  "kind": "minor",
+  "group": "deep",
+  "title": "The Storm Glass",
+  "location": "harbormaster",
+  "rumour": "A sealed weather glass is growing crystals in a shape nobody likes.",
+  "endings": { "tess": "On Tess's Shelf", "sold": "To a Dealer", "watched": "Watched It Finish" },
+  "about": [
+    "A short uncanny story. Tess tells you Hap Lorimer's storm glass hung in the ferry wheelhouse for forty years and was never wrong, but since he retired it has been growing coastlines (§{tessGlass}). Hap sells it to you to get it out of his kitchen (§{hapGlass}), and Tess wants a look at it in the harbormaster's shack.",
+    "On her chart table (§{stormglassShack}) the crystals show a headland, a bay, and steps coming up out of the water; if Sounding is in the run, Tess says it's the same as Cyrus drew. Sell it to Tess for the shack (On Tess's Shelf), keep it to sell to a Boston dealer (To a Dealer), or take it home and watch the stair finish at a doorway, as if waiting for something to come through (a Look; Watched It Finish)."
+  ],
+  "cast": {
+    "hap": {
+      "name": "Hap Lorimer",
+      "look": { "skin": "#e0b090", "hair": "#8a8a8a", "hs": 2, "coat": "#1e3a5a", "trim": "#e8e4dc", "style": "jacket", "pants": "#3a3a42", "hat": "cap", "hatc": "#1e2a3a", "moustache": "#8a8a8a" }
+    }
+  },
+  "icons": {
+    "stormglass": [
+      ".....kk.....",
+      "....kyyk....",
+      "....kkkk....",
+      "...kBBBBk...",
+      "...kBBBBk...",
+      "...kBcBBk...",
+      "...kBccBk...",
+      "...kcBcck...",
+      "...kcccck...",
+      "...kcccck...",
+      "..kyyyyyyk..",
+      "..kkkkkkkk.."
+    ]
+  },
+  "uniques": {
+    "stormGlass": {
+      "name": "A storm glass",
+      "icon": "stormglass",
+      "cat": "curio",
+      "guide": 65,
+      "questKey": true,
+      "condLabel": "Sealed",
+      "wantedBy": { "name": "A curio dealer from Boston", "mult": 1.6 },
+      "wantedKnown": "flag.glassFree",
+      "tells": [
+        "A sealed glass tube on a brass stand. The crystals in it are supposed to cloud before a storm.",
+        "These crystals are growing into a coastline. You know every coast for fifty miles. It isn't one of them."
+      ]
+    }
+  },
+  "soundings": { "glass-watched": "The weather glass drew a coast that isn't charted, and a stair up out of the water onto it, and stopped there, as if it was waiting to be finished by someone else." },
+  "overheard": [{ "line": "Shuddering: \"Hap Lorimer's weather glass. It drew my house. From the water.\"" }],
+  "scenes": {
+    "hapGlass": {
+      "title": "Hap sells the storm glass",
+      "customer": "hap",
+      "steps": [
+        {
+          "say": "hap",
+          "text": [
+            "Hap Lorimer. Forty years on the ferry. This storm glass hung in the wheelhouse the whole time. Never wrong.",
+            "Since I retired it's been growing... shapes. Coastlines. I'd like it out of my kitchen. Tess Bascombe says it's more honest than the forecast, and she'd have it, but she won't pay what it's worth."
+          ]
+        },
+        { "offer": { "unique": "stormGlass" }, "persona": "honest", "asking": 30, "min": 20 },
+        {
+          "if": "offer == 'deal'",
+          "then": [
+            { "set": { "glassBought": true } },
+            { "plan": "stormglass-shack" },
+            { "toast": "Calendar: the harbormaster's shack, at lunch", "look": "tess" }
+          ]
+        },
+        { "leave": "hap" }
+      ]
+    },
+    "tessGlass": {
+      "title": "Tess: Hap's storm glass",
+      "customer": "tess",
+      "steps": [
+        {
+          "say": "tess",
+          "text": [
+            "Hap Lorimer's storm glass. Hung in the ferry wheelhouse forty years and never once wrong. Now it's growing coastlines.",
+            "He wants too much for it, so he's bringing it to you. If you buy it, bring it down the shack at lunch. I want a look before I decide to want it."
+          ]
+        },
+        { "set": { "glassHeard": true } },
+        { "leave": "tess" }
+      ]
+    },
+    "stormglassShack": {
+      "title": "The weather glass",
+      "steps": [
+        {
+          "stage": "harbormaster",
+          "fadeOut": false,
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [104, 164] },
+            { "id": "tess", "cast": "tess", "at": [214, 160], "facingLeft": true }
+          ]
+        },
+        { "find": "gl", "in": "stock", "match": { "uniqueId": "stormGlass" } },
+        {
+          "if": "!gl",
+          "then": [
+            { "say": "tess", "text": "Sold it? Fine. I'll go back to trusting the radio. God help us all." },
+            { "end": true }
+          ]
+        },
+        { "narrate": "Tess sets the glass on the chart table, next to the big chart of the harbor. The crystals have grown since this morning." },
+        { "say": "tess", "text": "That's a coast. Look, a headland, a bay. And that, coming up out of the water onto it. Those are steps." },
+        { "say": "tess", "text": "Same as Cyrus drew. Don't tell me that's a coincidence. I've had enough of those this month.", "if": "quest.sounding" },
+        {
+          "choose": [
+            {
+              "label": "Give it to Tess for the shack",
+              "hint": "(she pays $65)",
+              "then": [
+                { "take": "gl" },
+                { "coin": 65, "why": "Tess bought the storm glass" },
+                { "rep": 1 },
+                { "say": "tess", "text": "It'll go by the radio. If it ever draws Water Street, I'm calling everybody." },
+                { "set": { "glassEnd": "tess" } }
+              ]
+            },
+            {
+              "label": "Keep it to sell on",
+              "hint": "(a Boston dealer pays $104)",
+              "then": [
+                { "edit": "gl", "set": { "questKey": false, "nosale": false } },
+                { "refresh": "panel" },
+                { "set": { "glassFree": true } },
+                { "say": "tess", "text": "Suit yourself. Don't sell it to anybody local." }
+              ]
+            },
+            {
+              "label": "Take it home and watch it finish",
+              "hint": "(Look)",
+              "then": [
+                {
+                  "narrate": [
+                    "You set it on the shop windowsill and watch it all afternoon between customers. The steps climb out of the crystal sea, one by one, up onto the strange coast, and stop at the top.",
+                    "At the top there's a doorway, and then nothing more grows. It looks finished. It looks like it's waiting for something to come through."
+                  ]
+                },
+                { "sounding": "glass-watched" },
+                { "edit": "gl", "set": { "questKey": false, "nosale": false } },
+                { "refresh": "panel" },
+                { "set": { "glassFree": true, "glassEnd": "watched" } }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "beats": [
+    { "drift": "stormglass-tess", "from": "3-2", "to": "3-3", "cast": "tess", "scene": "tessGlass" },
+    { "drift": "stormglass-hap", "from": "3-4", "to": "4-2", "cast": "hap", "scene": "hapGlass", "if": "flag.glassHeard" }
+  ],
+  "errands": [
+    {
+      "id": "stormglass-shack",
+      "title": "The weather glass",
+      "where": "the harbormaster's shack",
+      "scene": "stormglassShack",
+      "test": [{ "set": { "glassBought": true } }, { "add": { "unique": "stormGlass" } }]
+    }
+  ],
+  "calendar": [
+    { "id": "stormglass-shack", "errand": "stormglass-shack", "story": "stormglass", "where": "The harbormaster's shack", "title": "The weather glass", "known": "flag.glassBought" }
+  ],
+  "mornings": [
+    { "find": "gl", "in": "stock", "match": { "uniqueId": "stormGlass", "questKey": true } },
+    {
+      "if": "gl && errand.stormglass-shack == -1",
+      "note": "skipped the errand: it's just stock now",
+      "then": [
+        { "edit": "gl", "set": { "questKey": false, "nosale": false } },
+        { "refresh": "panel" },
+        { "set": { "glassFree": true } }
+      ]
+    }
+  ],
+  "outcome": "flag.glassEnd"
+});

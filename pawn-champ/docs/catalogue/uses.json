@@ -1,0 +1,2802 @@
+{
+ "stories": {
+  "main": {
+   "title": "The main story",
+   "kind": "other",
+   "data": false
+  },
+  "hollis": {
+   "title": "M1 Four Minutes Late",
+   "kind": "major",
+   "data": true
+  },
+  "grey": {
+   "title": "M2 The Gentleman in Grey",
+   "kind": "major",
+   "data": true
+  },
+  "fog": {
+   "title": "M3 The Fog Week",
+   "kind": "major",
+   "data": true
+  },
+  "psalter": {
+   "title": "M4 The Grey Psalter",
+   "kind": "major",
+   "data": true
+  },
+  "benefit": {
+   "title": "M5 The Benefit",
+   "kind": "major",
+   "data": true
+  },
+  "twins": {
+   "title": "M6 The Twins' Map",
+   "kind": "major",
+   "data": true
+  },
+  "museum": {
+   "title": "M7 The Museum Job",
+   "kind": "major",
+   "data": true
+  },
+  "freezer": {
+   "title": "M8 The Thing in Dory's Freezer",
+   "kind": "major",
+   "data": true
+  },
+  "radio": {
+   "title": "M9 Static on Channel 16",
+   "kind": "major",
+   "data": true
+  },
+  "spoons": {
+   "title": "M10 The Old Home Week Spoons",
+   "kind": "major",
+   "data": true
+  },
+  "selectmen": {
+   "title": "M11 The Selectmen's Race",
+   "kind": "major",
+   "data": true
+  },
+  "breakwaters": {
+   "title": "M12 The Breakwaters Reunion",
+   "kind": "major",
+   "data": true
+  },
+  "widow": {
+   "title": "M13 The Widow's Walk",
+   "kind": "major",
+   "data": true
+  },
+  "nightferry": {
+   "title": "M14 The Night Ferry",
+   "kind": "major",
+   "data": true
+  },
+  "longcon": {
+   "title": "M15 The Long Con",
+   "kind": "major",
+   "data": true
+  },
+  "rival": {
+   "title": "M16 The Rival Shop",
+   "kind": "major",
+   "data": true
+  },
+  "barrowboy": {
+   "title": "M17 Captain Barrow's Boy",
+   "kind": "major",
+   "data": true
+  },
+  "blessing": {
+   "title": "M18 The Blessing of the Fleet",
+   "kind": "major",
+   "data": true
+  },
+  "cabinet": {
+   "title": "M19 The Doctor's Cabinet",
+   "kind": "major",
+   "data": true
+  },
+  "sounding": {
+   "title": "M20 The Sounding",
+   "kind": "major",
+   "data": true
+  },
+  "plates": {
+   "title": "M21 The Halvorsen Plates",
+   "kind": "major",
+   "data": true
+  },
+  "thirteenth": {
+   "title": "M22 The Thirteenth Room",
+   "kind": "major",
+   "data": true
+  },
+  "dead": {
+   "title": "M23 The Dead Letter Office",
+   "kind": "major",
+   "data": true
+  },
+  "plotter": {
+   "title": "M24 Waypoints",
+   "kind": "major",
+   "data": true
+  },
+  "club": {
+   "title": "M25 The Christmas Club",
+   "kind": "major",
+   "data": true
+  },
+  "miniature": {
+   "title": "M26 Main Street in Miniature",
+   "kind": "major",
+   "data": true
+  },
+  "stool": {
+   "title": "M27 Stool Nine",
+   "kind": "major",
+   "data": true
+  },
+  "brassring": {
+   "title": "M28 The Brass Ring",
+   "kind": "major",
+   "data": true
+  },
+  "undertheice": {
+   "title": "M29 Under the Ice",
+   "kind": "major",
+   "data": true
+  },
+  "longestnight": {
+   "title": "M30 The Longest Night",
+   "kind": "major",
+   "data": true
+  },
+  "shanty": {
+   "title": "M31 The Shanty Town",
+   "kind": "major",
+   "data": true
+  },
+  "warrant": {
+   "title": "M32 Town Meeting",
+   "kind": "major",
+   "data": true
+  },
+  "odilewent": {
+   "title": "M33 Where Odile Went",
+   "kind": "major",
+   "data": true
+  },
+  "postcards": {
+   "title": "M34 Postcards Up the Coast",
+   "kind": "major",
+   "data": true
+  },
+  "saltire": {
+   "title": "M35 Saltire Capital",
+   "kind": "major",
+   "data": true
+  },
+  "collector": {
+   "title": "M36 The Collector from Boston",
+   "kind": "major",
+   "data": true
+  },
+  "queen": {
+   "title": "m1 The Missing Queen",
+   "kind": "minor",
+   "data": true
+  },
+  "chowder": {
+   "title": "m2 A Ring in the Chowder",
+   "kind": "minor",
+   "data": true
+  },
+  "bingo": {
+   "title": "m3 Bingo Night",
+   "kind": "minor",
+   "data": true
+  },
+  "seaglass": {
+   "title": "m4 Red Sea Glass",
+   "kind": "minor",
+   "data": true
+  },
+  "cutlines": {
+   "title": "m5 Cut Lines",
+   "kind": "minor",
+   "data": true
+  },
+  "proposal": {
+   "title": "m6 The Second Proposal",
+   "kind": "minor",
+   "data": true
+  },
+  "cuckoo": {
+   "title": "m7 The Cuckoo That Counts Down",
+   "kind": "minor",
+   "data": true
+  },
+  "vanishing": {
+   "title": "m8 The Vanishing Box",
+   "kind": "minor",
+   "data": true
+  },
+  "overdue": {
+   "title": "m9 The Overdue Book",
+   "kind": "minor",
+   "data": true
+  },
+  "weathervane": {
+   "title": "m10 The Weathervane",
+   "kind": "minor",
+   "data": true
+  },
+  "scrimshaw": {
+   "title": "m11 Scrimshaw",
+   "kind": "minor",
+   "data": true
+  },
+  "ned": {
+   "title": "m12 Captain Ned",
+   "kind": "minor",
+   "data": true
+  },
+  "ghosttour": {
+   "title": "m13 The Ghost Tour",
+   "kind": "minor",
+   "data": true
+  },
+  "fathom": {
+   "title": "m14 Mister Fathom's Other Families",
+   "kind": "minor",
+   "data": true
+  },
+  "decoy": {
+   "title": "m15 The Heron Decoy",
+   "kind": "minor",
+   "data": true
+  },
+  "ferrybet": {
+   "title": "m16 The Ferry Captain's Bet",
+   "kind": "minor",
+   "data": true
+  },
+  "snowglobe": {
+   "title": "m17 The Snow Globe",
+   "kind": "minor",
+   "data": true
+  },
+  "highscore": {
+   "title": "m18 High Score",
+   "kind": "minor",
+   "data": true
+  },
+  "dog": {
+   "title": "m19 The Three-Legged Dog",
+   "kind": "minor",
+   "data": true
+  },
+  "seance": {
+   "title": "m20 The Séance",
+   "kind": "minor",
+   "data": true
+  },
+  "veil": {
+   "title": "m21 Something Borrowed",
+   "kind": "minor",
+   "data": true
+  },
+  "noreaster": {
+   "title": "m22 The Nor'easter",
+   "kind": "minor",
+   "data": true
+  },
+  "evidence": {
+   "title": "m23 The Evidence Room",
+   "kind": "minor",
+   "data": true
+  },
+  "candlepin": {
+   "title": "m24 The Candlepin Trophy",
+   "kind": "minor",
+   "data": true
+  },
+  "plunge": {
+   "title": "m25 The Polar Plunge",
+   "kind": "minor",
+   "data": true
+  },
+  "prisms": {
+   "title": "m26 The Lighthouse Prisms",
+   "kind": "minor",
+   "data": true
+  },
+  "halfmap": {
+   "title": "m27 Half a Treasure Map",
+   "kind": "minor",
+   "data": true
+  },
+  "flash": {
+   "title": "m28 The Tattoo Flash",
+   "kind": "minor",
+   "data": true
+  },
+  "recipebox": {
+   "title": "m29 The Recipe Box",
+   "kind": "minor",
+   "data": true
+  },
+  "seacaptain": {
+   "title": "m30 The Sea Captain's Portrait",
+   "kind": "minor",
+   "data": true
+  },
+  "busker": {
+   "title": "m31 The Mayor of the Boardwalk",
+   "kind": "minor",
+   "data": true
+  },
+  "lights": {
+   "title": "m32 The Christmas Lights",
+   "kind": "minor",
+   "data": true
+  },
+  "lure": {
+   "title": "m33 The Lucky Lure",
+   "kind": "minor",
+   "data": true
+  },
+  "schoolbell": {
+   "title": "m34 The School Bell",
+   "kind": "minor",
+   "data": true
+  },
+  "teeth": {
+   "title": "m35 The Selectman's Teeth",
+   "kind": "minor",
+   "data": true
+  },
+  "bog": {
+   "title": "m36 The Cranberry Bog",
+   "kind": "minor",
+   "data": true
+  },
+  "urn": {
+   "title": "m37 The Wrong Urn",
+   "kind": "minor",
+   "data": true
+  },
+  "lisbon": {
+   "title": "m38 Letters from Lisbon",
+   "kind": "minor",
+   "data": true
+  },
+  "bowlingball": {
+   "title": "m39 The Bowling Ball",
+   "kind": "minor",
+   "data": true
+  },
+  "answering": {
+   "title": "m40 The Answering Machine",
+   "kind": "minor",
+   "data": true
+  },
+  "actuary": {
+   "title": "m41 The Actuary's Pen",
+   "kind": "minor",
+   "data": true
+  },
+  "lamp": {
+   "title": "m42 Four Accounts of a Lamp",
+   "kind": "minor",
+   "data": true
+  },
+  "whistle": {
+   "title": "m43 The Bosun's Whistle",
+   "kind": "minor",
+   "data": true
+  },
+  "thirtyyears": {
+   "title": "m44 Every Thirty Years",
+   "kind": "minor",
+   "data": true
+  },
+  "burl": {
+   "title": "m45 The Burl Bowl",
+   "kind": "minor",
+   "data": true
+  },
+  "banner": {
+   "title": "m46 The Sideshow Banner",
+   "kind": "minor",
+   "data": true
+  },
+  "bigcoat": {
+   "title": "m47 The Big Man's Coat",
+   "kind": "minor",
+   "data": true
+  },
+  "secondface": {
+   "title": "m48 The Second Face",
+   "kind": "minor",
+   "data": true
+  },
+  "portrait": {
+   "title": "m49 The Portrait",
+   "kind": "minor",
+   "data": true
+  },
+  "honey": {
+   "title": "m50 The Marsh Honey",
+   "kind": "minor",
+   "data": true
+  },
+  "camcorder": {
+   "title": "m51 The Camcorder",
+   "kind": "minor",
+   "data": true
+  },
+  "rufus": {
+   "title": "m52 The Dog Who Became a Man",
+   "kind": "minor",
+   "data": true
+  },
+  "whelk": {
+   "title": "m53 The Left-Handed Whelk",
+   "kind": "minor",
+   "data": true
+  },
+  "gansey": {
+   "title": "m54 The Gansey",
+   "kind": "minor",
+   "data": true
+  },
+  "helmet": {
+   "title": "m55 The Diver's Helmet",
+   "kind": "minor",
+   "data": true
+  },
+  "hymnal": {
+   "title": "m56 The Ninth Verse",
+   "kind": "minor",
+   "data": true
+  },
+  "slides": {
+   "title": "m57 The Lantern Slides",
+   "kind": "minor",
+   "data": true
+  },
+  "longgame": {
+   "title": "m58 The Long Game",
+   "kind": "minor",
+   "data": true
+  },
+  "stormglass": {
+   "title": "m59 The Storm Glass",
+   "kind": "minor",
+   "data": true
+  },
+  "bottle": {
+   "title": "m60 Return to Sender",
+   "kind": "minor",
+   "data": true
+  },
+  "photobooth": {
+   "title": "m61 The Photo Booth",
+   "kind": "minor",
+   "data": true
+  },
+  "prizeseed": {
+   "title": "m62 The Prize Seed",
+   "kind": "minor",
+   "data": true
+  },
+  "robot": {
+   "title": "m63 The Robot Costume",
+   "kind": "minor",
+   "data": true
+  },
+  "lastcolumn": {
+   "title": "m64 The Last Column",
+   "kind": "minor",
+   "data": true
+  },
+  "ballot": {
+   "title": "m65 The Ballot Box",
+   "kind": "minor",
+   "data": true
+  },
+  "figurehead": {
+   "title": "m66 The Figurehead",
+   "kind": "minor",
+   "data": true
+  },
+  "caretaker": {
+   "title": "m67 The Caretaker's Keys",
+   "kind": "minor",
+   "data": true
+  },
+  "thunder": {
+   "title": "m68 The Thunder Sheet",
+   "kind": "minor",
+   "data": true
+  },
+  "platter": {
+   "title": "m69 The Turkey Platter",
+   "kind": "minor",
+   "data": true
+  },
+  "donkey": {
+   "title": "m70 The Donkey",
+   "kind": "minor",
+   "data": true
+  },
+  "toboggan": {
+   "title": "m71 The Toboggan",
+   "kind": "minor",
+   "data": true
+  },
+  "skates": {
+   "title": "m72 The Figure Skates",
+   "kind": "minor",
+   "data": true
+  },
+  "sugarpan": {
+   "title": "m73 The Sugar Pan",
+   "kind": "minor",
+   "data": true
+  },
+  "iceboat": {
+   "title": "m74 The Iceboat",
+   "kind": "minor",
+   "data": true
+  },
+  "blackfriday": {
+   "title": "m75 The Black Friday Line",
+   "kind": "minor",
+   "data": true
+  },
+  "turkeytrot": {
+   "title": "m76 The Turkey Trot",
+   "kind": "minor",
+   "data": true
+  },
+  "snowday": {
+   "title": "m77 The Snow Day",
+   "kind": "minor",
+   "data": true
+  },
+  "windowdisplay": {
+   "title": "m78 The Window Display",
+   "kind": "minor",
+   "data": true
+  },
+  "valentine": {
+   "title": "m79 The Valentine",
+   "kind": "minor",
+   "data": true
+  },
+  "mudseason": {
+   "title": "m80 Mud Season",
+   "kind": "minor",
+   "data": true
+  },
+  "firstboat": {
+   "title": "m81 The First Boat Out",
+   "kind": "minor",
+   "data": true
+  },
+  "freezerSecond": {
+   "title": "A Second One",
+   "kind": "major",
+   "data": true
+  },
+  "yearaweek": {
+   "title": "A Year a Week",
+   "kind": "minor",
+   "data": true
+  },
+  "selectMeeting": {
+   "title": "A Year on the Board",
+   "kind": "major",
+   "data": true
+  },
+  "bingo2": {
+   "title": "Bingo Night, Again",
+   "kind": "minor",
+   "data": true
+  },
+  "rivalEve": {
+   "title": "Christmas Eve",
+   "kind": "major",
+   "data": true
+  },
+  "cranesnow": {
+   "title": "Crane in the Snow",
+   "kind": "minor",
+   "data": true
+  },
+  "newyear": {
+   "title": "New Year's Eve at the Anchor",
+   "kind": "minor",
+   "data": true
+  },
+  "onemorespring": {
+   "title": "One More Spring",
+   "kind": "minor",
+   "data": true
+  },
+  "psalterEcho": {
+   "title": "Out of Habit",
+   "kind": "minor",
+   "data": true
+  },
+  "crypt": {
+   "title": "The Bethel Crypt",
+   "kind": "minor",
+   "data": true
+  },
+  "twinstone": {
+   "title": "The Cornerstone's Twin",
+   "kind": "minor",
+   "data": true
+  },
+  "dogsweater": {
+   "title": "The Dog in the Sweater",
+   "kind": "minor",
+   "data": true
+  },
+  "selectTerm": {
+   "title": "The First Winter in Office",
+   "kind": "major",
+   "data": true
+  },
+  "pageant": {
+   "title": "The Last Pageant",
+   "kind": "minor",
+   "data": true
+  },
+  "royce": {
+   "title": "The Man Who Came Back",
+   "kind": "minor",
+   "data": true
+  },
+  "grey2": {
+   "title": "The Second Page",
+   "kind": "major",
+   "data": true
+  },
+  "freezerThaw": {
+   "title": "The Thaw",
+   "kind": "major",
+   "data": true
+  },
+  "brood": {
+   "title": "The Thaw in the Loft",
+   "kind": "minor",
+   "data": true
+  },
+  "wolfmoon": {
+   "title": "The Wolf Moon",
+   "kind": "major",
+   "data": true
+  },
+  "freezerTank": {
+   "title": "Too Big for the Tank",
+   "kind": "major",
+   "data": true
+  },
+  "rivalWinter": {
+   "title": "Winter Hours",
+   "kind": "major",
+   "data": true
+  },
+  "wrenwinter": {
+   "title": "Wren's Winter",
+   "kind": "minor",
+   "data": true
+  },
+  "secrets": {
+   "title": "Shop secrets",
+   "kind": "other",
+   "data": false
+  }
+ },
+ "places": {
+  "anchorBooth": {
+   "name": "anchorBooth",
+   "base": "anchorBooth",
+   "variant": "main",
+   "stories": [
+    "longcon"
+   ]
+  },
+  "arcade": {
+   "name": "Neptune's Arcade",
+   "base": "arcade",
+   "variant": "main",
+   "stories": [
+    "grey",
+    "highscore",
+    "photobooth"
+   ]
+  },
+  "arcadeDay": {
+   "name": "Neptune's Arcade",
+   "base": "arcade",
+   "variant": "day",
+   "stories": [
+    "highscore"
+   ]
+  },
+  "arcadeFront": {
+   "name": "Neptune's Arcade",
+   "base": "arcade",
+   "variant": "front",
+   "stories": [
+    "busker",
+    "camcorder"
+   ]
+  },
+  "arcadeFrontDay": {
+   "name": "Neptune's Arcade",
+   "base": "arcade",
+   "variant": "front day",
+   "stories": [
+    "busker"
+   ]
+  },
+  "arcadeFrontWinter": {
+   "name": "Neptune's Arcade",
+   "base": "arcade",
+   "variant": "front winter",
+   "stories": [
+    "banner"
+   ]
+  },
+  "athenaeum": {
+   "name": "The Athenaeum",
+   "base": "athenaeum",
+   "variant": "main",
+   "stories": [
+    "miniature",
+    "overdue",
+    "slides"
+   ]
+  },
+  "athenaeumBasement": {
+   "name": "The Athenaeum",
+   "base": "athenaeum",
+   "variant": "basement",
+   "stories": [
+    "psalter",
+    "spoons",
+    "plates"
+   ]
+  },
+  "bakeryBack": {
+   "name": "The back room of Bettany's bakery on Front Street",
+   "base": "bakeryBack",
+   "variant": "main",
+   "stories": [
+    "psalter"
+   ]
+  },
+  "below": {
+   "name": "Below the Arcade",
+   "base": "below",
+   "variant": "main",
+   "stories": [
+    "grey",
+    "grey2"
+   ]
+  },
+  "bogDawn": {
+   "name": "The cranberry bog at dawn",
+   "base": "bogDawn",
+   "variant": "main",
+   "stories": [
+    "bog"
+   ]
+  },
+  "bonnieDeck": {
+   "name": "The Bonnie Dee",
+   "base": "bonnieDeck",
+   "variant": "main",
+   "stories": [
+    "plotter"
+   ]
+  },
+  "bonnieWheelhouse": {
+   "name": "The Bonnie Dee",
+   "base": "bonnieDeck",
+   "variant": "wheelhouse",
+   "stories": [
+    "plotter"
+   ]
+  },
+  "carousel": {
+   "name": "The boardwalk carousel in winter",
+   "base": "carousel",
+   "variant": "main",
+   "stories": [
+    "brassring"
+   ]
+  },
+  "cedarStump": {
+   "name": "The cedar stump in the woods",
+   "base": "cedarStump",
+   "variant": "main",
+   "stories": [
+    "burl"
+   ]
+  },
+  "clamshack": {
+   "name": "The Clam Shack",
+   "base": "clamshack",
+   "variant": "main",
+   "stories": [
+    "veil"
+   ]
+  },
+  "clamshackDusk": {
+   "name": "The Clam Shack",
+   "base": "clamshack",
+   "variant": "dusk",
+   "stories": [
+    "selectmen",
+    "blessing",
+    "collector"
+   ]
+  },
+  "clarion": {
+   "name": "The Clarion building on Front Street (pitched",
+   "base": "clarion",
+   "variant": "main",
+   "stories": [
+    "lastcolumn"
+   ]
+  },
+  "clarionStudio": {
+   "name": "The Clarion building on Front Street (pitched",
+   "base": "clarion",
+   "variant": "studio",
+   "stories": [
+    "thunder"
+   ]
+  },
+  "classroom": {
+   "name": "Desmond Wick's classroom at Saint Brine's school",
+   "base": "classroom",
+   "variant": "main",
+   "stories": [
+    "psalter"
+   ]
+  },
+  "cliffroad": {
+   "name": "The Cliff Road house",
+   "base": "cliffroad",
+   "variant": "main",
+   "stories": [
+    "grey",
+    "spoons",
+    "widow",
+    "brassring"
+   ]
+  },
+  "cliffroadSale": {
+   "name": "The Cliff Road house",
+   "base": "cliffroad",
+   "variant": "sale",
+   "stories": [
+    "longcon"
+   ]
+  },
+  "clockshop": {
+   "name": "Moss Clock Repair",
+   "base": "clockshop",
+   "variant": "main",
+   "stories": [
+    "hollis",
+    "cuckoo"
+   ]
+  },
+  "clockshopDay": {
+   "name": "Moss Clock Repair",
+   "base": "clockshop",
+   "variant": "day",
+   "stories": [
+    "cuckoo"
+   ]
+  },
+  "coldroom": {
+   "name": "The fish-market cold room",
+   "base": "coldroom",
+   "variant": "main",
+   "stories": [
+    "freezer",
+    "figurehead",
+    "freezerTank"
+   ]
+  },
+  "cottage": {
+   "name": "A shut summer cottage on Cliff Road",
+   "base": "cottage",
+   "variant": "main",
+   "stories": [
+    "caretaker"
+   ]
+  },
+  "creche": {
+   "name": "Saint Brine's with the crèche",
+   "base": "creche",
+   "variant": "main",
+   "stories": [
+    "donkey"
+   ]
+  },
+  "customsRecords": {
+   "name": "The Customs House records room",
+   "base": "customsRecords",
+   "variant": "main",
+   "stories": [
+    "hollis",
+    "cranesnow"
+   ]
+  },
+  "docks": {
+   "name": "Pier Nine",
+   "base": "docks",
+   "variant": "main",
+   "stories": [
+    "main",
+    "hollis",
+    "museum",
+    "lure",
+    "whistle",
+    "helmet",
+    "cranesnow"
+   ]
+  },
+  "docksDay": {
+   "name": "Pier Nine",
+   "base": "docks",
+   "variant": "day",
+   "stories": [
+    "lure",
+    "whistle"
+   ]
+  },
+  "docksFleet": {
+   "name": "Pier Nine",
+   "base": "docks",
+   "variant": "fleet",
+   "stories": [
+    "blessing"
+   ]
+  },
+  "ferry": {
+   "name": "The island ferry",
+   "base": "ferry",
+   "variant": "main",
+   "stories": [
+    "ferrybet",
+    "lisbon",
+    "yearaweek"
+   ]
+  },
+  "ferryLanding": {
+   "name": "The island ferry",
+   "base": "ferry",
+   "variant": "landing",
+   "stories": [
+    "radio",
+    "dead"
+   ]
+  },
+  "ferryLandingNight": {
+   "name": "The island ferry",
+   "base": "ferry",
+   "variant": "landing night",
+   "stories": [
+    "fog",
+    "widow",
+    "postcards"
+   ]
+  },
+  "ferryLandingNoon": {
+   "name": "The island ferry",
+   "base": "ferry",
+   "variant": "landing noon",
+   "stories": [
+    "lisbon"
+   ]
+  },
+  "ferryNight": {
+   "name": "The island ferry",
+   "base": "ferry",
+   "variant": "night",
+   "stories": [
+    "nightferry"
+   ]
+  },
+  "fishMarket": {
+   "name": "fishMarket",
+   "base": "fishMarket",
+   "variant": "main",
+   "stories": [
+    "figurehead"
+   ]
+  },
+  "fortabel": {
+   "name": "Fort Abel",
+   "base": "fortabel",
+   "variant": "main",
+   "stories": [
+    "twins",
+    "bigcoat"
+   ]
+  },
+  "gannet": {
+   "name": "Gannet Island at dusk",
+   "base": "gannet",
+   "variant": "main",
+   "stories": [
+    "twins",
+    "radio"
+   ]
+  },
+  "gannetDock": {
+   "name": "Gannet Island at dusk",
+   "base": "gannet",
+   "variant": "dock",
+   "stories": [
+    "nightferry"
+   ]
+  },
+  "grange": {
+   "name": "The Grange Hall",
+   "base": "grange",
+   "variant": "main",
+   "stories": [
+    "fog",
+    "benefit",
+    "spoons",
+    "selectmen",
+    "longcon",
+    "chowder",
+    "bingo",
+    "lamp",
+    "mudseason",
+    "bingo2"
+   ]
+  },
+  "grangeStorm": {
+   "name": "The Grange Hall",
+   "base": "grange",
+   "variant": "storm",
+   "stories": [
+    "blessing"
+   ]
+  },
+  "graveyard": {
+   "name": "The Old Burying Ground",
+   "base": "graveyard",
+   "variant": "main",
+   "stories": [
+    "fog",
+    "ghosttour",
+    "urn",
+    "royce"
+   ]
+  },
+  "graveyardDay": {
+   "name": "The Old Burying Ground",
+   "base": "graveyard",
+   "variant": "day",
+   "stories": [
+    "grey",
+    "urn"
+   ]
+  },
+  "green": {
+   "name": "Harbor Green",
+   "base": "green",
+   "variant": "main",
+   "stories": [
+    "freezer",
+    "selectmen",
+    "breakwaters",
+    "rival",
+    "queen",
+    "cutlines",
+    "lights",
+    "honey",
+    "prizeseed",
+    "skates",
+    "turkeytrot",
+    "twinstone"
+   ]
+  },
+  "greenDay": {
+   "name": "Harbor Green",
+   "base": "green",
+   "variant": "day",
+   "stories": [
+    "queen",
+    "turkeytrot",
+    "mudseason"
+   ]
+  },
+  "greenMoon": {
+   "name": "Harbor Green",
+   "base": "green",
+   "variant": "moon",
+   "stories": [
+    "rufus"
+   ]
+  },
+  "greenNight": {
+   "name": "Harbor Green",
+   "base": "green",
+   "variant": "night",
+   "stories": [
+    "freezer",
+    "plates",
+    "lights",
+    "freezerSecond",
+    "twinstone",
+    "freezerThaw",
+    "wrenwinter"
+   ]
+  },
+  "gullpointDay": {
+   "name": "Gull Point lighthouse",
+   "base": "lighthouse",
+   "variant": "day",
+   "stories": [
+    "prisms"
+   ]
+  },
+  "halloween": {
+   "name": "Main Street on Halloween night",
+   "base": "halloween",
+   "variant": "main",
+   "stories": [
+    "robot"
+   ]
+  },
+  "harbormaster": {
+   "name": "The harbormaster's shack on the town pier",
+   "base": "harbormaster",
+   "variant": "main",
+   "stories": [
+    "cutlines",
+    "stormglass",
+    "firstboat"
+   ]
+  },
+  "harbormasterNight": {
+   "name": "The harbormaster's shack on the town pier",
+   "base": "harbormaster",
+   "variant": "night",
+   "stories": [
+    "radio",
+    "nightferry",
+    "sounding",
+    "plotter"
+   ]
+  },
+  "historical": {
+   "name": "The Historical Society",
+   "base": "historical",
+   "variant": "main",
+   "stories": [
+    "scrimshaw",
+    "seacaptain",
+    "gansey"
+   ]
+  },
+  "historicalGala": {
+   "name": "The Historical Society",
+   "base": "historical",
+   "variant": "gala",
+   "stories": [
+    "museum"
+   ]
+  },
+  "historicalNight": {
+   "name": "The Historical Society",
+   "base": "historical",
+   "variant": "night",
+   "stories": [
+    "museum",
+    "undertheice"
+   ]
+  },
+  "icepond": {
+   "name": "Hob's Pond",
+   "base": "icepond",
+   "variant": "main",
+   "stories": [
+    "toboggan",
+    "iceboat"
+   ]
+  },
+  "icepondNight": {
+   "name": "Hob's Pond",
+   "base": "icepond",
+   "variant": "night",
+   "stories": [
+    "undertheice"
+   ]
+  },
+  "icepondRace": {
+   "name": "Hob's Pond",
+   "base": "icepond",
+   "variant": "race",
+   "stories": [
+    "iceboat"
+   ]
+  },
+  "icepondSled": {
+   "name": "Hob's Pond",
+   "base": "icepond",
+   "variant": "sled",
+   "stories": [
+    "toboggan"
+   ]
+  },
+  "kitchen": {
+   "name": "A kitchen on Front Street",
+   "base": "kitchen",
+   "variant": "main",
+   "stories": [
+    "thirteenth",
+    "fathom",
+    "recipebox",
+    "platter"
+   ]
+  },
+  "kitchenNight": {
+   "name": "A kitchen on Front Street",
+   "base": "kitchen",
+   "variant": "night",
+   "stories": [
+    "club",
+    "stool",
+    "brassring"
+   ]
+  },
+  "launch": {
+   "name": "places for the deep set",
+   "base": "launch",
+   "variant": "main",
+   "stories": [
+    "sounding"
+   ]
+  },
+  "lighthouse": {
+   "name": "Gull Point lighthouse",
+   "base": "lighthouse",
+   "variant": "main",
+   "stories": [
+    "main",
+    "odilewent",
+    "prisms"
+   ]
+  },
+  "lowtide": {
+   "name": "places for the deep set",
+   "base": "launch",
+   "variant": "",
+   "stories": [
+    "sounding"
+   ]
+  },
+  "marsh": {
+   "name": "Hob's Marsh",
+   "base": "marsh",
+   "variant": "main",
+   "stories": [
+    "psalter",
+    "decoy",
+    "dog",
+    "bog",
+    "burl",
+    "honey"
+   ]
+  },
+  "marshDay": {
+   "name": "Hob's Marsh",
+   "base": "marsh",
+   "variant": "day",
+   "stories": [
+    "dog",
+    "dogsweater"
+   ]
+  },
+  "marshHives": {
+   "name": "Hob's Marsh",
+   "base": "marsh",
+   "variant": "hives",
+   "stories": [
+    "honey"
+   ]
+  },
+  "miniature": {
+   "name": "Main Street in miniature",
+   "base": "miniature",
+   "variant": "main",
+   "stories": [
+    "miniature",
+    "warrant"
+   ]
+  },
+  "motorinn": {
+   "name": "The Harborview Motor Inn on the edge of town",
+   "base": "motorinn",
+   "variant": "main",
+   "stories": [
+    "club",
+    "collector"
+   ]
+  },
+  "nest": {
+   "name": "The Nest",
+   "base": "nest",
+   "variant": "main",
+   "stories": [
+    "cabinet",
+    "brood"
+   ]
+  },
+  "observatory": {
+   "name": "The Signal Hill observatory",
+   "base": "observatory",
+   "variant": "main",
+   "stories": [
+    "plates"
+   ]
+  },
+  "observatorySky": {
+   "name": "The Signal Hill observatory",
+   "base": "observatory",
+   "variant": "sky",
+   "stories": [
+    "plates"
+   ]
+  },
+  "office": {
+   "name": "Gilded Hand Finance",
+   "base": "office",
+   "variant": "main",
+   "stories": [
+    "main"
+   ]
+  },
+  "officeAfter": {
+   "name": "Gilded Hand Finance",
+   "base": "office",
+   "variant": "after",
+   "stories": [
+    "portrait"
+   ]
+  },
+  "orsolya": {
+   "name": "Madame Orsolya's parlor",
+   "base": "orsolya",
+   "variant": "main",
+   "stories": [
+    "grey",
+    "brassring",
+    "undertheice",
+    "seance",
+    "onemorespring",
+    "grey2"
+   ]
+  },
+  "pearls": {
+   "name": "Pearl's Luncheonette on Main Street",
+   "base": "pearls",
+   "variant": "main",
+   "stories": [
+    "stool"
+   ]
+  },
+  "pinwheel": {
+   "name": "Pinwheel Lanes",
+   "base": "pinwheel",
+   "variant": "main",
+   "stories": [
+    "breakwaters",
+    "barrowboy",
+    "candlepin",
+    "bowlingball",
+    "photobooth"
+   ]
+  },
+  "pinwheelLobby": {
+   "name": "Pinwheel Lanes",
+   "base": "pinwheel",
+   "variant": "lobby",
+   "stories": [
+    "photobooth"
+   ]
+  },
+  "plungeBeach": {
+   "name": "plungeBeach",
+   "base": "plungeBeach",
+   "variant": "main",
+   "stories": [
+    "plunge"
+   ]
+  },
+  "police": {
+   "name": "The police station",
+   "base": "police",
+   "variant": "main",
+   "stories": [
+    "barrowboy",
+    "shanty",
+    "evidence"
+   ]
+  },
+  "postoffice": {
+   "name": "The Hollow Neck post office after hours",
+   "base": "postoffice",
+   "variant": "main",
+   "stories": [
+    "dead",
+    "postcards",
+    "valentine"
+   ]
+  },
+  "postofficeLast": {
+   "name": "The Hollow Neck post office after hours",
+   "base": "postoffice",
+   "variant": "last",
+   "stories": [
+    "dead",
+    "valentine"
+   ]
+  },
+  "reclaimed": {
+   "name": "Reclaimed & Co.",
+   "base": "reclaimed",
+   "variant": "main",
+   "stories": [
+    "rival"
+   ]
+  },
+  "reclaimedNight": {
+   "name": "Reclaimed & Co.",
+   "base": "reclaimed",
+   "variant": "night",
+   "stories": [
+    "rival",
+    "rivalEve",
+    "rivalWinter"
+   ]
+  },
+  "rink": {
+   "name": "rink",
+   "base": "rink",
+   "variant": "main",
+   "stories": [
+    "skates"
+   ]
+  },
+  "roomThirteen": {
+   "name": "places for the deep set",
+   "base": "launch",
+   "variant": "thirteen",
+   "stories": [
+    "thirteenth"
+   ]
+  },
+  "rustyanchor": {
+   "name": "The Rusty Anchor",
+   "base": "rustyanchor",
+   "variant": "main",
+   "stories": [
+    "breakwaters",
+    "club",
+    "brassring",
+    "warrant",
+    "proposal",
+    "ned",
+    "flash",
+    "actuary",
+    "secondface",
+    "newyear"
+   ]
+  },
+  "saintbrines": {
+   "name": "Saint Brine's",
+   "base": "saintbrines",
+   "variant": "main",
+   "stories": [
+    "vanishing",
+    "snowglobe",
+    "schoolbell",
+    "hymnal",
+    "donkey",
+    "crypt",
+    "pageant"
+   ]
+  },
+  "saintbrinesAttic": {
+   "name": "Saint Brine's",
+   "base": "saintbrines",
+   "variant": "attic",
+   "stories": [
+    "benefit"
+   ]
+  },
+  "sandbar": {
+   "name": "The sandbar and breakwater at low tide",
+   "base": "sandbar",
+   "variant": "main",
+   "stories": [
+    "seaglass",
+    "decoy",
+    "plunge",
+    "halfmap",
+    "whelk",
+    "bottle"
+   ]
+  },
+  "sandbarBoat": {
+   "name": "The sandbar and breakwater at low tide",
+   "base": "sandbar",
+   "variant": "boat",
+   "stories": [
+    "barrowboy"
+   ]
+  },
+  "sandbarNight": {
+   "name": "The sandbar and breakwater at low tide",
+   "base": "sandbar",
+   "variant": "night",
+   "stories": [
+    "twins",
+    "odilewent"
+   ]
+  },
+  "shanties": {
+   "name": "The ice-fishing shanties on the harbor flats",
+   "base": "shanties",
+   "variant": "main",
+   "stories": [
+    "shanty"
+   ]
+  },
+  "shantyInside": {
+   "name": "The ice-fishing shanties on the harbor flats",
+   "base": "shanties",
+   "variant": "inside",
+   "stories": [
+    "shanty"
+   ]
+  },
+  "shop": {
+   "name": "The Crooked Scale",
+   "base": "shop",
+   "variant": "main",
+   "stories": [
+    "main",
+    "snowday",
+    "secrets"
+   ]
+  },
+  "shopNight": {
+   "name": "The Crooked Scale",
+   "base": "shop",
+   "variant": "after hours",
+   "stories": [
+    "main",
+    "cabinet",
+    "thirteenth",
+    "longestnight",
+    "noreaster",
+    "answering",
+    "thirtyyears",
+    "longgame",
+    "blackfriday",
+    "windowdisplay",
+    "rivalEve",
+    "grey2",
+    "freezerTank",
+    "secrets"
+   ]
+  },
+  "sugarhouse": {
+   "name": "The sugarhouse in the woods past Hob's Marsh",
+   "base": "sugarhouse",
+   "variant": "main",
+   "stories": [
+    "sugarpan"
+   ]
+  },
+  "surgery": {
+   "name": "Dr",
+   "base": "surgery",
+   "variant": "main",
+   "stories": [
+    "cabinet"
+   ]
+  },
+  "thanksgiving": {
+   "name": "Rory's kitchen on Thanksgiving",
+   "base": "thanksgiving",
+   "variant": "main",
+   "stories": [
+    "platter"
+   ]
+  },
+  "townhall": {
+   "name": "Town Hall",
+   "base": "townhall",
+   "variant": "main",
+   "stories": [
+    "hollis",
+    "benefit",
+    "selectmen",
+    "warrant",
+    "saltire",
+    "weathervane",
+    "evidence",
+    "teeth",
+    "ballot",
+    "sugarpan",
+    "selectMeeting",
+    "selectTerm",
+    "wrenwinter"
+   ]
+  },
+  "townhallRoof": {
+   "name": "Town Hall",
+   "base": "townhall",
+   "variant": "roof",
+   "stories": [
+    "weathervane"
+   ]
+  },
+  "townhallVault": {
+   "name": "Town Hall",
+   "base": "townhall",
+   "variant": "vault",
+   "stories": [
+    "warrant",
+    "saltire",
+    "ballot"
+   ]
+  },
+  "vigil": {
+   "name": "The vigil's hall on the longest night",
+   "base": "vigil",
+   "variant": "main",
+   "stories": [
+    "longestnight",
+    "grey2"
+   ]
+  },
+  "weighoff": {
+   "name": "weighoff",
+   "base": "weighoff",
+   "variant": "main",
+   "stories": [
+    "prizeseed"
+   ]
+  },
+  "widowsWalk": {
+   "name": "The widow's walk on the Cliff Road roof",
+   "base": "widowsWalk",
+   "variant": "main",
+   "stories": [
+    "widow"
+   ]
+  },
+  "widowsWalkSpring": {
+   "name": "The widow's walk on the Cliff Road roof",
+   "base": "widowsWalk",
+   "variant": "spring",
+   "stories": [
+    "onemorespring"
+   ]
+  },
+  "wolfwood": {
+   "name": "The Hollow in Hob's Wood",
+   "base": "wolfwood",
+   "variant": "main",
+   "stories": [
+    "psalter",
+    "wolfmoon"
+   ]
+  }
+ },
+ "characters": {
+  "abe": [
+   "dog",
+   "dogsweater"
+  ],
+  "abijah": [
+   "sugarpan"
+  ],
+  "abner": [
+   "grey",
+   "fog"
+  ],
+  "achebe": [
+   "freezer",
+   "freezerSecond",
+   "freezerThaw",
+   "freezerTank"
+  ],
+  "agathe": [
+   "hollis",
+   "widow",
+   "blessing",
+   "cuckoo",
+   "cranesnow",
+   "grey2"
+  ],
+  "agnes": [
+   "thirteenth"
+  ],
+  "akers": [
+   "undertheice"
+  ],
+  "amabel": [
+   "main",
+   "benefit",
+   "longestnight",
+   "crypt",
+   "pageant",
+   "secrets"
+  ],
+  "ambrose": [
+   "vanishing"
+  ],
+  "amelia": [
+   "lisbon"
+  ],
+  "amos": [
+   "prizeseed"
+  ],
+  "anaMedeiros": [
+   "blessing"
+  ],
+  "annika": [
+   "lights"
+  ],
+  "ansel": [
+   "fog"
+  ],
+  "anselm": [
+   "dead"
+  ],
+  "ansgar": [
+   "odilewent"
+  ],
+  "arlo": [
+   "bowlingball"
+  ],
+  "arneSorensen": [
+   "cutlines"
+  ],
+  "ashby": [
+   "wrenwinter"
+  ],
+  "ashgrove": [
+   "fog"
+  ],
+  "augie": [
+   "flash"
+  ],
+  "augusta": [
+   "plates"
+  ],
+  "augustin": [
+   "windowdisplay"
+  ],
+  "avery": [
+   "figurehead"
+  ],
+  "barrow": [
+   "main",
+   "museum",
+   "radio",
+   "longcon",
+   "barrowboy",
+   "shanty",
+   "warrant",
+   "collector",
+   "evidence",
+   "caretaker",
+   "wrenwinter"
+  ],
+  "barrowQuiet": [
+   "evidence"
+  ],
+  "benefitDonor": [
+   "benefit"
+  ],
+  "benji": [
+   "cuckoo"
+  ],
+  "benny": [
+   "breakwaters",
+   "newyear"
+  ],
+  "bento": [
+   "plotter"
+  ],
+  "bertToomey": [
+   "decoy"
+  ],
+  "bertil": [
+   "helmet"
+  ],
+  "bettany": [
+   "psalter",
+   "nightferry",
+   "cabinet",
+   "seaglass",
+   "recipebox",
+   "lamp",
+   "honey",
+   "rufus",
+   "yearaweek",
+   "onemorespring",
+   "psalterEcho"
+  ],
+  "bettanyPack": [
+   "psalter",
+   "psalterEcho"
+  ],
+  "bev": [
+   "shanty",
+   "candlepin",
+   "bowlingball",
+   "photobooth",
+   "wolfmoon"
+  ],
+  "boardwalker": [
+   "selectmen"
+  ],
+  "boatShoes": [
+   "queen"
+  ],
+  "brandt": [
+   "skates"
+  ],
+  "bridget": [
+   "recipebox"
+  ],
+  "bridie": [
+   "platter"
+  ],
+  "brisket": [
+   "psalter"
+  ],
+  "britta": [
+   "iceboat"
+  ],
+  "bryony": [
+   "rival",
+   "windowdisplay",
+   "rivalEve",
+   "rivalWinter"
+  ],
+  "cal": [
+   "freezer",
+   "freezerThaw",
+   "freezerTank"
+  ],
+  "caleb": [
+   "undertheice"
+  ],
+  "calloway": [
+   "dead"
+  ],
+  "carmen": [
+   "veil"
+  ],
+  "carmenBride": [
+   "veil"
+  ],
+  "carmenWed": [
+   "veil"
+  ],
+  "chamberMan": [
+   "warrant"
+  ],
+  "chet": [
+   "radio"
+  ],
+  "clem": [
+   "collector"
+  ],
+  "clement": [
+   "seance"
+  ],
+  "clifford": [
+   "schoolbell"
+  ],
+  "clyde": [
+   "mudseason"
+  ],
+  "corey": [
+   "donkey"
+  ],
+  "corinne": [
+   "lastcolumn"
+  ],
+  "cormac": [
+   "platter"
+  ],
+  "cosima": [
+   "longcon"
+  ],
+  "crane": [
+   "hollis",
+   "cranesnow"
+  ],
+  "cyril": [
+   "bog"
+  ],
+  "cyrus": [
+   "sounding"
+  ],
+  "dale": [
+   "weathervane"
+  ],
+  "dash": [
+   "camcorder"
+  ],
+  "deckhand": [
+   "selectmen"
+  ],
+  "declan": [
+   "blessing"
+  ],
+  "decoyLady": [
+   "decoy"
+  ],
+  "dee": [
+   "breakwaters",
+   "newyear"
+  ],
+  "delia": [
+   "schoolbell"
+  ],
+  "della": [
+   "turkeytrot"
+  ],
+  "desmond": [
+   "psalter",
+   "wolfmoon"
+  ],
+  "deweyLopes": [
+   "ferrybet"
+  ],
+  "dex": [
+   "bingo",
+   "bingo2"
+  ],
+  "digCrew": [
+   "selectTerm"
+  ],
+  "dolores": [
+   "bingo",
+   "bingo2"
+  ],
+  "donny": [
+   "lisbon"
+  ],
+  "doorbuster": [
+   "blackfriday"
+  ],
+  "dory": [
+   "freezer",
+   "radio",
+   "sounding",
+   "cutlines",
+   "prisms",
+   "lure",
+   "whistle",
+   "helmet",
+   "figurehead",
+   "freezerSecond",
+   "royce",
+   "freezerThaw",
+   "wolfmoon",
+   "freezerTank"
+  ],
+  "dot": [
+   "blessing",
+   "stool",
+   "collector",
+   "plunge",
+   "whistle",
+   "whelk",
+   "bottle",
+   "robot",
+   "platter",
+   "freezerTank"
+  ],
+  "dulcie": [
+   "benefit",
+   "vanishing",
+   "pageant"
+  ],
+  "dunlevy": [
+   "toboggan"
+  ],
+  "dunmore": [
+   "banner"
+  ],
+  "dunphy": [
+   "warrant",
+   "evidence",
+   "wrenwinter"
+  ],
+  "dutch": [
+   "twins"
+  ],
+  "dwight": [
+   "highscore"
+  ],
+  "edwina": [
+   "donkey"
+  ],
+  "eli": [
+   "barrowboy",
+   "bowlingball"
+  ],
+  "elmer": [
+   "snowday"
+  ],
+  "emmett": [
+   "actuary"
+  ],
+  "ernie": [
+   "stool"
+  ],
+  "everett": [
+   "blackfriday"
+  ],
+  "fairbairn": [
+   "collector"
+  ],
+  "fane": [
+   "lastcolumn"
+  ],
+  "fatima": [
+   "blessing"
+  ],
+  "faye": [
+   "recipebox"
+  ],
+  "felix": [
+   "ghosttour"
+  ],
+  "fergus": [
+   "blessing"
+  ],
+  "fontaine": [
+   "highscore"
+  ],
+  "furtado": [
+   "figurehead"
+  ],
+  "gerry": [
+   "toboggan"
+  ],
+  "gideon": [
+   "thunder"
+  ],
+  "gil": [
+   "overdue"
+  ],
+  "gilToomey": [
+   "decoy"
+  ],
+  "glassman": [
+   "seaglass"
+  ],
+  "gordie": [
+   "selectmen",
+   "warrant",
+   "saltire",
+   "lamp",
+   "secondface",
+   "portrait",
+   "selectMeeting",
+   "rivalEve",
+   "twinstone",
+   "selectTerm",
+   "wolfmoon"
+  ],
+  "gorham": [
+   "ballot"
+  ],
+  "graca": [
+   "blessing"
+  ],
+  "grosvenor": [
+   "longcon"
+  ],
+  "gus": [
+   "queen",
+   "longgame",
+   "skates",
+   "twinstone"
+  ],
+  "hal": [
+   "benefit",
+   "noreaster",
+   "bog",
+   "lamp",
+   "rufus",
+   "caretaker",
+   "blackfriday",
+   "windowdisplay",
+   "mudseason",
+   "selectTerm",
+   "grey2",
+   "brood",
+   "wolfmoon"
+  ],
+  "hap": [
+   "stormglass"
+  ],
+  "hattie": [
+   "fathom"
+  ],
+  "hazel": [
+   "robot"
+  ],
+  "hepzibah": [
+   "ghosttour"
+  ],
+  "hester": [
+   "spoons",
+   "longcon",
+   "cabinet",
+   "plates",
+   "miniature",
+   "undertheice",
+   "saltire",
+   "overdue",
+   "thirtyyears",
+   "burl",
+   "slides",
+   "lastcolumn",
+   "sugarpan",
+   "crypt"
+  ],
+  "hollis": [
+   "hollis",
+   "cranesnow"
+  ],
+  "honora": [
+   "widow",
+   "yearaweek",
+   "onemorespring"
+  ],
+  "hosea": [
+   "fog"
+  ],
+  "housekeeper": [
+   "grey"
+  ],
+  "idaHarrow": [
+   "seance"
+  ],
+  "ignatius": [
+   "benefit",
+   "blessing",
+   "cabinet",
+   "longestnight",
+   "bingo",
+   "snowglobe",
+   "schoolbell",
+   "urn",
+   "lamp",
+   "hymnal",
+   "caretaker",
+   "donkey",
+   "bingo2",
+   "pageant",
+   "brood"
+  ],
+  "ilona": [
+   "banner"
+  ],
+  "ines": [
+   "veil"
+  ],
+  "ingrid": [
+   "teeth"
+  ],
+  "ivo": [
+   "slides"
+  ],
+  "jo": [
+   "plotter"
+  ],
+  "joanDufresne": [
+   "firstboat"
+  ],
+  "jolene": [
+   "flash"
+  ],
+  "jonah": [
+   "gansey"
+  ],
+  "jory": [
+   "noreaster"
+  ],
+  "josie": [
+   "longestnight"
+  ],
+  "joyce": [
+   "blackfriday"
+  ],
+  "juneT": [
+   "chowder"
+  ],
+  "junie": [
+   "brassring"
+  ],
+  "junkman": [
+   "cabinet",
+   "brood"
+  ],
+  "kenny": [
+   "plotter"
+  ],
+  "kieran": [
+   "blessing"
+  ],
+  "kipS": [
+   "plunge"
+  ],
+  "kristof": [
+   "warrant"
+  ],
+  "ladd": [
+   "cabinet",
+   "brood"
+  ],
+  "lark": [
+   "main",
+   "psalter",
+   "twins"
+  ],
+  "leland": [
+   "club"
+  ],
+  "lenaM": [
+   "shanty"
+  ],
+  "leo": [
+   "plates"
+  ],
+  "leon": [
+   "snowday"
+  ],
+  "lew": [
+   "burl"
+  ],
+  "lightfoot": [
+   "figurehead"
+  ],
+  "linnet": [
+   "main",
+   "psalter",
+   "twins"
+  ],
+  "linus": [
+   "prisms"
+  ],
+  "lonnie": [
+   "teeth"
+  ],
+  "lorna": [
+   "breakwaters"
+  ],
+  "lorraine": [
+   "prizeseed"
+  ],
+  "lucia": [
+   "caretaker"
+  ],
+  "lucinda": [
+   "seacaptain"
+  ],
+  "lucius": [
+   "busker"
+  ],
+  "lusk": [
+   "museum",
+   "scrimshaw"
+  ],
+  "lyle": [
+   "cuckoo"
+  ],
+  "lyman": [
+   "brassring"
+  ],
+  "mabel": [
+   "teeth"
+  ],
+  "marguerite": [
+   "selectmen",
+   "rival",
+   "warrant",
+   "saltire",
+   "teeth",
+   "lamp",
+   "banner",
+   "ballot",
+   "selectMeeting",
+   "selectTerm"
+  ],
+  "marian": [
+   "windowdisplay"
+  ],
+  "marisol": [
+   "chowder"
+  ],
+  "marnie": [
+   "halfmap"
+  ],
+  "marty": [
+   "candlepin"
+  ],
+  "marv": [
+   "rival",
+   "collector",
+   "scrimshaw",
+   "seance",
+   "ballot",
+   "freezerTank",
+   "rivalWinter"
+  ],
+  "mateo": [
+   "caretaker"
+  ],
+  "maudie": [
+   "skates"
+  ],
+  "maureen": [
+   "urn"
+  ],
+  "mercy": [
+   "bog",
+   "prizeseed"
+  ],
+  "merle": [
+   "club"
+  ],
+  "merrit": [
+   "main",
+   "psalter",
+   "benefit",
+   "museum",
+   "widow",
+   "nightferry",
+   "rival",
+   "answering",
+   "portrait",
+   "rivalEve",
+   "rivalWinter",
+   "secrets"
+  ],
+  "mickDoherty": [
+   "cutlines"
+  ],
+  "moody": [
+   "postcards"
+  ],
+  "moon_bev": [
+   "wolfmoon"
+  ],
+  "moon_dory": [
+   "wolfmoon"
+  ],
+  "moon_gordie": [
+   "wolfmoon"
+  ],
+  "moon_hal": [
+   "wolfmoon"
+  ],
+  "moon_ruthie": [
+   "wolfmoon"
+  ],
+  "mott": [
+   "fog",
+   "secrets"
+  ],
+  "nanFerreira": [
+   "freezer",
+   "ferrybet",
+   "grey2"
+  ],
+  "nando": [
+   "shanty"
+  ],
+  "nils": [
+   "iceboat"
+  ],
+  "nolan": [
+   "lights"
+  ],
+  "norbert": [
+   "answering"
+  ],
+  "noreen": [
+   "longestnight"
+  ],
+  "nuala": [
+   "platter"
+  ],
+  "ochoa": [
+   "noreaster"
+  ],
+  "odile": [
+   "main",
+   "odilewent",
+   "postcards"
+  ],
+  "ohio": [
+   "ned"
+  ],
+  "okonjo": [
+   "seaglass"
+  ],
+  "opal": [
+   "lights"
+  ],
+  "orla": [
+   "hymnal"
+  ],
+  "ormsby": [
+   "whistle"
+  ],
+  "orsolya": [
+   "grey",
+   "brassring",
+   "undertheice",
+   "seance",
+   "onemorespring",
+   "grey2"
+  ],
+  "osgood": [
+   "recipebox"
+  ],
+  "otis": [
+   "postcards",
+   "valentine",
+   "dogsweater"
+  ],
+  "ottoline": [
+   "plates"
+  ],
+  "ozzie": [
+   "robot"
+  ],
+  "pearl": [
+   "stool"
+  ],
+  "peleg": [
+   "fog"
+  ],
+  "pell": [
+   "main",
+   "twins",
+   "secrets"
+  ],
+  "penhallow": [
+   "wrenwinter"
+  ],
+  "pennick": [
+   "psalter"
+  ],
+  "percy": [
+   "secondface"
+  ],
+  "percyBank": [
+   "secondface"
+  ],
+  "peregrine": [
+   "longcon"
+  ],
+  "philippa": [
+   "honey"
+  ],
+  "pim": [
+   "hollis"
+  ],
+  "pip": [
+   "banner"
+  ],
+  "pomfret": [
+   "freezer",
+   "freezerSecond",
+   "freezerThaw"
+  ],
+  "posie": [
+   "busker"
+  ],
+  "posy": [
+   "skates"
+  ],
+  "priya": [
+   "proposal"
+  ],
+  "proprietor": [
+   "grey",
+   "grey2"
+  ],
+  "prue": [
+   "sugarpan"
+  ],
+  "pryce": [
+   "grey"
+  ],
+  "pye": [
+   "psalter",
+   "wolfmoon"
+  ],
+  "quarrie": [
+   "thirtyyears"
+  ],
+  "quayle": [
+   "scrimshaw",
+   "seacaptain",
+   "gansey"
+  ],
+  "quillon": [
+   "grey",
+   "grey2"
+  ],
+  "radioBuyer": [
+   "radio"
+  ],
+  "ray": [
+   "veil"
+  ],
+  "rayT": [
+   "chowder"
+  ],
+  "reenactor": [
+   "longcon"
+  ],
+  "remy": [
+   "lure"
+  ],
+  "rollo": [
+   "halfmap"
+  ],
+  "rook": [
+   "spoons",
+   "twinstone"
+  ],
+  "rory": [
+   "platter"
+  ],
+  "rosa": [
+   "dog"
+  ],
+  "rosalie": [
+   "valentine"
+  ],
+  "rowan": [
+   "undertheice"
+  ],
+  "royce": [
+   "radio",
+   "royce"
+  ],
+  "roz": [
+   "nightferry"
+  ],
+  "rudy": [
+   "robot"
+  ],
+  "rufus": [
+   "rufus"
+  ],
+  "ruiMendes": [
+   "firstboat"
+  ],
+  "russ": [
+   "robot"
+  ],
+  "russell": [
+   "urn"
+  ],
+  "ruthie": [
+   "club",
+   "brassring",
+   "warrant",
+   "ned",
+   "actuary",
+   "secondface",
+   "longgame",
+   "thunder",
+   "newyear",
+   "wolfmoon"
+  ],
+  "sandoval": [
+   "freezer",
+   "freezerSecond",
+   "freezerThaw"
+  ],
+  "seaChest": [
+   "fog"
+  ],
+  "shattuck": [
+   "saltire"
+  ],
+  "shepherd": [
+   "psalter",
+   "wolfmoon"
+  ],
+  "skip": [
+   "twins",
+   "breakwaters",
+   "barrowboy",
+   "prisms",
+   "busker",
+   "lisbon",
+   "bigcoat",
+   "toboggan",
+   "turkeytrot",
+   "newyear",
+   "pageant",
+   "grey2",
+   "wolfmoon"
+  ],
+  "sorrel": [
+   "sounding",
+   "thirteenth"
+  ],
+  "spoonSellerA": [
+   "spoons"
+  ],
+  "spoonSellerB": [
+   "spoons"
+  ],
+  "spoonSellerC": [
+   "spoons"
+  ],
+  "spoonSellerD": [
+   "spoons"
+  ],
+  "spoonSellerE": [
+   "spoons"
+  ],
+  "sportsman": [
+   "lure"
+  ],
+  "stampman": [
+   "lisbon"
+  ],
+  "sully": [
+   "crypt"
+  ],
+  "tamsin": [
+   "stool"
+  ],
+  "teddy": [
+   "proposal"
+  ],
+  "temperance": [
+   "fog"
+  ],
+  "tess": [
+   "fog",
+   "freezer",
+   "radio",
+   "selectmen",
+   "nightferry",
+   "blessing",
+   "sounding",
+   "plotter",
+   "odilewent",
+   "cutlines",
+   "prisms",
+   "gansey",
+   "stormglass",
+   "iceboat",
+   "firstboat",
+   "selectMeeting",
+   "selectTerm"
+  ],
+  "thackeray": [
+   "saltire"
+  ],
+  "theo": [
+   "snowglobe"
+  ],
+  "thorne": [
+   "spoons"
+  ],
+  "tilly": [
+   "lure"
+  ],
+  "tobias": [
+   "hollis"
+  ],
+  "toby": [
+   "miniature"
+  ],
+  "torvald": [
+   "bigcoat"
+  ],
+  "tuck": [
+   "twinstone"
+  ],
+  "vance": [
+   "cabinet"
+  ],
+  "vantreece": [
+   "main",
+   "grey",
+   "museum"
+  ],
+  "varnum": [
+   "shanty"
+  ],
+  "vivienne": [
+   "longestnight"
+  ],
+  "wally": [
+   "caretaker"
+  ],
+  "walt": [
+   "fathom"
+  ],
+  "wanda": [
+   "breakwaters",
+   "newyear"
+  ],
+  "wardClegg": [
+   "widow"
+  ],
+  "wendy": [
+   "camcorder"
+  ],
+  "wilbur": [
+   "portrait"
+  ],
+  "wilhelmina": [
+   "whelk"
+  ],
+  "winifred": [
+   "dead"
+  ],
+  "winnie": [
+   "plunge"
+  ],
+  "wren": [
+   "main",
+   "hollis",
+   "museum",
+   "wrenwinter"
+  ],
+  "wynn": [
+   "brassring"
+  ]
+ }
+}

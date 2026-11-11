@@ -1,0 +1,218 @@
+// Pawn Champ - The Bosun's Whistle. Minor quest m43, batch H (docs/quests/MINOR.md#m43-the-bosuns-whistle).
+// A quiet man haggles with a brass bosun's whistle, and whoever hears it agrees. He's using it on
+// the fish auction at Pier Nine. You need it off him without hearing it: Dory's freezer earmuffs,
+// or Captain Ned does the talking if you have him.
+//
+// Written as data: docs/STORY_DATA.md. Strict JSON inside the call. Code half: js/quests/whistle.js.
+defineStory({
+  "id": "whistle",
+  "kind": "minor",
+  "title": "The Bosun's Whistle",
+  "location": "docks",
+  "rumour": "One buyer at the Pier Nine fish auction is getting every lot at his own price, and nobody can say why they let him.",
+  "endings": { "pocketed": "Piped Aboard", "overboard": "Over the Side", "heard": "Aye, Aye" },
+  "about": [
+    "A short uncanny story. A quiet man in a navy cap, Odell Ormsby, points at the dearest thing on your shelves, pipes one falling note on a brass bosun's whistle, names his price, and you hear yourself say \"Aye, aye\" (§{silasHaggle}). The next day Dory says he has been doing the same at the Pier Nine fish auction all week, buying every lot at half price, and offers you her freezer-room earmuffs (§{doryWhistle}).",
+    "At the auction (§{whistleAuction}) wear the earmuffs so the whistle does nothing, or hold up Captain Ned if you have him, since dummies can't agree to anything, and Odell hands it over. Walk up without either and you agree to leave (Aye, Aye). With the whistle, keep it in a drawer and never blow it (Piped Aboard), or drop it off the pier (Over the Side)."
+  ],
+  "cast": {
+    "ormsby": {
+      "name": "Odell Ormsby",
+      "look": { "skin": "#e8d0c0", "hair": "#5a5a5a", "hs": 0, "coat": "#1e2a3a", "trim": "#c8a050", "style": "jacket", "hat": "cap", "hatc": "#1e2a3a", "band": "#c8a050", "pants": "#2a2a30" }
+    }
+  },
+  "icons": {
+    "bosun": [
+      "............",
+      "..........k.",
+      ".........kYk",
+      "........kYk.",
+      ".kkkkkkkYk..",
+      "kYYYYYYYyk..",
+      "kyyyyyyyk...",
+      ".kkkkkkyk...",
+      ".....kyk....",
+      "....kyk.....",
+      "....kk......",
+      "............"
+    ]
+  },
+  "uniques": {
+    "bosunWhistle": {
+      "name": "Brass bosun's whistle",
+      "icon": "bosun",
+      "cat": "curio",
+      "guide": 180,
+      "condLabel": "Never polished",
+      "tells": [
+        "A bosun's call: brass pipe, round buoy, a chain worn thin. Navy, very old.",
+        "Stamped on the keel: H.M.S. AGREEABLE. There is no record of any such ship."
+      ]
+    }
+  },
+  "scenes": {
+    "silasHaggle": {
+      "title": "Odell Ormsby pipes his price",
+      "customer": "ormsby",
+      "steps": [
+        { "say": "ormsby", "text": "Ormsby. I'd like that, please." },
+        {
+          "hook": "dearest",
+          "sets": ["pick", "price"],
+          "note": "pick: the dearest thing on your shelves that is for sale; price: a third of its guide, in dollars."
+        },
+        {
+          "if": "!pick",
+          "then": [
+            { "say": "ormsby", "text": "Nothing today. Good day." },
+            { "leave": "ormsby" },
+            { "end": true }
+          ]
+        },
+        {
+          "narrate": [
+            "He points at the {pick.name|lower}. You say a price. He lifts a little brass whistle to his lips and pipes one long, falling note.",
+            "\"{price},\" he says. And you hear yourself say: \"Aye, aye.\" You wrap it for him. You even say thank you."
+          ]
+        },
+        { "sell": "pick", "to": "ormsby" },
+        { "refresh": "panel" },
+        { "hook": "paid", "note": "You get his price for it." },
+        { "set": { "whistleHeard": true } },
+        { "leave": "ormsby" },
+        { "narrate": "Ten minutes later you're still standing at the counter wondering why you did that." }
+      ]
+    },
+    "doryWhistle": {
+      "title": "Dory asks for help at the fish auction",
+      "customer": "dory",
+      "steps": [
+        {
+          "say": "dory",
+          "text": [
+            "Has a quiet man in a navy cap been in here? Ormsby? He blows a whistle, and you just... agree.",
+            "He's been at my auction all week. Every lot, half price. My fishermen are going broke and none of them can tell me why they keep saying yes."
+          ]
+        },
+        { "say": "dory", "text": "He got you too, didn't he. I can see it. You've got the look. Sort of agreeable.", "if": "flag.whistleHeard" },
+        { "say": "dory", "text": "Come to the auction tomorrow at noon, the second sale. Wear these. They're for the freezer room. You won't hear a thing." },
+        {
+          "choose": [
+            {
+              "label": "Take the earmuffs",
+              "hint": "(you'll hear nothing)",
+              "then": [{ "set": { "whistleMuffs": true } }]
+            },
+            { "label": "\"I'll take my chances.\"", "then": [{ "set": { "whistleMuffs": false } }] }
+          ]
+        },
+        { "plan": "whistle-auction" },
+        { "toast": "Calendar: the fish auction, at noon", "look": "dory" },
+        { "leave": "dory" }
+      ]
+    },
+    "whistleAuction": {
+      "title": "The second sale at the fish auction",
+      "steps": [
+        {
+          "stage": "docksDay",
+          "fadeOut": false,
+          "actors": [
+            { "id": "you", "cast": "keeper", "name": "You", "at": [110, 166] },
+            { "id": "ormsby", "cast": "ormsby", "at": [230, 164], "facingLeft": true }
+          ]
+        },
+        { "narrate": "The fish auction on Pier Nine: totes of ice, a chalkboard, and twenty fishermen in waders standing very close together. Odell Ormsby stands a little apart, whistle in his hand." },
+        {
+          "find": "ned",
+          "in": "stock",
+          "match": { "icon": "dummy" },
+          "note": "Captain Ned, the ventriloquist dummy, if he is on your shelf."
+        },
+        {
+          "choose": [
+            {
+              "label": "Earmuffs on. Walk up and take it.",
+              "if": "flag.whistleMuffs",
+              "then": [
+                { "narrate": "In the earmuffs the whole pier goes silent. Odell lifts the whistle and his cheeks go round and nothing happens. Nothing at all. He tries again. You hold out your hand." }
+              ]
+            },
+            {
+              "label": "Let Captain Ned do the talking",
+              "hint": "(dummies can't agree to anything)",
+              "if": "ned",
+              "then": [
+                { "narrate": "You hold Captain Ned up in front of you. Odell pipes the note straight into his painted face. \"Absolutely not,\" says Captain Ned, in a voice that is mostly yours. Odell looks at the dummy, then at you, then at the dummy." }
+              ]
+            },
+            {
+              "label": "Just walk up and ask him for it",
+              "then": [
+                { "narrate": "He sees you coming and lifts the whistle. One long, falling note." },
+                { "say": "ormsby", "text": "You were just leaving." },
+                { "narrate": "\"Aye, aye,\" you say, and you leave, and you're halfway up Water Street before you're cross about it." },
+                { "set": { "whistleEnd": "heard" } },
+                { "end": true }
+              ]
+            }
+          ]
+        },
+        { "narrate": "He puts the whistle in it. Then he sits down on an upturned tote and talks for a while, and later Dory tells you what he said: the whistle was his grandfather's, off a ship nobody can find, and he only meant to use it once." },
+        { "set": { "whistleGot": true } },
+        {
+          "choose": [
+            {
+              "label": "Keep it, in a drawer, and never blow it",
+              "hint": "(it goes in your stock)",
+              "then": [
+                {
+                  "if": "shelf.free",
+                  "then": [{ "add": { "unique": "bosunWhistle" } }, { "refresh": "panel" }]
+                },
+                { "set": { "whistleEnd": "pocketed" } }
+              ]
+            },
+            {
+              "label": "Drop it off the end of the pier",
+              "then": [
+                { "narrate": "It goes in with hardly a splash. Out in the harbor, for a second, every gull on every piling says yes to something." },
+                { "rep": 3 },
+                { "set": { "whistleEnd": "overboard" } }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "beats": [
+    { "at": "1-2", "cast": "ormsby", "scene": "silasHaggle" },
+    { "at": "1-3", "cast": "dory", "scene": "doryWhistle" }
+  ],
+  "errands": [
+    {
+      "id": "whistle-auction",
+      "title": "The second sale at the fish auction",
+      "where": "Pier Nine",
+      "scene": "whistleAuction",
+      "test": [{ "set": { "whistleMuffs": true } }]
+    }
+  ],
+  "calendar": [
+    { "id": "whistle-auction", "errand": "whistle-auction", "story": "whistle", "where": "Pier Nine", "title": "The fish auction" }
+  ],
+  "epilogue": [
+    { "line": "There's a brass whistle in the drawer under your till. Some days your hand goes to it during a hard haggle. So far, it has come back empty.", "if": "flag.whistleEnd == 'pocketed'" },
+    { "line": "Odell Ormsby bought a boat at the end of the month. At his price. The seller still doesn't know why.", "if": "flag.whistleEnd == 'heard'" }
+  ],
+  "talk": {
+    "by": "dot",
+    "rumour": [
+      "The fishermen are in a mood. Some fellow at the auction gets every lot at his own price, and they all say yes, and none of them know why. I've had three of them crying into chowder."
+    ],
+    "react": { "pocketed": "The auction's back to normal and the quiet man's gone. The fishermen say you've got his whistle. They're very polite to you now. Just in case.", "overboard": "Something went off the end of Pier Nine and every gull on the harbor agreed with it. My fryer man swears to this.", "heard": "That quiet fellow bought a boat for nothing, they say. The seller said yes before he knew he'd said it." },
+    "sway": { "pocketed": { "dot": -1 }, "overboard": { "dot": 1 }, "heard": { "dot": -1 } }
+  },
+  "outcome": "flag.whistleEnd"
+});

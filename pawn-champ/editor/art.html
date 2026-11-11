@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Art · Pawn Champ</title>
+  <link rel="stylesheet" href="editor.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">Art</div>
+    <div class="story-title" id="story-title"></div>
+    <div class="top-actions">
+      <label class="status">Month
+        <select id="month" title="The season the game is in: snow, coats and scarves from November">
+          <option value="1">October</option><option value="2">November</option><option value="3">December</option>
+          <option value="4">January</option><option value="5">February</option><option value="6">March</option>
+        </select>
+      </label>
+      <a class="button" href="index.html" title="The story editor">Stories</a>
+    </div>
+  </header>
+  <div class="layout">
+    <nav class="side" id="side"></nav>
+    <main class="page" id="page"><p class="muted">Loading the game…</p></main>
+    <aside class="notes" id="notes"></aside>
+  </div>
+  <!-- the game itself, hidden: the page asks it for every piece of art and draws each one with it -->
+  <iframe id="game" src="../index.html?editor=1" title="game" tabindex="-1" aria-hidden="true"></iframe>
+  <script src="../tools/storyfile.js"></script>
+  <script src="static.js"></script>
+  <script src="art.js"></script>
+</body>
+</html>
